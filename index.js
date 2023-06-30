@@ -354,14 +354,12 @@ Clarity.prototype.draw_map = function (context, fore) {
 
         for (; x < width; x++) {
 
-            const tile = this.get_tile(x, y) || {};
+            const tile = this.get_tile(x, y) || map.keys[0];
 
             if ((!fore && !tile.fore) || (fore && tile.fore)) {
 
                 var t_x = (x * this.tile_size) - this.camera.x;
                 var t_y = (y * this.tile_size) - this.camera.y;
-
-                if (tile.notATile) continue;
                 
                 this.draw_tile(
                     t_x,

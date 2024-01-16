@@ -57,6 +57,12 @@ export class DashboardSidebarComponent {
       icon: 'bi-play',
       path: '/dashboard/playground',
     },
+    {
+      isActive: false,
+      title: 'Engine Settings',
+      icon: 'bi-sliders',
+      path: '/dashboard/engine-settings',
+    },
     // {
     //   isActive: false,
     //   title: 'Bootstrap widgets',

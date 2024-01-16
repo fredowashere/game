@@ -1,0 +1,153 @@
+<div class="container py-5" style="max-width: 600px;">
+
+    <div class="text-center">
+        <h1 class="display-6">Engine Settings</h1>
+        <p class="lead">In this screen you can tweak/destroy the engine itself.</p>
+    </div>
+
+    <div class="card card-body shadow">
+
+        <div class="d-flex flex-wrap justify-content-center gap-3 mb-3">
+
+            <app-input
+                type="checkbox"
+                name="alert_errors"
+                label="Alert Errors"
+                [ngControl]="form.controls.alert_errors"
+                [floatingLabel]="true"
+            />
+
+            <app-input
+                type="checkbox"
+                name="log_info"
+                label="Log Info"
+                [ngControl]="form.controls.log_info"
+                [floatingLabel]="true"
+            />
+
+            <app-input
+                type="checkbox"
+                name="limit_viewport"
+                label="Limit Viewport"
+                [ngControl]="form.controls.limit_viewport"
+                [floatingLabel]="true"
+            />
+
+            <!-- <app-input
+                type="checkbox"
+                name="key__left"
+                label="Key Left"
+                [ngControl]="form.controls.key.controls.left"
+                [floatingLabel]="true"
+            />
+
+            <app-input
+                type="checkbox"
+                name="key__right"
+                label="Key Right"
+                [ngControl]="form.controls.key.controls.right"
+                [floatingLabel]="true"
+            />
+
+            <app-input
+                type="checkbox"
+                name="key__up"
+                label="Key Up"
+                [ngControl]="form.controls.key.controls.up"
+                [floatingLabel]="true"
+            /> -->
+
+            <app-input
+                type="checkbox"
+                name="player__can_jump"
+                label="Player Can Jump"
+                [ngControl]="form.controls.player.controls.can_jump"
+                [floatingLabel]="true"
+            />
+        </div>
+
+        <div class="flexgrid flexgrid--2 mb-3">
+
+            <app-input
+                type="number"
+                name="viewportx"
+                label="Viewport X"
+                [ngControl]="form.controls.viewport.controls.x"
+                [floatingLabel]="true"
+            />
+
+            <app-input
+                type="number"
+                name="viewporty"
+                label="Viewport Y"
+                [ngControl]="form.controls.viewport.controls.y"
+                [floatingLabel]="true"
+            />
+
+            <app-input
+                type="number"
+                name="camerax"
+                label="Camera X"
+                [ngControl]="form.controls.camera.controls.x"
+                [floatingLabel]="true"
+            />
+
+            <app-input
+                type="number"
+                name="cameray"
+                label="Camera Y"
+                [ngControl]="form.controls.camera.controls.y"
+                [floatingLabel]="true"
+            />
+
+            <app-input
+                type="number"
+                name="playerlocy"
+                label="Player Location Y"
+                [ngControl]="form.controls.player.controls.loc.controls.x"
+                [floatingLabel]="true"
+            />
+
+            <app-input
+                type="number"
+                name="playerlocy"
+                label="Player Location X"
+                [ngControl]="form.controls.player.controls.loc.controls.y"
+                [floatingLabel]="true"
+            />
+
+            <app-input
+                type="number"
+                name="playervely"
+                label="Player Velocity Y"
+                [ngControl]="form.controls.player.controls.vel.controls.x"
+                [floatingLabel]="true"
+            />
+
+            <app-input
+                type="number"
+                name="playervely"
+                label="Player Velocity X"
+                [ngControl]="form.controls.player.controls.vel.controls.y"
+                [floatingLabel]="true"
+            />
+        </div>
+
+        <div class="d-flex flex-wrap gap-3 justify-content-between">
+
+            <button
+                class="btn btn-outline-primary"
+                (click)="reset()"
+            >
+                Factory Reset
+            </button>
+
+            <button
+                class="btn btn-primary"
+                (click)="save()"
+            >
+                Save Current
+            </button>
+        </div>
+    </div>
+</div>

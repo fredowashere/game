@@ -27,6 +27,11 @@ const routes: Routes = [
         loadChildren: () =>
           import('./features/playground/playground.module').then(m => m.PlaygroundModule)
       },
+      {
+        path: 'engine-settings',
+        loadChildren: () =>
+          import('./features/engine-settings/engine-settings.module').then(m => m.EngineSettingsModule)
+      },
     ]
   },
 ];

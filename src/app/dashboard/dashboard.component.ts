@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter, Subject, takeUntil, tap } from 'rxjs';
 import { SidebarService } from '../services/sidebar.service';
+import { DEFAULT_ENGINE_SETTINGS } from './features/models/engine-settings';
+import { DEFAULT_MATERIALS } from './features/models/materials';
 
 @Component({
   selector: 'app-dashboard',
@@ -27,6 +29,14 @@ export class DashboardComponent {
         tap(() => document.querySelector('.sb-layout__main')?.scrollTop)
       )
       .subscribe();
+
+    // Populate localStorage with default settings
+    if (!localStorage.getItem("engine_settings")) {
+      localStorage.setItem("engine_settings", JSON.stringify(DEFAULT_ENGINE_SETTINGS));
+    }
+    if (!localStorage.getItem("materials")) {
+      localStorage.setItem("materials", JSON.stringify(DEFAULT_MATERIALS));
+    }
   }
 
   ngOnDestroy() {

@@ -29,6 +29,10 @@ import { IMaterial } from '../models/materials';
 
                 <h5 class="text-uppercase" style="margin-left: -1rem;">Appearance</h5>
 
+                <span class="mb-3" id="colorPicker">
+                    <span [style.background]="pickerColor"></span> {{ pickerColor }}
+                </span>
+
                 <app-input
                     class="mb-3"
                     type="checkbox"
@@ -162,7 +166,7 @@ import { IMaterial } from '../models/materials';
     
                 <button
                     class="btn btn-primary"
-                    (click)="activeModal.close('Save')"
+                    (click)="save(); activeModal.close('Save')"
                 >
                     Save
                 </button>
@@ -170,14 +174,31 @@ import { IMaterial } from '../models/materials';
         </div>
     `,
     styles: [`
+
         :host ::ng-deep textarea[id*="script"] {
             height: 250px!important;
+        }
+
+        #colorPicker {
+            width: 200px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        #colorPicker > span {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
         }
     `]
 })
 export class MaterialEditComponent {
 
     @Input("material") material!: IMaterial;
+
+    pickerColor = "#0cf";
 
     form = new FormGroup({
         // Appearance
@@ -207,8 +228,26 @@ export class MaterialEditComponent {
 
     ngOnInit() {
         if (this.material) {
+            this.pickerColor = this.material.color;
             this.form.patchValue(this.material);
         }
+    }
+
+    ngAfterViewInit() {
+        const pickerParent = document.querySelector("#colorPicker");
+        new window.Picker({
+            parent: pickerParent,
+            defaultColor: this.pickerColor,
+            onChange: (color: any) => {
+                const rgba = color.rgbaString;
+                this.pickerColor = rgba;
+                this.form.controls.color.setValue(rgba);
+            }
+        });
+    }
+
+    save() {
+        console.log(this.form.getRawValue());
     }
 
     async delete() {

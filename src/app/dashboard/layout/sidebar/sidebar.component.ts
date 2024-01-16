@@ -63,17 +63,6 @@ export class DashboardSidebarComponent {
       icon: 'bi-play',
       path: '/dashboard/playground',
     },
-    // {
-    //   isActive: false,
-    //   title: 'Bootstrap widgets',
-    //   icon: 'bi-grid',
-    //   children: [
-    //     {
-    //       path: '/dashboard/demos/accordion',
-    //       title: 'Accordion'
-    //     }
-    //   ]
-    // },
   ];
 
   username$: Observable<string | undefined>;

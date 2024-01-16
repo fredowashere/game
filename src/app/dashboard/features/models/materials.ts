@@ -19,10 +19,10 @@ export interface IMaterial {
 export const DEFAULT_MATERIALS = [
     { id: 0, name: "Empty Space", color: '#333', solid: false },
     { id: 1, name: "Wall", color: '#888', solid: false },
-    { id: 2, name: "Bouncing Carpet", color: '#555', solid: true, bounce: 0.35 },
+    { id: 2, name: "Dampening Carpet", color: '#555', solid: true, bounce: 0.35 },
     { id: 3, name: "Water", color: 'rgba(121, 220, 242, 0.4)', friction: { x: 0.9, y: 0.9 }, gravity: { x: 0, y: 0.1 }, jump: true, fore: true },
     { id: 4, name: "", color: '#777', jump: true },
-    { id: 5, name: "", color: '#E373FA', solid: true, bounce: 1.1 },
+    { id: 5, name: "Bouncing Carpet", color: '#E373FA', solid: true, bounce: 1.1 },
     { id: 6, name: "", color: '#666', solid: true, bounce: 0 },
     { id: 7, name: "Change Color", color: '#73C6FA', solid: false, script: 'game.player.color = "#"+(Math.random()*0xFFFFFF<<0).toString(16);' },
     { id: 8, name: "Next Level", color: '#FADF73', solid: false, script: 'alert("You won! Reloading map.");\ngame.load_map(map);' },

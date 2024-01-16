@@ -4,6 +4,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { AreYouSureComponent } from '../are-you-sure.component';
+import { IMaterial } from '../models/materials';
 
 @Component({
     selector: 'app-material-edit',
@@ -59,7 +60,7 @@ import { AreYouSureComponent } from '../are-you-sure.component';
 })
 export class MaterialEditComponent {
 
-    @Input("material") material!: any; // ToDo: Type this
+    @Input("material") material!: IMaterial;
 
     form = new FormGroup({});
 

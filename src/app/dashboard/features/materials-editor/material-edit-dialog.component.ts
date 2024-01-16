@@ -198,7 +198,7 @@ export class MaterialEditComponent {
 
     @Input("material") material!: IMaterial;
 
-    pickerColor = "#0cf";
+    pickerColor = "rgba(0,204,255,1)";
 
     form = new FormGroup({
         // Appearance

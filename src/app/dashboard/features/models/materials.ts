@@ -17,16 +17,16 @@ export interface IMaterial {
 }
 
 export const DEFAULT_MATERIALS = [
-    { id: 0, name: "Empty Space", color: '#333', solid: false },
-    { id: 1, name: "Wall", color: '#888', solid: false },
-    { id: 2, name: "Dampening Carpet", color: '#555', solid: true, bounce: 0.35 },
+    { id: 0, name: "Empty Space", color: 'rgba(51,51,51,1)', solid: false },
+    { id: 1, name: "Wall", color: 'rgba(136,136,136,1)', solid: false },
+    { id: 2, name: "Dampening Carpet", color: 'rgba(85,85,85,1)', solid: true, bounce: 0.35 },
     { id: 3, name: "Water", color: 'rgba(121, 220, 242, 0.4)', friction: { x: 0.9, y: 0.9 }, gravity: { x: 0, y: 0.1 }, jump: true, fore: true },
-    { id: 4, name: "", color: '#777', jump: true },
-    { id: 5, name: "Bouncing Carpet", color: '#E373FA', solid: true, bounce: 1.1 },
-    { id: 6, name: "", color: '#666', solid: true, bounce: 0 },
-    { id: 7, name: "Change Color", color: '#73C6FA', solid: false, script: 'game.player.color = "#"+(Math.random()*0xFFFFFF<<0).toString(16);' },
-    { id: 8, name: "Next Level", color: '#FADF73', solid: false, script: 'alert("You won! Reloading map.");\ngame.load_map(map);' },
-    { id: 9, name: "Death", color: '#C93232', solid: false, script: 'alert("You died!");\ngame.load_map(map);' },
-    { id: 10, name: "", color: '#555', solid: true},
-    { id: 11, name: "Unlock", color: '#0FF', solid: false, script: 'game.current_map.keys[10].solid = 0;\ngame.current_map.keys[10].color = "#888";' }
+    { id: 4, name: "", color: 'rgba(119,119,119,1)', jump: true },
+    { id: 5, name: "Bouncing Carpet", color: 'rgba(227,115,250,1)', solid: true, bounce: 1.1 },
+    { id: 6, name: "", color: 'rgba(102,102,102,1)', solid: true, bounce: 0 },
+    { id: 7, name: "Change Color", color: 'rgba(115,198,250,1)', solid: false, script: 'game.player.color = "#"+(Math.random()*0xFFFFFF<<0).toString(16);' },
+    { id: 8, name: "Next Level", color: 'rgba(250,223,115,1)', solid: false, script: 'alert("You won! Reloading map.");\ngame.load_map(map);' },
+    { id: 9, name: "Death", color: 'rgba(201,50,50,1)', solid: false, script: 'alert("You died!");\ngame.load_map(map);' },
+    { id: 10, name: "", color: 'rgba(85,85,85,1)', solid: true},
+    { id: 11, name: "Unlock", color: 'rgba(0,255,255,1)', solid: false, script: 'game.current_map.keys[10].solid = 0;\ngame.current_map.keys[10].color = "#888";' }
 ];

@@ -9,7 +9,7 @@ var map = {
     Key vairables:
     
     id       [required] - an integer that corresponds with a tile in the data array.
-    colour   [required] - any javascript compatible colour variable.
+    color   [required] - any javascript compatible color variable.
     solid    [optional] - whether the tile is solid or not, defaults to false.
     bounce   [optional] - how much velocity is preserved upon hitting the tile, 0.5 is half.
     jump     [optional] - whether the player can jump while over the tile, defaults to false.
@@ -21,18 +21,18 @@ var map = {
     */
     
     keys: [
-        {id: 0, colour: '#333', solid: 0},
-        {id: 1, colour: '#888', solid: 0},
-        {id: 2,colour: '#555',solid: 1,bounce: 0.35},
-        {id: 3,colour: 'rgba(121, 220, 242, 0.4)',friction: {x: 0.9,y: 0.9},gravity: {x: 0,y: 0.1},jump: 1,fore: 1},
-        {id: 4,colour: '#777',jump: 1},
-        {id: 5,colour: '#E373FA',solid: 1,bounce: 1.1},
-        {id: 6,colour: '#666',solid: 1,bounce: 0},
-        {id: 7,colour: '#73C6FA',solid: 0,script: 'change_colour'},
-        {id: 8,colour: '#FADF73',solid: 0,script: 'next_level'},
-        {id: 9,colour: '#C93232',solid: 0,script: 'death'},
-        {id: 10,colour: '#555',solid: 1},
-        {id: 11,colour: '#0FF',solid: 0,script: 'unlock'}
+        {id: 0, color: '#333', solid: 0},
+        {id: 1, color: '#888', solid: 0},
+        {id: 2,color: '#555',solid: 1,bounce: 0.35},
+        {id: 3,color: 'rgba(121, 220, 242, 0.4)',friction: {x: 0.9,y: 0.9},gravity: {x: 0,y: 0.1},jump: 1,fore: 1},
+        {id: 4,color: '#777',jump: 1},
+        {id: 5,color: '#E373FA',solid: 1,bounce: 1.1},
+        {id: 6,color: '#666',solid: 1,bounce: 0},
+        {id: 7,color: '#73C6FA',solid: 0,script: 'change_color'},
+        {id: 8,color: '#FADF73',solid: 0,script: 'next_level'},
+        {id: 9,color: '#C93232',solid: 0,script: 'death'},
+        {id: 10,color: '#555',solid: 1},
+        {id: 11,color: '#0FF',solid: 0,script: 'unlock'}
     ],
 
     /* An array representing the map tiles. Each number corresponds to a key */
@@ -122,23 +122,23 @@ var map = {
         right: 0.3
     },
     
-    /* The coordinates at which the player spawns and the colour of the player */
+    /* The coordinates at which the player spawns and the color of the player */
 
     player: {
         x: 2,
         y: 2,
-        colour: '#FF9900'
+        color: '#FF9900'
     },
     
     /* scripts refered to by the "script" variable in the tile keys */
 
     scripts: {
         /* you can just use "this" instead of your engine variable ("game"), but Codepen doesn't like it */
-        change_colour: 'game.player.colour = "#"+(Math.random()*0xFFFFFF<<0).toString(16);',
+        change_color: 'game.player.color = "#"+(Math.random()*0xFFFFFF<<0).toString(16);',
         /* you could load a new map variable here */
         next_level: 'alert("Yay! You won! Reloading map.");game.load_map(map);',
         death: 'alert("You died!");game.load_map(map);',
-        unlock: 'game.current_map.keys[10].solid = 0;game.current_map.keys[10].colour = "#888";'
+        unlock: 'game.current_map.keys[10].solid = 0;game.current_map.keys[10].color = "#888";'
     }
 };
 
@@ -281,7 +281,7 @@ Clarity.prototype.load_map = function (map) {
 
     this.player.loc.x = map.player.x * this.tile_size || 0;
     this.player.loc.y = map.player.y * this.tile_size || 0;
-    this.player.colour = map.player.colour || '#000';
+    this.player.color = map.player.color || '#000';
   
     this.key.left  = false;
     this.key.up    = false;
@@ -309,9 +309,9 @@ Clarity.prototype.get_tile = function (x, y) {
 
 Clarity.prototype.draw_tile = function (x, y, tile, context) {
 
-    if (!tile || !tile.colour) return;
+    if (!tile || !tile.color) return;
 
-    context.fillStyle = tile.colour;
+    context.fillStyle = tile.color;
     context.fillRect(
         x,
         y,
@@ -566,7 +566,7 @@ Clarity.prototype.update_player = function () {
 
 Clarity.prototype.draw_player = function (context) {
 
-    context.fillStyle = this.player.colour;
+    context.fillStyle = this.player.color;
 
     context.beginPath();
 

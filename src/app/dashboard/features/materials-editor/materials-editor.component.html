@@ -41,7 +41,7 @@
             [thead]="thead"
             [tbody]="tbody"
             [items]="materials"
-            [searchable]="[ 'name', 'script' ]"
+            [searchable]="[ 'name' ]"
             [paginated]="true"
             [pageSize]="10"
             [selectable]="true"
@@ -50,7 +50,7 @@
             <ng-template #thead>
                 <th sortable="name" (sort)="dt.sort($event)">Name</th>
                 <th sortable="color" (sort)="dt.sort($event)">Color</th>
-                <th sortable="fore" (sort)="dt.sort($event)">Foreground</th>
+                <th sortable="fore" (sort)="dt.sort($event)">Fore</th>
                 <th sortable="solid" (sort)="dt.sort($event)">Solid</th>
                 <th class="text-end" sortable="gravity" (sort)="dt.sort($event)">Gravity</th>
                 <th class="text-end" sortable="friction" (sort)="dt.sort($event)">Friction</th>
@@ -74,7 +74,7 @@
                     {{ material.color }}
                 </td>
         
-                <td data-label="Foreground">
+                <td data-label="Fore">
                     {{ material.fore ? "True" : "False" }}
                 </td>
         
@@ -110,10 +110,7 @@
                 </td>
         
                 <td data-label="Script">
-                    <ng-container *ngIf="material.script; else noScript">
-                        <ngb-highlight [result]="material.script" [term]="(term$ | async) || ''"/>
-                    </ng-container>
-                    <ng-template #noScript>--</ng-template>
+                    {{ material.script ? "True" : "False" }}
                 </td>
         
                 <td>

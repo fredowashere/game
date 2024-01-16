@@ -41,6 +41,12 @@ export class DashboardSidebarComponent {
   sidebarItems: SidebarItem[] = [
     {
       isActive: false,
+      title: 'Engine Settings',
+      icon: 'bi-sliders',
+      path: '/dashboard/engine-settings',
+    },
+    {
+      isActive: false,
       title: 'Materials Editor',
       icon: 'bi-grid-fill',
       path: '/dashboard/materials-editor',
@@ -56,12 +62,6 @@ export class DashboardSidebarComponent {
       title: 'Playground',
       icon: 'bi-play',
       path: '/dashboard/playground',
-    },
-    {
-      isActive: false,
-      title: 'Engine Settings',
-      icon: 'bi-sliders',
-      path: '/dashboard/engine-settings',
     },
     // {
     //   isActive: false,

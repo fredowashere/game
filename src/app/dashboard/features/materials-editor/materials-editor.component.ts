@@ -44,12 +44,18 @@ export class MaterialsEditorComponent {
   }
 
   async create() {
-    const modalRef = this.modalService.open(MaterialEditComponent);
+    const modalRef = this.modalService.open(
+      MaterialEditComponent,
+      { size: "lg" }
+    );
     await modalRef.result;
   }
 
   async edit(material: IMaterial) {
-    const modalRef = this.modalService.open(MaterialEditComponent);
+    const modalRef = this.modalService.open(
+      MaterialEditComponent,
+      { size: "lg" }
+    );
     modalRef.componentInstance.material = material;
     await modalRef.result;
   }

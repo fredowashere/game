@@ -9,7 +9,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
     template: `
 
         <div class="modal-header">
-            <h4 class="modal-title" id="modal-title">Delete</h4>
+            <h4 class="modal-title" id="modal-title">Confirmation</h4>
             <button
                 type="button"
                 class="btn-close" 
@@ -18,8 +18,10 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
         </div>
 
         <div class="modal-body">
-            <p><strong>Are you sure you want to continue with the deletion?</strong></p>
-            <p>All information will be permanently deleted.<br><span class="text-danger">This operation can not be undone.</span></p>
+            <div class="text-center fs-5 py-4">
+                Are you sure you want to continue?<br>
+                <b class="text-danger">This operation can not be undone.</b>
+            </div>
         </div>
         
         <div class="modal-footer">

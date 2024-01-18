@@ -147,13 +147,15 @@ import { IMaterial } from '../models/materials';
         
         <div class="modal-footer flex-wrap justify-content-between gap-3">
 
-            <button
-                *ngIf="material"
-                class="btn btn-danger me-auto"
-                (click)="delete()"
-            >
-                Delete
-            </button>
+            <div>
+                <button
+                    *ngIf="material"
+                    class="btn btn-danger me-auto"
+                    (click)="delete()"
+                >
+                    Delete
+                </button>
+            </div>
 
             <div class="d-flex flex-wrap gap-3">
 
@@ -166,7 +168,7 @@ import { IMaterial } from '../models/materials';
     
                 <button
                     class="btn btn-primary"
-                    (click)="save(); activeModal.close('Save')"
+                    (click)="save();"
                 >
                     Save
                 </button>
@@ -203,7 +205,7 @@ export class MaterialEditComponent {
     form = new FormGroup({
         // Appearance
         name: new FormControl(),
-        color: new FormControl(),
+        color: new FormControl(this.pickerColor),
         fore: new FormControl(),
         // Physiques
         solid: new FormControl(),
@@ -246,13 +248,28 @@ export class MaterialEditComponent {
         });
     }
 
-    save() {
-        console.log(this.form.getRawValue());
+    async save() {
+        if (this.material) {
+            this.activeModal.close({
+                operation: "Update",
+                old: this.material,
+                new: this.form.getRawValue()
+            });
+        }
+        else {
+            this.activeModal.close({
+                operation: "Create",
+                old: null,
+                new: this.form.getRawValue()
+            });
+        }
     }
 
     async delete() {
-        const modalRef = this.modalService.open(AreYouSureComponent);
-        await modalRef.result;
-        this.activeModal.close('Deleted');
+        this.activeModal.close({
+            operation: "Delete",
+            old: this.material,
+            new: null
+        });
     }
 }

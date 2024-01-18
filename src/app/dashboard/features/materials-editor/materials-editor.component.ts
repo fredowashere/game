@@ -44,20 +44,38 @@ export class MaterialsEditorComponent {
   }
 
   async create() {
+
     const modalRef = this.modalService.open(
       MaterialEditComponent,
       { size: "lg" }
     );
-    await modalRef.result;
+    const results = await modalRef.result;
+    console.log(results);
+
+    const id = this.materials[0].id + 1;
+    this.materials = [ { ...results.new, id }, ...this.materials ];
+    localStorage.setItem("materials", JSON.stringify(this.materials));
   }
 
   async edit(material: IMaterial) {
+
     const modalRef = this.modalService.open(
       MaterialEditComponent,
       { size: "lg" }
     );
     modalRef.componentInstance.material = material;
-    await modalRef.result;
+    const results = await modalRef.result;
+    console.log(results);
+
+    if (results.operation === "Delete") {
+      return this.deleteOne(results.old);
+    }
+
+    const id = results.old.id;
+    const foundIndex = this.materials.findIndex(material => material.id === id);
+    this.materials.splice(foundIndex, 1, { ...results.new, id });
+    this.materials = [ ...this.materials ];
+    localStorage.setItem("materials", JSON.stringify(this.materials));
   }
 
   async deleteOne(material: IMaterial, procedural = false) {

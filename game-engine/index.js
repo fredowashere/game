@@ -144,9 +144,19 @@ const Clarity = function (domTarget) {
         canJump: true
     };
 
+    this.prevTime = 0;
+    this.currTime = 0;
+    this.dt = 0;
+
     window.onkeydown = this.keydown.bind(this);
     window.onkeyup   = this.keyup.bind(this);
 };
+
+Clarity.prototype.deltaTime = function() {
+    this.prevTime = this.currTime;
+    this.currTime = new Date().getTime();
+    this.dt = Math.min(this.currTime - this.prevTime, 0.75);
+}
 
 Clarity.prototype.error = function (message) {
     if (this.alertErrors) alert(message);
@@ -403,8 +413,8 @@ Clarity.prototype.movePlayer = function () {
     this.player.vel.x = Math.min(Math.max(this.player.vel.x, -this.currentMap.velLimit.x), this.currentMap.velLimit.x);
     this.player.vel.y = Math.min(Math.max(this.player.vel.y, -this.currentMap.velLimit.y), this.currentMap.velLimit.y);
     
-    this.player.loc.x += this.player.vel.x;
-    this.player.loc.y += this.player.vel.y;
+    this.player.loc.x += this.player.vel.x * this.dt;
+    this.player.loc.y += this.player.vel.y * this.dt;
     
     this.player.vel.x *= .9;
     
@@ -549,6 +559,7 @@ game.loadMap(map);
 game.limitViewport = true;
 
 (function loop() {
+    game.deltaTime();
     game.updatePlayer();
     game.drawMap();
     game.drawPlayer();

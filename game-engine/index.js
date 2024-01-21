@@ -1,8 +1,7 @@
 /* Customisable map data */
+const map = {
 
-var map = {
-
-    tile_size: 16,
+    tileSize: 16,
 
     /*
     
@@ -28,8 +27,8 @@ var map = {
         { id: 4, color: '#777', jump: 1},
         { id: 5, color: '#E373FA', solid: 1, bounce: 1.1},
         { id: 6, color: '#666', solid: 1, bounce: 0},
-        { id: 7, color: '#73C6FA', solid: 0, script: 'change_color' },
-        { id: 8, color: '#FADF73', solid: 0, script: 'next_level' },
+        { id: 7, color: '#73C6FA', solid: 0, script: 'changeColor' },
+        { id: 8, color: '#FADF73', solid: 0, script: 'nextLevel' },
         { id: 9, color: '#C93232', solid: 0, script: 'death' },
         { id: 10, color: '#555', solid: 1 },
         { id: 11, color: '#0FF', solid: 0, script: 'unlock' }
@@ -101,86 +100,45 @@ var map = {
     ],
 
     /* Default gravity of the map */
-    
-    gravity: {
-        x: 0,
-        y: 0.3
-    },
+    gravity: { x: 0, y: 0.3 },
     
     /* Velocity limits */
-
-    vel_limit: {
-        x: 2,
-        y: 16
-    },
+    velLimit: { x: 2, y: 16 },
 
     /* Movement speed when the key is pressed */
-    
-    movement_speed: {
-        jump: 6,
-        left: 0.3,
-        right: 0.3
-    },
+    movementSpeed: { jump: 6, left: 0.3, right: 0.3 },
     
     /* The coordinates at which the player spawns and the color of the player */
-
-    player: {
-        x: 2,
-        y: 2,
-        color: '#FF9900'
-    },
+    player: { x: 2, y: 2, color: '#FF9900' },
     
-    /* scripts refered to by the "script" variable in the tile keys */
-
+    /* Scripts refered to by the "script" variable in the tile keys */
     scripts: {
-        /* you can just use "this" instead of your engine variable ("game"), but Codepen doesn't like it */
-        change_color: 'game.player.color = "#"+(Math.random()*0xFFFFFF<<0).toString(16);',
-        /* you could load a new map variable here */
-        next_level: 'alert("Yay! You won! Reloading map.");game.load_map(map);',
-        death: 'alert("You died!");game.load_map(map);',
-        unlock: 'game.current_map.keys[10].solid = 0;game.current_map.keys[10].color = "#888";'
+        changeColor: 'game.player.color = "#"+(Math.random()*0xFFFFFF<<0).toString(16);',
+        nextLevel: 'alert("Yay! You won! Reloading map."); game.loadMap(map);',
+        death: 'alert("You died!"); game.loadMap(map);',
+        unlock: 'game.currentMap.keys[10].solid = 0; game.currentMap.keys[10].color = "#888";'
     }
 };
 
 /* Clarity engine */
+const Clarity = function () {
 
-var Clarity = function () {
-
-    this.alert_errors   = false;
-    this.log_info       = true;
-    this.tile_size      = 16;
-    this.limit_viewport = false;
-    this.jump_switch    = 0;
+    this.alertErrors   = false;
+    this.logInfo       = true;
+    this.tileSize      = 16;
+    this.limitViewport = false;
+    this.jumpSwitch    = 0;
     
-    this.viewport = {
-        x: 200,
-        y: 200
-    };
+    this.viewport = { x: 200, y: 200 };
     
-    this.camera = {
-        x: 0,
-        y: 0
-    };
+    this.camera = { x: 0, y: 0 };
     
-    this.key = {
-        left: false,
-        right: false,
-        up: false
-    };
+    this.key = { left: false, right: false, up: false };
 
     this.player = {
-
-        loc: {
-            x: 0,
-            y: 0
-        },
-        
-        vel: {
-            x: 0,
-            y: 0
-        },
-        
-        can_jump: true
+        loc: { x: 0, y: 0 },
+        vel: { x: 0, y: 0 },
+        canJump: true
     };
 
     window.onkeydown = this.keydown.bind(this);
@@ -188,22 +146,22 @@ var Clarity = function () {
 };
 
 Clarity.prototype.error = function (message) {
-    if (this.alert_errors) alert(message);
-    if (this.log_info) console.log(message);
+    if (this.alertErrors) alert(message);
+    if (this.logInfo) console.log(message);
 };
 
 Clarity.prototype.log = function (message) {
-    if (this.log_info) console.log(message);
+    if (this.logInfo) console.log(message);
 };
 
-Clarity.prototype.set_viewport = function (x, y) {
+Clarity.prototype.setViewport = function (x, y) {
     this.viewport.x = x;
     this.viewport.y = y;
 };
 
 Clarity.prototype.keydown = function (e) {
 
-    var _this = this;
+    const _this = this;
 
     switch (e.keyCode) {
     case 37:
@@ -220,7 +178,7 @@ Clarity.prototype.keydown = function (e) {
 
 Clarity.prototype.keyup = function (e) {
 
-    var _this = this;
+    const _this = this;
 
     switch (e.keyCode) {
     case 37:
@@ -235,13 +193,27 @@ Clarity.prototype.keyup = function (e) {
     }
 };
 
-Clarity.prototype.getHtmlMap = function(world) {
-    return [ ...[ ...world.querySelectorAll(".row") ].map(row => row.querySelectorAll(".tile")) ] ;
+Clarity.prototype.constructHtmlMap = function(world) {
+
+    for (let i = 0; i < mapWidth; i++) {
+        const row = document.createElement("DIV");
+        row.classList.add("row");
+        for (let j = 0; j < mapHeight; j++) {
+          const tile = document.createElement("DIV");
+          tile.classList.add("tile");
+          row.appendChild(tile);
+        }
+        world.appendChild(row);
+    }
+
+    this.htmlMap = [ ...[ ...world.querySelectorAll(".row") ].map(row => row.querySelectorAll(".tile")) ];
 }
 
-Clarity.prototype.load_map = function (world, map) {
+Clarity.prototype.loadMap = function (world, player, map) {
 
-    const htmlMap = this.getHtmlMap(world);
+    this.htmlPlayer = player;
+
+    this.constructHtmlMap(world);
 
     if (typeof map      === 'undefined'
      || typeof map.data === 'undefined'
@@ -252,35 +224,35 @@ Clarity.prototype.load_map = function (world, map) {
         return false;
     }
 
-    this.current_map = map;
+    this.currentMap = map;
 
-    this.current_map.background = map.background || '#333';
-    this.current_map.gravity = map.gravity || { x: 0, y: 0.3 };
-    this.tile_size = map.tile_size || 16;
+    this.currentMap.background = map.background || '#333';
+    this.currentMap.gravity = map.gravity || { x: 0, y: 0.3 };
+    this.tileSize = map.tileSize || 16;
 
-    var _this = this;
+    const _this = this;
     
-    this.current_map.width = 0;
-    this.current_map.height = 0;
+    this.currentMap.width = 0;
+    this.currentMap.height = 0;
 
     map.keys.forEach(function (key) {
         map.data.forEach(function (row, y) {
-            _this.current_map.height = Math.max(_this.current_map.height, y);
+            _this.currentMap.height = Math.max(_this.currentMap.height, y);
             row.forEach(function (tile, x) {
-                _this.current_map.width = Math.max(_this.current_map.width, x);
+                _this.currentMap.width = Math.max(_this.currentMap.width, x);
                 if (tile == key.id) {
-                    _this.current_map.data[y][x] = key;
-                    htmlMap[y][x].style.backgroundColor = _this.current_map.data[y][x].color;
+                    _this.currentMap.data[y][x] = key;
+                    _this.htmlMap[y][x].style.backgroundColor = _this.currentMap.data[y][x].color;
                 }
             });
         });
     });
     
-    this.current_map.width_p = this.current_map.width * this.tile_size;
-    this.current_map.height_p = this.current_map.height * this.tile_size;
+    this.currentMap.widthP = this.currentMap.width * this.tileSize;
+    this.currentMap.heightP = this.currentMap.height * this.tileSize;
 
-    this.player.loc.x = map.player.x * this.tile_size || 0;
-    this.player.loc.y = map.player.y * this.tile_size || 0;
+    this.player.loc.x = map.player.x * this.tileSize || 0;
+    this.player.loc.y = map.player.y * this.tileSize || 0;
     this.player.color = map.player.color || '#000';
   
     this.key.left  = false;
@@ -296,20 +268,41 @@ Clarity.prototype.load_map = function (world, map) {
     return true;
 };
 
-Clarity.prototype.get_tile = function (x, y) {
-    return (this.current_map.data[y] && this.current_map.data[y][x]) ? this.current_map.data[y][x] : 0;
+Clarity.prototype.getTile = function (x, y) {
+    return (this.currentMap.data[y] && this.currentMap.data[y][x]) ? this.currentMap.data[y][x] : 0;
 };
 
-Clarity.prototype.move_player = function () {
+Clarity.prototype.drawTile = function (x, y, tile) {
 
-    var tX = this.player.loc.x + this.player.vel.x;
-    var tY = this.player.loc.y + this.player.vel.y;
+    if (!tile || !tile.color) return;
 
-    var offset = Math.round((this.tile_size / 2) - 1);
+    const htmlTile = this.htmlMap[y][x];
+    htmlTile.style.backgroundColor = tile.color;
+};
 
-    var tile = this.get_tile(
-        Math.round(this.player.loc.x / this.tile_size),
-        Math.round(this.player.loc.y / this.tile_size)
+Clarity.prototype.drawMap = function () {
+    let y = (this.camera.y / this.tileSize) | 0;
+    const height = (this.camera.y + this.viewport.y + this.tileSize) / this.tileSize;
+    for (; y < height; y++) {
+        let x = (this.camera.x / this.tileSize) | 0;
+        const width = (this.camera.x + this.viewport.x + this.tileSize) / this.tileSize;
+        for (; x < width; x++) {
+            const tile = this.getTile(x, y) || map.keys[0];
+            this.drawTile(x, y, tile);
+        }
+    }
+};
+
+Clarity.prototype.movePlayer = function () {
+
+    const tX = this.player.loc.x + this.player.vel.x;
+    const tY = this.player.loc.y + this.player.vel.y;
+
+    const offset = Math.round((this.tileSize / 2) - 1);
+
+    const tile = this.getTile(
+        Math.round(this.player.loc.x / this.tileSize),
+        Math.round(this.player.loc.y / this.tileSize)
     );
      
     if(tile.gravity) {
@@ -319,8 +312,8 @@ Clarity.prototype.move_player = function () {
         
     } else {
         
-        this.player.vel.x += this.current_map.gravity.x;
-        this.player.vel.y += this.current_map.gravity.y;
+        this.player.vel.x += this.currentMap.gravity.x;
+        this.player.vel.y += this.currentMap.gravity.y;
     }
     
     if (tile.friction) {
@@ -329,36 +322,36 @@ Clarity.prototype.move_player = function () {
         this.player.vel.y *= tile.friction.y;
     }
 
-    var t_y_up   = Math.floor(tY / this.tile_size);
-    var t_y_down = Math.ceil(tY / this.tile_size);
-    var y_near1  = Math.round((this.player.loc.y - offset) / this.tile_size);
-    var y_near2  = Math.round((this.player.loc.y + offset) / this.tile_size);
+    const tYUp   = Math.floor(tY / this.tileSize);
+    const tYDown = Math.ceil(tY / this.tileSize);
+    const yNear1  = Math.round((this.player.loc.y - offset) / this.tileSize);
+    const yNear2  = Math.round((this.player.loc.y + offset) / this.tileSize);
 
-    var t_x_left  = Math.floor(tX / this.tile_size);
-    var t_x_right = Math.ceil(tX / this.tile_size);
-    var x_near1   = Math.round((this.player.loc.x - offset) / this.tile_size);
-    var x_near2   = Math.round((this.player.loc.x + offset) / this.tile_size);
+    const tXLeft  = Math.floor(tX / this.tileSize);
+    const tXRight = Math.ceil(tX / this.tileSize);
+    const xNear1   = Math.round((this.player.loc.x - offset) / this.tileSize);
+    const xNear2   = Math.round((this.player.loc.x + offset) / this.tileSize);
 
-    var top1    = this.get_tile(x_near1, t_y_up);
-    var top2    = this.get_tile(x_near2, t_y_up);
-    var bottom1 = this.get_tile(x_near1, t_y_down);
-    var bottom2 = this.get_tile(x_near2, t_y_down);
-    var left1   = this.get_tile(t_x_left, y_near1);
-    var left2   = this.get_tile(t_x_left, y_near2);
-    var right1  = this.get_tile(t_x_right, y_near1);
-    var right2  = this.get_tile(t_x_right, y_near2);
+    const top1    = this.getTile(xNear1, tYUp);
+    const top2    = this.getTile(xNear2, tYUp);
+    const bottom1 = this.getTile(xNear1, tYDown);
+    const bottom2 = this.getTile(xNear2, tYDown);
+    const left1   = this.getTile(tXLeft, yNear1);
+    const left2   = this.getTile(tXLeft, yNear2);
+    const right1  = this.getTile(tXRight, yNear1);
+    const right2  = this.getTile(tXRight, yNear2);
 
 
-    if (tile.jump && this.jump_switch > 15) {
+    if (tile.jump && this.jumpSwitch > 15) {
 
-        this.player.can_jump = true;
+        this.player.canJump = true;
         
-        this.jump_switch = 0;
+        this.jumpSwitch = 0;
         
-    } else this.jump_switch++;
+    } else this.jumpSwitch++;
     
-    this.player.vel.x = Math.min(Math.max(this.player.vel.x, -this.current_map.vel_limit.x), this.current_map.vel_limit.x);
-    this.player.vel.y = Math.min(Math.max(this.player.vel.y, -this.current_map.vel_limit.y), this.current_map.vel_limit.y);
+    this.player.vel.x = Math.min(Math.max(this.player.vel.x, -this.currentMap.velLimit.x), this.currentMap.velLimit.x);
+    this.player.vel.y = Math.min(Math.max(this.player.vel.y, -this.currentMap.velLimit.y), this.currentMap.velLimit.y);
     
     this.player.loc.x += this.player.vel.x;
     this.player.loc.y += this.player.vel.y;
@@ -369,17 +362,17 @@ Clarity.prototype.move_player = function () {
 
         /* fix overlap */
 
-        while (this.get_tile(Math.floor(this.player.loc.x / this.tile_size), y_near1).solid
-            || this.get_tile(Math.floor(this.player.loc.x / this.tile_size), y_near2).solid)
+        while (this.getTile(Math.floor(this.player.loc.x / this.tileSize), yNear1).solid
+            || this.getTile(Math.floor(this.player.loc.x / this.tileSize), yNear2).solid)
             this.player.loc.x += 0.1;
 
-        while (this.get_tile(Math.ceil(this.player.loc.x / this.tile_size), y_near1).solid
-            || this.get_tile(Math.ceil(this.player.loc.x / this.tile_size), y_near2).solid)
+        while (this.getTile(Math.ceil(this.player.loc.x / this.tileSize), yNear1).solid
+            || this.getTile(Math.ceil(this.player.loc.x / this.tileSize), yNear2).solid)
             this.player.loc.x -= 0.1;
 
         /* tile bounce */
 
-        var bounce = 0;
+        let bounce = 0;
 
         if (left1.solid && left1.bounce > bounce) bounce = left1.bounce;
         if (left2.solid && left2.bounce > bounce) bounce = left2.bounce;
@@ -394,17 +387,17 @@ Clarity.prototype.move_player = function () {
 
         /* fix overlap */
         
-        while (this.get_tile(x_near1, Math.floor(this.player.loc.y / this.tile_size)).solid
-            || this.get_tile(x_near2, Math.floor(this.player.loc.y / this.tile_size)).solid)
+        while (this.getTile(xNear1, Math.floor(this.player.loc.y / this.tileSize)).solid
+            || this.getTile(xNear2, Math.floor(this.player.loc.y / this.tileSize)).solid)
             this.player.loc.y += 0.1;
 
-        while (this.get_tile(x_near1, Math.ceil(this.player.loc.y / this.tile_size)).solid
-            || this.get_tile(x_near2, Math.ceil(this.player.loc.y / this.tile_size)).solid)
+        while (this.getTile(xNear1, Math.ceil(this.player.loc.y / this.tileSize)).solid
+            || this.getTile(xNear2, Math.ceil(this.player.loc.y / this.tileSize)).solid)
             this.player.loc.y -= 0.1;
 
         /* tile bounce */
         
-        var bounce = 0;
+        let bounce = 0;
         
         if (top1.solid && top1.bounce > bounce) bounce = top1.bounce;
         if (top2.solid && top2.bounce > bounce) bounce = top2.bounce;
@@ -415,82 +408,77 @@ Clarity.prototype.move_player = function () {
 
         if ((bottom1.solid || bottom2.solid) && !tile.jump) {
             
-            this.player.on_floor = true;
-            this.player.can_jump = true;
+            this.player.onFloor = true;
+            this.player.canJump = true;
         }
         
     }
     
     /* Adjust the camera */
-    var c_x = Math.round(this.player.loc.x - this.viewport.x / 2);
-    var c_y = Math.round(this.player.loc.y - this.viewport.y / 2);
-    var x_dif = Math.abs(c_x - this.camera.x);
-    var y_dif = Math.abs(c_y - this.camera.y);
+    const cX = Math.round(this.player.loc.x - this.viewport.x / 2);
+    const cY = Math.round(this.player.loc.y - this.viewport.y / 2);
+    const xDiff = Math.abs(cX - this.camera.x);
+    const yDiff = Math.abs(cY - this.camera.y);
     
-    if(x_dif > 5) {
-        var mag = Math.round(Math.max(1, x_dif * 0.1));
-        if(c_x != this.camera.x) {
-            this.camera.x += c_x > this.camera.x ? mag : -mag;
-            if(this.limit_viewport) {
-                this.camera.x = Math.min(this.current_map.width_p - this.viewport.x + this.tile_size, this.camera.x);
+    if(xDiff > 5) {
+        const mag = Math.round(Math.max(1, xDiff * 0.1));
+        if(cX != this.camera.x) {
+            this.camera.x += cX > this.camera.x ? mag : -mag;
+            if(this.limitViewport) {
+                this.camera.x = Math.min(this.currentMap.widthP - this.viewport.x + this.tileSize, this.camera.x);
                 this.camera.x = Math.max(0, this.camera.x);
             }
         }
     }
     
-    if(y_dif > 5) {
-        var mag = Math.round(Math.max(1, y_dif * 0.1));
-        if(c_y != this.camera.y) {
-            this.camera.y += c_y > this.camera.y ? mag : -mag;
-            if(this.limit_viewport) {
-                this.camera.y = Math.min(this.current_map.height_p - this.viewport.y + this.tile_size, this.camera.y);
+    if(yDiff > 5) {
+        const mag = Math.round(Math.max(1, yDiff * 0.1));
+        if(cY != this.camera.y) {
+            this.camera.y += cY > this.camera.y ? mag : -mag;
+            if(this.limitViewport) {
+                this.camera.y = Math.min(this.currentMap.heightP - this.viewport.y + this.tileSize, this.camera.y);
                 this.camera.y = Math.max(0, this.camera.y);
             }
         }
     }
 
-    console.log(this.camera);
     worldWrap.scrollTo(this.camera.x, this.camera.y)
     
-    if(this.last_tile != tile.id && tile.script) {
-        eval(this.current_map.scripts[tile.script]);
+    if(this.lastTile != tile.id && tile.script) {
+        eval(this.currentMap.scripts[tile.script]);
     }
     
-    this.last_tile = tile.id;
+    this.lastTile = tile.id;
 };
 
-Clarity.prototype.update_player = function () {
+Clarity.prototype.updatePlayer = function () {
 
     if (this.key.left) {
-        if (this.player.vel.x > -this.current_map.vel_limit.x) {
-            this.player.vel.x -= this.current_map.movement_speed.left;
+        if (this.player.vel.x > -this.currentMap.velLimit.x) {
+            this.player.vel.x -= this.currentMap.movementSpeed.left;
         }
     }
 
     if (this.key.up) {
-        if (this.player.can_jump && this.player.vel.y > -this.current_map.vel_limit.y) {
-            this.player.vel.y -= this.current_map.movement_speed.jump;
-            this.player.can_jump = false;
+        if (this.player.canJump && this.player.vel.y > -this.currentMap.velLimit.y) {
+            this.player.vel.y -= this.currentMap.movementSpeed.jump;
+            this.player.canJump = false;
         }
     }
 
     if (this.key.right) {
-        if (this.player.vel.x < this.current_map.vel_limit.x) {
-            this.player.vel.x += this.current_map.movement_speed.left;
+        if (this.player.vel.x < this.currentMap.velLimit.x) {
+            this.player.vel.x += this.currentMap.movementSpeed.left;
         }
     }
 
-    this.move_player();
+    this.movePlayer();
 };
 
-Clarity.prototype.drawPlayer = function (player) {
-    player.style.backgroundColor = this.player.color;
-    player.style.left = (this.player.loc.x + this.tile_size / 2) + "px";
-    player.style.top = (this.player.loc.y + this.tile_size / 2) + "px";
-};
-
-Clarity.prototype.update = function () {
-    this.update_player();
+Clarity.prototype.drawPlayer = function () {
+    this.htmlPlayer.style.backgroundColor = this.player.color;
+    this.htmlPlayer.style.left = (this.player.loc.x + this.tileSize / 2) + "px";
+    this.htmlPlayer.style.top = (this.player.loc.y + this.tileSize / 2) + "px";
 };
 
 window.addEventListener("keydown", function(e) {
@@ -499,7 +487,6 @@ window.addEventListener("keydown", function(e) {
     }
 }, false);
 
-/* World construction */
 const viewportWidth = 576;
 const viewportHeight = 576;
 const mapWidth = 1e2;
@@ -512,17 +499,6 @@ const player = document.querySelector(".player");
 worldWrap.style.width = viewportWidth + "px";
 worldWrap.style.height = viewportHeight + "px";
 
-for (let i = 0; i < mapWidth; i++) {
-    const row = document.createElement("DIV");
-    row.classList.add("row");
-    for (let j = 0; j < mapHeight; j++) {
-      const tile = document.createElement("DIV");
-      tile.classList.add("tile");
-      row.appendChild(tile);
-    }
-    world.appendChild(row);
-}
-
 /* Setup of the engine */
 function unsupportedAnimFrame(callback) {
     return window.setTimeout(callback, 1000 / 60);
@@ -530,14 +506,17 @@ function unsupportedAnimFrame(callback) {
 
 window.requestAnimFrame = window.requestAnimationFrame || unsupportedAnimFrame;
 
+// ToDo: Maybe a pre-load step to setup HTML references would be best
+// ToDo: What about parametizing the whole HTML creation step and just ask for an HTML point of insertion?
+
 const game = new Clarity();
-game.set_viewport(viewportWidth, viewportHeight);
-game.load_map(world, map);
-game.limit_viewport = true;
+game.setViewport(viewportWidth, viewportHeight);
+game.loadMap(world, player, map);
+game.limitViewport = true;
 
 (function loop() {
-  game.update();
-  game.drawPlayer(player);
+  game.drawMap();
+  game.updatePlayer();
+  game.drawPlayer();
   window.requestAnimFrame(loop);
 })();
-

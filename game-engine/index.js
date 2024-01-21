@@ -4,21 +4,17 @@ const map = {
     tileSize: 16,
 
     /*
-    
-    Key vairables:
-    
-    id       [required] - an integer that corresponds with a tile in the data array.
-    color   [required] - any javascript compatible color variable.
-    solid    [optional] - whether the tile is solid or not, defaults to false.
-    bounce   [optional] - how much velocity is preserved upon hitting the tile, 0.5 is half.
-    jump     [optional] - whether the player can jump while over the tile, defaults to false.
-    friction [optional] - friction of the tile, must have X and Y values (e.g {x:0.5, y:0.5}).
-    gravity  [optional] - gravity of the tile, must have X and Y values (e.g {x:0.5, y:0.5}).
-    fore     [optional] - whether the tile is drawn in front of the player, defaults to false.
-    script   [optional] - refers to a script in the scripts section, executed if it is touched.
-    
+        Key variables:
+            id       [required] - an integer that corresponds with a tile in the data array.
+            color   [required] - any javascript compatible color variable.
+            solid    [optional] - whether the tile is solid or not, defaults to false.
+            bounce   [optional] - how much velocity is preserved upon hitting the tile, 0.5 is half.
+            jump     [optional] - whether the player can jump while over the tile, defaults to false.
+            friction [optional] - friction of the tile, must have X and Y values (e.g {x:0.5, y:0.5}).
+            gravity  [optional] - gravity of the tile, must have X and Y values (e.g {x:0.5, y:0.5}).
+            fore     [optional] - whether the tile is drawn in front of the player, defaults to false.
+            script   [optional] - refers to a script in the scripts section, executed if it is touched.
     */
-    
     keys: [
         { id: 0, color: '#333', solid: 0 },
         { id: 1, color: '#888', solid: 0 },
@@ -196,13 +192,18 @@ Clarity.prototype.keyup = function (e) {
 Clarity.prototype.constructHtmlMap = function(world) {
 
     for (let i = 0; i < mapWidth; i++) {
+
         const row = document.createElement("DIV");
         row.classList.add("row");
+
         for (let j = 0; j < mapHeight; j++) {
+
           const tile = document.createElement("DIV");
           tile.classList.add("tile");
+
           row.appendChild(tile);
         }
+
         world.appendChild(row);
     }
 
@@ -215,12 +216,12 @@ Clarity.prototype.loadMap = function (world, player, map) {
 
     this.constructHtmlMap(world);
 
-    if (typeof map      === 'undefined'
+    if (
+        typeof map      === 'undefined'
      || typeof map.data === 'undefined'
-     || typeof map.keys === 'undefined') {
-
+     || typeof map.keys === 'undefined'
+    ) {
         this.error('Error: Invalid map data!');
-
         return false;
     }
 
@@ -305,32 +306,29 @@ Clarity.prototype.movePlayer = function () {
         Math.round(this.player.loc.y / this.tileSize)
     );
      
-    if(tile.gravity) {
-        
+    if (tile.gravity) {
         this.player.vel.x += tile.gravity.x;
         this.player.vel.y += tile.gravity.y;
-        
-    } else {
-        
+    }
+    else {
         this.player.vel.x += this.currentMap.gravity.x;
         this.player.vel.y += this.currentMap.gravity.y;
     }
     
     if (tile.friction) {
-
         this.player.vel.x *= tile.friction.x;
         this.player.vel.y *= tile.friction.y;
     }
 
     const tYUp   = Math.floor(tY / this.tileSize);
     const tYDown = Math.ceil(tY / this.tileSize);
-    const yNear1  = Math.round((this.player.loc.y - offset) / this.tileSize);
-    const yNear2  = Math.round((this.player.loc.y + offset) / this.tileSize);
+    const yNear1 = Math.round((this.player.loc.y - offset) / this.tileSize);
+    const yNear2 = Math.round((this.player.loc.y + offset) / this.tileSize);
 
     const tXLeft  = Math.floor(tX / this.tileSize);
     const tXRight = Math.ceil(tX / this.tileSize);
-    const xNear1   = Math.round((this.player.loc.x - offset) / this.tileSize);
-    const xNear2   = Math.round((this.player.loc.x + offset) / this.tileSize);
+    const xNear1  = Math.round((this.player.loc.x - offset) / this.tileSize);
+    const xNear2  = Math.round((this.player.loc.x + offset) / this.tileSize);
 
     const top1    = this.getTile(xNear1, tYUp);
     const top2    = this.getTile(xNear2, tYUp);
@@ -341,14 +339,13 @@ Clarity.prototype.movePlayer = function () {
     const right1  = this.getTile(tXRight, yNear1);
     const right2  = this.getTile(tXRight, yNear2);
 
-
     if (tile.jump && this.jumpSwitch > 15) {
-
         this.player.canJump = true;
-        
         this.jumpSwitch = 0;
-        
-    } else this.jumpSwitch++;
+    }
+    else {
+        this.jumpSwitch++;
+    }
     
     this.player.vel.x = Math.min(Math.max(this.player.vel.x, -this.currentMap.velLimit.x), this.currentMap.velLimit.x);
     this.player.vel.y = Math.min(Math.max(this.player.vel.y, -this.currentMap.velLimit.y), this.currentMap.velLimit.y);
@@ -360,58 +357,61 @@ Clarity.prototype.movePlayer = function () {
     
     if (left1.solid || left2.solid || right1.solid || right2.solid) {
 
-        /* fix overlap */
-
-        while (this.getTile(Math.floor(this.player.loc.x / this.tileSize), yNear1).solid
-            || this.getTile(Math.floor(this.player.loc.x / this.tileSize), yNear2).solid)
+        /* Fix overlap */
+        while (
+            this.getTile(Math.floor(this.player.loc.x / this.tileSize), yNear1).solid
+         || this.getTile(Math.floor(this.player.loc.x / this.tileSize), yNear2).solid
+        ) {
             this.player.loc.x += 0.1;
+        }
 
-        while (this.getTile(Math.ceil(this.player.loc.x / this.tileSize), yNear1).solid
-            || this.getTile(Math.ceil(this.player.loc.x / this.tileSize), yNear2).solid)
+        while (
+            this.getTile(Math.ceil(this.player.loc.x / this.tileSize), yNear1).solid
+         || this.getTile(Math.ceil(this.player.loc.x / this.tileSize), yNear2).solid
+        ) {
             this.player.loc.x -= 0.1;
+        }
 
-        /* tile bounce */
-
+        /* Tile bounce */
         let bounce = 0;
-
-        if (left1.solid && left1.bounce > bounce) bounce = left1.bounce;
-        if (left2.solid && left2.bounce > bounce) bounce = left2.bounce;
+        if (left1.solid  && left1.bounce > bounce)  bounce = left1.bounce;
+        if (left2.solid  && left2.bounce > bounce)  bounce = left2.bounce;
         if (right1.solid && right1.bounce > bounce) bounce = right1.bounce;
         if (right2.solid && right2.bounce > bounce) bounce = right2.bounce;
 
         this.player.vel.x *= -bounce || 0;
-        
     }
     
     if (top1.solid || top2.solid || bottom1.solid || bottom2.solid) {
 
-        /* fix overlap */
-        
-        while (this.getTile(xNear1, Math.floor(this.player.loc.y / this.tileSize)).solid
-            || this.getTile(xNear2, Math.floor(this.player.loc.y / this.tileSize)).solid)
+        /* Fix overlap */
+        while (
+            this.getTile(xNear1, Math.floor(this.player.loc.y / this.tileSize)).solid
+         || this.getTile(xNear2, Math.floor(this.player.loc.y / this.tileSize)).solid
+        ) {
             this.player.loc.y += 0.1;
+        }
 
-        while (this.getTile(xNear1, Math.ceil(this.player.loc.y / this.tileSize)).solid
-            || this.getTile(xNear2, Math.ceil(this.player.loc.y / this.tileSize)).solid)
+        while (
+            this.getTile(xNear1, Math.ceil(this.player.loc.y / this.tileSize)).solid
+         || this.getTile(xNear2, Math.ceil(this.player.loc.y / this.tileSize)).solid
+        ) {
             this.player.loc.y -= 0.1;
+        }
 
-        /* tile bounce */
-        
+        /* Tile bounce */
         let bounce = 0;
-        
-        if (top1.solid && top1.bounce > bounce) bounce = top1.bounce;
-        if (top2.solid && top2.bounce > bounce) bounce = top2.bounce;
+        if (top1.solid    && top1.bounce > bounce)    bounce = top1.bounce;
+        if (top2.solid    && top2.bounce > bounce)    bounce = top2.bounce;
         if (bottom1.solid && bottom1.bounce > bounce) bounce = bottom1.bounce;
         if (bottom2.solid && bottom2.bounce > bounce) bounce = bottom2.bounce;
         
         this.player.vel.y *= -bounce || 0;
 
         if ((bottom1.solid || bottom2.solid) && !tile.jump) {
-            
             this.player.onFloor = true;
             this.player.canJump = true;
         }
-        
     }
     
     /* Adjust the camera */
@@ -420,22 +420,22 @@ Clarity.prototype.movePlayer = function () {
     const xDiff = Math.abs(cX - this.camera.x);
     const yDiff = Math.abs(cY - this.camera.y);
     
-    if(xDiff > 5) {
+    if (xDiff > 5) {
         const mag = Math.round(Math.max(1, xDiff * 0.1));
-        if(cX != this.camera.x) {
+        if (cX != this.camera.x) {
             this.camera.x += cX > this.camera.x ? mag : -mag;
-            if(this.limitViewport) {
+            if (this.limitViewport) {
                 this.camera.x = Math.min(this.currentMap.widthP - this.viewport.x + this.tileSize, this.camera.x);
                 this.camera.x = Math.max(0, this.camera.x);
             }
         }
     }
     
-    if(yDiff > 5) {
+    if (yDiff > 5) {
         const mag = Math.round(Math.max(1, yDiff * 0.1));
-        if(cY != this.camera.y) {
+        if (cY != this.camera.y) {
             this.camera.y += cY > this.camera.y ? mag : -mag;
-            if(this.limitViewport) {
+            if (this.limitViewport) {
                 this.camera.y = Math.min(this.currentMap.heightP - this.viewport.y + this.tileSize, this.camera.y);
                 this.camera.y = Math.max(0, this.camera.y);
             }
@@ -444,7 +444,7 @@ Clarity.prototype.movePlayer = function () {
 
     worldWrap.scrollTo(this.camera.x, this.camera.y)
     
-    if(this.lastTile != tile.id && tile.script) {
+    if (this.lastTile != tile.id && tile.script) {
         eval(this.currentMap.scripts[tile.script]);
     }
     
@@ -482,7 +482,7 @@ Clarity.prototype.drawPlayer = function () {
 };
 
 window.addEventListener("keydown", function(e) {
-    if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
+    if (["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
         e.preventDefault();
     }
 }, false);

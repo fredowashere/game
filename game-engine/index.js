@@ -122,7 +122,6 @@ const Clarity = function (domTarget) {
     if (!domTarget) return this.error("Cannot initialize engine without a valid target element.");
 
     this.domTarget = domTarget;
-    this.domStylesheet = null;
     this.domWorldWrap = null;
     this.domWorld = null;
     this.domPlayer = null;
@@ -208,7 +207,7 @@ Clarity.prototype.keyup = function (e) {
 };
 
 Clarity.prototype.cleanHtml = function() {
-    if (this.domStylesheet || this.domWorldWrap || this.domWorld || this.domMap || this.domPlayer) {
+    if (this.domWorldWrap || this.domWorld || this.domMap || this.domPlayer) {
         this.domTarget.innerHTML = "";
     }
 };
@@ -217,42 +216,22 @@ Clarity.prototype.createHtml = function() {
 
     this.cleanHtml();
 
-    const uuid = Math.random().toString(36).substring(2, 15);
-
-    const styles = `
-.${uuid}-world-wrap {
-    background: #333;
-    overflow: hidden;
-}
-
-.${uuid}-world { position: relative; }
-.${uuid}-row { display: flex; }
-.${uuid}-tile {
-    width: ${this.tileSize}px;
-    height: ${this.tileSize}px;
-    flex: 0 0 ${this.tileSize}px;
-}
-
-.${uuid}-player {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    width: ${this.tileSize}px;
-    height: ${this.tileSize}px;
-}
-    `;
-    this.domStylesheet = document.createElement("style");
-    this.domStylesheet.innerHTML = styles;
-    this.domTarget.appendChild(this.domStylesheet);
-
     this.domPlayer = document.createElement("DIV");
-    this.domPlayer.classList.add(`${uuid}-player`);
+    this.domPlayer.classList.add("player");
+    this.domPlayer.style.position = "absolute";
+    this.domPlayer.style.transform = "translate(-50%, -50%)";
+    this.domPlayer.style.borderRadius = "50%";
+    this.domPlayer.style.width = this.tileSize + "px";
+    this.domPlayer.style.height = this.tileSize + "px";
 
     this.domWorld = document.createElement("DIV");
-    this.domWorld.classList.add(`${uuid}-world`);
+    this.domWorld.classList.add("world");
+    this.domWorld.style.position = "relative";
     
     this.domWorldWrap = document.createElement("DIV");
-    this.domWorldWrap.classList.add(`${uuid}-world-wrap`);
+    this.domWorldWrap.classList.add("world-wrap");
+    this.domWorldWrap.style.backgroundColor = "#333";
+    this.domWorldWrap.style.overflow = "hidden";
     this.domWorldWrap.style.width = this.viewport.x + "px";
     this.domWorldWrap.style.height = this.viewport.y + "px";
 
@@ -267,12 +246,16 @@ Clarity.prototype.createHtml = function() {
 
         const row = [];
         const domRow = document.createElement("DIV");
-        domRow.classList.add(`${uuid}-row`);
+        domRow.classList.add("row");
+        domRow.style.display = "flex";
 
         for (let j = 0; j <= mapSize + 1; j++) {
 
           const domTile = document.createElement("DIV");
-          domTile.classList.add(`${uuid}-tile`);
+          domTile.classList.add("tile");
+          domTile.style.width = this.tileSize + "px";
+          domTile.style.height = this.tileSize + "px";
+          domTile.style.flex = "0 0 " + this.tileSize + "px";
 
           row.push(domTile);
           domRow.appendChild(domTile);

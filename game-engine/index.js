@@ -1,7 +1,7 @@
 /* Customisable map data */
 const map = {
 
-    tileSize: 16,
+    tileSize: 24,
 
     /*
         Key variables:
@@ -117,7 +117,15 @@ const map = {
 };
 
 /* Clarity engine */
-const Clarity = function () {
+const Clarity = function (domTarget) {
+
+    if (!domTarget) return this.error("Cannot initialize engine without a valid target element.");
+
+    this.domTarget = domTarget;
+    this.domStylesheet = null;
+    this.domWorldWrap = null;
+    this.domWorld = null;
+    this.domPlayer = null;
 
     this.alertErrors   = false;
     this.logInfo       = true;
@@ -151,11 +159,19 @@ Clarity.prototype.log = function (message) {
 };
 
 Clarity.prototype.setViewport = function (x, y) {
+
     this.viewport.x = x;
     this.viewport.y = y;
+
+    if (this.domWorldWrap) {
+        this.domWorldWrap.style.width = x + "px";
+        this.domWorldWrap.style.height = y + "px";
+    }
 };
 
 Clarity.prototype.keydown = function (e) {
+
+    e.preventDefault();
 
     const _this = this;
 
@@ -174,6 +190,8 @@ Clarity.prototype.keydown = function (e) {
 
 Clarity.prototype.keyup = function (e) {
 
+    e.preventDefault();
+
     const _this = this;
 
     switch (e.keyCode) {
@@ -189,32 +207,82 @@ Clarity.prototype.keyup = function (e) {
     }
 };
 
-Clarity.prototype.constructHtmlMap = function(world) {
-
-    for (let i = 0; i < mapWidth; i++) {
-
-        const row = document.createElement("DIV");
-        row.classList.add("row");
-
-        for (let j = 0; j < mapHeight; j++) {
-
-          const tile = document.createElement("DIV");
-          tile.classList.add("tile");
-
-          row.appendChild(tile);
-        }
-
-        world.appendChild(row);
+Clarity.prototype.cleanHtml = function() {
+    if (this.domStylesheet || this.domWorldWrap || this.domWorld || this.domMap || this.domPlayer) {
+        this.domTarget.innerHTML = "";
     }
+};
 
-    this.htmlMap = [ ...[ ...world.querySelectorAll(".row") ].map(row => row.querySelectorAll(".tile")) ];
+Clarity.prototype.createHtml = function() {
+
+    this.cleanHtml();
+
+    const uuid = Math.random().toString(36).substring(2, 15);
+
+    const styles = `
+.${uuid}-world-wrap {
+    background: #333;
+    overflow: hidden;
 }
 
-Clarity.prototype.loadMap = function (world, player, map) {
+.${uuid}-world { position: relative; }
+.${uuid}-row { display: flex; }
+.${uuid}-tile {
+    width: ${this.tileSize}px;
+    height: ${this.tileSize}px;
+    flex: 0 0 ${this.tileSize}px;
+}
 
-    this.htmlPlayer = player;
+.${uuid}-player {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    width: ${this.tileSize}px;
+    height: ${this.tileSize}px;
+}
+    `;
+    this.domStylesheet = document.createElement("style");
+    this.domStylesheet.innerHTML = styles;
+    this.domTarget.appendChild(this.domStylesheet);
 
-    this.constructHtmlMap(world);
+    this.domPlayer = document.createElement("DIV");
+    this.domPlayer.classList.add(`${uuid}-player`);
+
+    this.domWorld = document.createElement("DIV");
+    this.domWorld.classList.add(`${uuid}-world`);
+    
+    this.domWorldWrap = document.createElement("DIV");
+    this.domWorldWrap.classList.add(`${uuid}-world-wrap`);
+    this.domWorldWrap.style.width = this.viewport.x + "px";
+    this.domWorldWrap.style.height = this.viewport.y + "px";
+
+    this.domWorld.appendChild(this.domPlayer);
+    this.domWorldWrap.appendChild(this.domWorld);
+    this.domTarget.appendChild(this.domWorldWrap);
+
+    const mapSize = Math.max(this.currentMap.width, this.currentMap.height);
+
+    this.domMap = [];
+    for (let i = 0; i <= mapSize + 1; i++) {
+
+        const row = [];
+        const domRow = document.createElement("DIV");
+        domRow.classList.add(`${uuid}-row`);
+
+        for (let j = 0; j <= mapSize + 1; j++) {
+
+          const domTile = document.createElement("DIV");
+          domTile.classList.add(`${uuid}-tile`);
+
+          row.push(domTile);
+          domRow.appendChild(domTile);
+        }
+        this.domWorld.appendChild(domRow);
+        this.domMap.push(row);
+    }
+};
+
+Clarity.prototype.loadMap = function (map) {
 
     if (
         typeof map      === 'undefined'
@@ -230,20 +298,18 @@ Clarity.prototype.loadMap = function (world, player, map) {
     this.currentMap.background = map.background || '#333';
     this.currentMap.gravity = map.gravity || { x: 0, y: 0.3 };
     this.tileSize = map.tileSize || 16;
-
-    const _this = this;
     
-    this.currentMap.width = 0;
-    this.currentMap.height = 0;
+    this.currentMap.width = Math.max(...map.data.map(row => row.length));
+    this.currentMap.height = map.data.length;
 
-    map.keys.forEach(function (key) {
-        map.data.forEach(function (row, y) {
-            _this.currentMap.height = Math.max(_this.currentMap.height, y);
-            row.forEach(function (tile, x) {
-                _this.currentMap.width = Math.max(_this.currentMap.width, x);
+    this.createHtml();
+
+    map.keys.forEach(key => {
+        map.data.forEach((row, y) => {
+            row.forEach((tile, x) => {
                 if (tile == key.id) {
-                    _this.currentMap.data[y][x] = key;
-                    _this.htmlMap[y][x].style.backgroundColor = _this.currentMap.data[y][x].color;
+                    this.currentMap.data[y][x] = key;
+                    this.domMap[y][x].style.backgroundColor = this.currentMap.data[y][x].color;
                 }
             });
         });
@@ -277,16 +343,20 @@ Clarity.prototype.drawTile = function (x, y, tile) {
 
     if (!tile || !tile.color) return;
 
-    const htmlTile = this.htmlMap[y][x];
-    htmlTile.style.backgroundColor = tile.color;
+    const domTile = this.domMap[y][x];
+    domTile.style.backgroundColor = tile.color;
 };
 
 Clarity.prototype.drawMap = function () {
+
     let y = (this.camera.y / this.tileSize) | 0;
     const height = (this.camera.y + this.viewport.y + this.tileSize) / this.tileSize;
+
     for (; y < height; y++) {
+
         let x = (this.camera.x / this.tileSize) | 0;
         const width = (this.camera.x + this.viewport.x + this.tileSize) / this.tileSize;
+
         for (; x < width; x++) {
             const tile = this.getTile(x, y) || map.keys[0];
             this.drawTile(x, y, tile);
@@ -442,7 +512,7 @@ Clarity.prototype.movePlayer = function () {
         }
     }
 
-    worldWrap.scrollTo(this.camera.x, this.camera.y)
+    this.domWorldWrap.scrollTo(this.camera.x, this.camera.y)
     
     if (this.lastTile != tile.id && tile.script) {
         eval(this.currentMap.scripts[tile.script]);
@@ -476,47 +546,28 @@ Clarity.prototype.updatePlayer = function () {
 };
 
 Clarity.prototype.drawPlayer = function () {
-    this.htmlPlayer.style.backgroundColor = this.player.color;
-    this.htmlPlayer.style.left = (this.player.loc.x + this.tileSize / 2) + "px";
-    this.htmlPlayer.style.top = (this.player.loc.y + this.tileSize / 2) + "px";
+    this.domPlayer.style.backgroundColor = this.player.color;
+    this.domPlayer.style.left = (this.player.loc.x + this.tileSize / 2) + "px";
+    this.domPlayer.style.top = (this.player.loc.y + this.tileSize / 2) + "px";
 };
 
-window.addEventListener("keydown", function(e) {
-    if (["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
-        e.preventDefault();
-    }
-}, false);
-
-const viewportWidth = 576;
-const viewportHeight = 576;
+const viewportWidth = 480;
+const viewportHeight = 480;
 const mapWidth = 1e2;
 const mapHeight = 1e2;
 
-const worldWrap = document.querySelector(".world-wrap");
-const world = document.querySelector(".world");
-const player = document.querySelector(".player");
-
-worldWrap.style.width = viewportWidth + "px";
-worldWrap.style.height = viewportHeight + "px";
-
 /* Setup of the engine */
-function unsupportedAnimFrame(callback) {
-    return window.setTimeout(callback, 1000 / 60);
-};
+window.requestAnimFrame = window.requestAnimationFrame || (cb => window.setTimeout(cb, 1000 / 60));
 
-window.requestAnimFrame = window.requestAnimationFrame || unsupportedAnimFrame;
-
-// ToDo: Maybe a pre-load step to setup HTML references would be best
-// ToDo: What about parametizing the whole HTML creation step and just ask for an HTML point of insertion?
-
-const game = new Clarity();
+const domTarget = document.querySelector("#target");
+const game = new Clarity(domTarget);
 game.setViewport(viewportWidth, viewportHeight);
-game.loadMap(world, player, map);
+game.loadMap(map);
 game.limitViewport = true;
 
 (function loop() {
-  game.drawMap();
-  game.updatePlayer();
-  game.drawPlayer();
-  window.requestAnimFrame(loop);
+    game.updatePlayer();
+    game.drawMap();
+    game.drawPlayer();
+    window.requestAnimFrame(loop);
 })();

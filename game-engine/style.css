@@ -3,56 +3,10 @@
   user-select: none;
 }
 
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background-color: #333;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #555;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: #666;
-}
-
-
 body {
   margin: 0;
   background-color: #444;
   min-height: 100vh;
   display: grid;
   place-items: center;
-}
-
-.world-wrap {
-  background: #333;
-  overflow: auto;
-  box-shadow: 0 10px 10px 5px #0002;
-}
-
-.world {
-  position: relative;
-}
-
-.row {
-  display: flex;
-}
-
-.tile {
-  width: 16px;
-  height: 16px;
-  flex: 0 0 16px;
-}
-
-.player {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  width: 16px;
-  height: 16px;
 }

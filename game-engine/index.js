@@ -251,14 +251,14 @@ Clarity.prototype.createHtml = function() {
 
         for (let j = 0; j <= mapSize + 1; j++) {
 
-          const domTile = document.createElement("DIV");
-          domTile.classList.add("tile");
-          domTile.style.width = this.tileSize + "px";
-          domTile.style.height = this.tileSize + "px";
-          domTile.style.flex = "0 0 " + this.tileSize + "px";
+            const domTile = document.createElement("DIV");
+            domTile.classList.add("tile");
+            domTile.style.width = this.tileSize + "px";
+            domTile.style.height = this.tileSize + "px";
+            domTile.style.flex = "0 0 " + this.tileSize + "px";
 
-          row.push(domTile);
-          domRow.appendChild(domTile);
+            row.push(domTile);
+            domRow.appendChild(domTile);
         }
         this.domWorld.appendChild(domRow);
         this.domMap.push(row);
@@ -293,6 +293,7 @@ Clarity.prototype.loadMap = function (map) {
                 if (tile == key.id) {
                     this.currentMap.data[y][x] = key;
                     this.domMap[y][x].style.backgroundColor = this.currentMap.data[y][x].color;
+                    this.domMap[y][x].setAttribute("data-key", key.id);
                 }
             });
         });
@@ -495,7 +496,7 @@ Clarity.prototype.movePlayer = function () {
         }
     }
 
-    this.domWorldWrap.scrollTo(this.camera.x, this.camera.y)
+    this.domWorldWrap.scrollTo(this.camera.x | 0, this.camera.y | 0)
     
     if (this.lastTile != tile.id && tile.script) {
         eval(this.currentMap.scripts[tile.script]);

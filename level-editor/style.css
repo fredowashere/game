@@ -1,0 +1,52 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #333;
+  height: 100vh;
+  display: grid;
+  place-items: center;
+  user-select: none;
+}
+
+.world-wrap {
+  border: 2px solid #fff2;
+  position: relative;
+  width: 1024px;
+  height: 576px;
+  overflow: auto;
+}
+
+.world {
+  position: absolute;
+}
+
+.row {
+  display: flex;
+}
+
+.tile {
+  position: relative;
+  border: 1px solid #fff2;
+  width: 1em;
+  height: 1em;
+  flex: 0 0 1em;
+}
+
+.tile.crosshair::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: #f003;
+}
+
+[data-key="0"] {
+  background-color: #0000;
+}
+
+[data-key="1"] {
+  background-color: #fff;
+}

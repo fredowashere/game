@@ -1,0 +1,23 @@
+.editor-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.map-editor {
+    border: 1px solid #eee;
+    border-radius: 6px;
+    background: #fff;
+}
+
+.map-editor__controls {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+}
+
+.materials-pane {
+    flex: 0 0 350px;
+    overflow: hidden;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    background: #fff;
+}

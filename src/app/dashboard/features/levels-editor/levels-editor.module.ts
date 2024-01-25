@@ -5,7 +5,7 @@ import { LevelsEditorComponent } from './levels-editor.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { MapMaterialsComponent } from './materials/map-materials/map-materials.component';
 import { GlobalMaterialsComponent } from './materials/global-materials/global-materials.component';
-import { MapEditorComponent } from './map-editor/map-editor.component';
+import { LevelDetailsComponent } from './level-details/level-details.component';
 
 const routes: Routes = [
   { path: '', component: LevelsEditorComponent }
@@ -16,7 +16,7 @@ const routes: Routes = [
     LevelsEditorComponent,
     MapMaterialsComponent,
     GlobalMaterialsComponent,
-    MapEditorComponent
+    LevelDetailsComponent
   ],
   imports: [
     CommonModule,

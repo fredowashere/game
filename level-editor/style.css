@@ -12,6 +12,7 @@ body {
   user-select: none;
 }
 
+/* ToDo: Should I prefix these? */
 .world-wrap {
   border: 2px solid #fff2;
   position: relative;
@@ -43,6 +44,7 @@ body {
   background-color: #f003;
 }
 
+/* ToDo: How to pass these? */
 [data-key="0"] {
   background-color: #0000;
 }

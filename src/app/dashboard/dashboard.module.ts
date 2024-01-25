@@ -11,7 +11,7 @@ const routes: Routes = [
     path: '',
     component: DashboardComponent,
     children: [
-      { path: '', redirectTo: 'materials-editor', pathMatch: 'full' },
+      { path: '', redirectTo: 'levels-editor', pathMatch: 'full' },
       {
         path: 'materials-editor',
         loadChildren: () =>

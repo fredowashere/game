@@ -34,10 +34,10 @@ export class LevelDetailsComponent {
     map.import();
 
     this.form.controls.lmb.valueChanges
-      .subscribe(value => map.setLMB(value && value.id || null));
+      .subscribe(value => map.setLMB(value ? value.id : null));
 
     this.form.controls.rmb.valueChanges
-      .subscribe(value => map.setRMB(value && value.id || null));
+      .subscribe(value => map.setRMB(value ? value.id : null));
 
     this.form.controls.lmb.setValue(materials[0]);
     this.form.controls.rmb.setValue(materials[0]);

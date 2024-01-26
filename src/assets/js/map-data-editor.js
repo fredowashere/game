@@ -121,6 +121,10 @@
         return newEl.innerHTML.trim();
     };
 
+    MapDataEditor.prototype.destroy = function() {}; // ToDo: Implement this (removes memory leaks)
+
+    MapDataEditor.prototype.clean = function() {}; // ToDo: Implement this (clean the canvas from all materials)
+
     function getMatrix(el) {
         return [...el.querySelectorAll(`.map-editor-${this.uuid}__row`)].map(row => row.querySelectorAll(`.map-editor-${this.uuid}__tile`));
     }
@@ -280,7 +284,7 @@
 }
 
 .map-editor-${this.uuid}__world-wrap {
-    background-color: #444;
+    background-image: linear-gradient(45deg, #777, #333);
     position: relative;
     width: ${this.viewportWidth}px;
     height: ${this.viewportHeight}px;
@@ -322,7 +326,7 @@
 }
 
 .map-editor-${this.uuid}__tile--crosshair {
-    border: 1px solid #f00;
+    border: 1px solid #f008;
 }
 
 ${materialStyles}`;

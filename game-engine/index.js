@@ -31,7 +31,7 @@ const map = {
     ],
 
     /* An array representing the map tiles. Each number corresponds to a key */
-    html: `
+    data: `
 <div class="g-row" style="display: flex">
     <div class="g-tile" data-key="2"></div><div class="g-tile" data-key="2"></div><div class="g-tile" data-key="2"></div><div class="g-tile" data-key="2"></div><div class="g-tile" data-key="2"></div><div class="g-tile" data-key="2"></div><div class="g-tile" data-key="2"></div><div class="g-tile" data-key="2"></div><div class="g-tile" data-key="2"></div><div class="g-tile" data-key="2"></div><div class="g-tile" data-key="2"></div><div class="g-tile" data-key="2"></div><div class="g-tile" data-key="2"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div><div class="g-tile" data-key="0"></div>
 </div>
@@ -466,7 +466,7 @@ Clarity.prototype.createHtml = function() {
     this.domWorld = document.createElement("DIV");
     this.domWorld.classList.add("g-world");
     this.domWorld.style.position = "relative";
-    this.domWorld.innerHTML = this.currentMap.html;
+    this.domWorld.innerHTML = this.currentMap.data;
     this.currentMap.dom = [ ...this.domWorld.querySelectorAll(".g-row") ].map(row => [ ...row.querySelectorAll(".g-tile") ]);
     
     this.domWorldWrap = document.createElement("DIV");
@@ -485,7 +485,7 @@ Clarity.prototype.loadMap = function (map) {
 
     if (
         typeof map      === "undefined"
-     || typeof map.html === "undefined"
+     || typeof map.data === "undefined"
      || typeof map.keys === "undefined"
     ) {
         this.error("Error: Invalid map data!");

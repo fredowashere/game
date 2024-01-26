@@ -12,6 +12,14 @@
         this.viewportWidth = viewportWidth || 1024;
         this.viewportHeight = viewportHeight || 576;
 
+        this._mi = 0;
+        this._mj = 0;
+        this._crosshairInterval = -1;
+        this._tileClass = `map-editor-${this.uuid}__tile`;
+        this._tileEditorClass = `map-editor-${this.uuid}__tile--editor`;
+        this._tileCrosshairClass = `map-editor-${this.uuid}__tile--crosshair`;
+        this._editorTiles = [];
+
         init.bind(this)(targetEl);
         addStyle.bind(this)(materials);
     }
@@ -85,6 +93,8 @@
 
             this.world.appendChild(rowEl);
         }
+
+        this._editorTiles = [ ...this.world.querySelectorAll("." + this._tileEditorClass) ];
     };
 
     MapDataEditor.prototype.export = function() {
@@ -103,8 +113,8 @@
             .forEach(editor => editor.remove());
 
         // Remove .crosshair class
-        [...newEl.querySelectorAll(".tile--crosshair")]
-            .forEach(ch => ch.classList.remove("tile--crosshair"));
+        [...newEl.querySelectorAll(`.map-editor-${this.uuid}__tile--crosshair`)]
+            .forEach(ch => ch.classList.remove(`map-editor-${this.uuid}__tile--crosshair`));
 
         localStorage.setItem("prova", newEl.innerHTML.trim());
 
@@ -154,10 +164,6 @@
             { passive: false }
         );
 
-        const tileQuery = `map-editor-${this.uuid}__tile`;
-        const tileEditorQuery = `map-editor-${this.uuid}__tile--editor`;
-        const tileCrosshairQuery = `map-editor-${this.uuid}__tile--crosshair`;
-
         // Remove right mouse button menu
         this.worldWrap.addEventListener("contextmenu", evt => evt.preventDefault());
 
@@ -169,7 +175,7 @@
             const prevY = this.worldWrap.scrollTop + mdevt.pageY;
 
             if (mdevt.button === 0) {
-                if (mdevt.target.classList.contains(tileQuery) && !mdevt.target.classList.contains(tileEditorQuery)) {
+                if (mdevt.target.classList.contains(this._tileClass) && !mdevt.target.classList.contains(this._tileEditorClass)) {
                     if (this.lmb === null) {
                         mdevt.target.removeAttribute("data-key");
                     }
@@ -180,7 +186,7 @@
             }
 
             if (mdevt.button === 2) {
-                if (mdevt.target.classList.contains(tileQuery) && !mdevt.target.classList.contains(tileEditorQuery)) {
+                if (mdevt.target.classList.contains(this._tileClass) && !mdevt.target.classList.contains(this._tileEditorClass)) {
                     if (this.rmb === null) {
                         mdevt.target.removeAttribute("data-key");
                     }
@@ -201,7 +207,7 @@
                 }
 
                 if (mdevt.button === 0) {
-                    if (mmevt.target.classList.contains(tileQuery) && !mmevt.target.classList.contains(tileEditorQuery)) {
+                    if (mmevt.target.classList.contains(this._tileClass) && !mmevt.target.classList.contains(this._tileEditorClass)) {
                         if (this.lmb === null) {
                             mmevt.target.removeAttribute("data-key");
                         }
@@ -212,7 +218,7 @@
                 }
 
                 if (mdevt.button === 2) {
-                    if (mmevt.target.classList.contains(tileQuery) && !mmevt.target.classList.contains(tileEditorQuery)) {
+                    if (mmevt.target.classList.contains(this._tileClass) && !mmevt.target.classList.contains(this._tileEditorClass)) {
                         if (this.rmb === null) {
                             mmevt.target.removeAttribute("data-key");
                         }
@@ -232,27 +238,29 @@
             document.addEventListener("mouseup", mouseUpHandler);
         });
 
-        this.world.addEventListener("mousemove", (evt) => {
-
-            const editorTiles = [ ...this.world.querySelectorAll(tileEditorQuery) ];
-            
-            // Clean crosshair on all tiles
-            editorTiles.forEach(tile => tile.classList.remove(tileCrosshairQuery));
-            
+        this.world.addEventListener("mousemove", evt => {
             const hoveredEl = evt.target;
-            if (hoveredEl.classList.contains(tileQuery)) {
-
-                const i = hoveredEl.getAttribute("data-i");
-                const j = hoveredEl.getAttribute("data-j");
-
-                // Add crosshair where needed
-                editorTiles.forEach(tile => {
-                    if (tile.getAttribute("data-i") === i || tile.getAttribute("data-j") === j) {
-                        tile.classList.add(tileCrosshairQuery);
-                    }
-                });
+            if (hoveredEl.classList.contains(this._tileClass)) {
+                this._mi = hoveredEl.getAttribute("data-i");
+                this._mj = hoveredEl.getAttribute("data-j");
             }
         });
+
+        this._crosshairInterval = setInterval(
+            () => {
+
+                // Clean crosshair on all tiles
+                this._editorTiles.forEach(tile => tile.classList.remove(this._tileCrosshairClass));
+                
+                // Add crosshair where needed
+                this._editorTiles.forEach(tile => {
+                    if (tile.getAttribute("data-i") === this._mi || tile.getAttribute("data-j") === this._mj) {
+                        tile.classList.add(this._tileCrosshairClass);
+                    }
+                });
+            },
+            150
+        );
     }
 
     function addStyle(materials) {
@@ -300,7 +308,6 @@
 }
 
 .map-editor-${this.uuid}__tile {
-    position: relative;
     border: 1px solid #fff2;
     width: 1em;
     height: 1em;
@@ -314,11 +321,8 @@
     background-color: #444;
 }
 
-.map-editor-${this.uuid}__tile--crosshair::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-color: #f003;
+.map-editor-${this.uuid}__tile--crosshair {
+    border: 1px solid #f00;
 }
 
 ${materialStyles}`;

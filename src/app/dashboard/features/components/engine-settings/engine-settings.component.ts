@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { DEFAULT_ENGINE_SETTINGS } from '../models/engine-settings';
+import { DEFAULT_ENGINE_SETTINGS } from '../../models/engine-settings';
 import { ToastService } from 'src/app/services/toast.service';
 
 @Component({

@@ -2,9 +2,9 @@ import { Component, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TableComponent } from 'src/app/shared/components/table/table.component';
 import { ToastService } from 'src/app/services/toast.service';
-import { DEFAULT_MATERIALS, IMaterial } from '../../models/materials';
-import { AreYouSureComponent } from '../../are-you-sure.component';
 import { MaterialEditComponent } from '../../materials-editor/material-edit-dialog.component';
+import { DEFAULT_MATERIALS, IMaterial } from '../../../models/materials';
+import { AreYouSureComponent } from '../../../are-you-sure.component';
 
 @Component({
   selector: 'app-global-materials',

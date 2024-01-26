@@ -1,10 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MaterialEditComponent } from './material-edit-dialog.component';
-import { AreYouSureComponent } from '../are-you-sure.component';
 import { TableComponent } from 'src/app/shared/components/table/table.component';
-import { DEFAULT_MATERIALS, IMaterial } from '../models/materials';
 import { ToastService } from 'src/app/services/toast.service';
+import { DEFAULT_MATERIALS, IMaterial } from '../../models/materials';
+import { AreYouSureComponent } from '../../are-you-sure.component';
 
 @Component({
   selector: 'app-materials-editor',

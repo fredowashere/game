@@ -3,8 +3,7 @@ import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { AreYouSureComponent } from '../are-you-sure.component';
-import { IMaterial } from '../models/materials';
+import { IMaterial } from '../../models/materials';
 
 @Component({
     selector: 'app-material-edit',

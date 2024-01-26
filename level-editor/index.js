@@ -1,13 +1,16 @@
 (function() {
 
-    function MapDataEditor(targetEl, materials) {
+    function MapDataEditor(targetEl, materials, viewportWidth, viewportHeight) {
         
         this.uuid = Math.random().toString(36).slice(2, 7);
         this.worldSize = 1e2;
         this.worldWrap = null;
         this.world = null;
-        this.lmb = 1;
-        this.rmb = 0;
+        this.lmb = null;
+        this.rmb = null;
+
+        this.viewportWidth = viewportWidth || 1024;
+        this.viewportHeight = viewportHeight || 576;
 
         init.bind(this)(targetEl);
         addStyle.bind(this)(materials);
@@ -15,11 +18,11 @@
 
     window.MapDataEditor = MapDataEditor;
 
-    MapDataEditor.prototype.setLeftButtonMaterial = function(val) {
+    MapDataEditor.prototype.setLMB = function(val) {
         this.lmb = val;
     };
 
-    MapDataEditor.prototype.setRightButtonMaterial = function(val) {
+    MapDataEditor.prototype.setRMB = function(val) {
         this.rmb = val;
     };
 
@@ -137,7 +140,7 @@
         }
 
         let minZoom = 4;
-        let maxZoom = 64;
+        let maxZoom = 48;
         let zoomSteps = 1;
         let zoom = 16;
         this.worldWrap.addEventListener(
@@ -259,7 +262,9 @@
         }
 
         const materialStyles = materials
-            .map(m => `[data-key="${m.id}"] { background-color: ${m.color}; }`)
+            .map(m => `[data-key="${m.id}"] {
+    background-color: ${m.color};
+}`)
             .join("\n\n");
 
         const css = `
@@ -270,8 +275,8 @@
 .map-editor-${this.uuid}__world-wrap {
     background-color: #444;
     position: relative;
-    width: 1024px;
-    height: 576px;
+    width: ${this.viewportWidth}px;
+    height: ${this.viewportHeight}px;
     overflow: auto;
 }
 
@@ -317,8 +322,7 @@
     background-color: #f003;
 }
 
-${materialStyles}
-`;
+${materialStyles}`;
 
         const style = document.createElement("STYLE");
         style.id = "map-editor-style-" + this.uuid;

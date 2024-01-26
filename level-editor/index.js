@@ -1,7 +1,8 @@
 (function() {
 
-    function MapDataEditor(targetEl) {
-
+    function MapDataEditor(targetEl, materials) {
+        
+        this.uuid = Math.random().toString(36).slice(2, 7);
         this.worldSize = 1e2;
         this.worldWrap = null;
         this.world = null;
@@ -9,6 +10,7 @@
         this.rmb = 0;
 
         init.bind(this)(targetEl);
+        addStyle.bind(this)(materials);
     }
 
     window.MapDataEditor = MapDataEditor;
@@ -21,10 +23,15 @@
         this.rmb = val;
     };
 
-    MapDataEditor.prototype.load = function(mapData) {
+    MapDataEditor.prototype.import = function(mapData) {
 
-        mapData = localStorage.getItem("prova");
-        console.log("hey", mapData);
+        // Add prefix to mapData classes
+        if (mapData) {
+            mapData = mapData
+                .replaceAll("world", `map-editor-${this.uuid}__world`)
+                .replaceAll("row", `map-editor-${this.uuid}__row`)
+                .replaceAll("tile", `map-editor-${this.uuid}__tile`);
+        }
 
         // Clear editor from previous map
         this.world.innerHTML = "";
@@ -32,7 +39,7 @@
         // Load map data into a new element
         const newEl = document.createElement("DIV");
         newEl.innerHTML = mapData;
-        const newElMatrix = getMatrix(newEl);
+        const newElMatrix = getMatrix.bind(this)(newEl);
 
         const newElMatrixSize = Math.max(newElMatrix.length, ...newElMatrix.map(row => row.length));
         const constructionSize = Math.max(this.worldSize, newElMatrixSize);
@@ -40,17 +47,17 @@
         for (let i = -1; i < constructionSize; i++) {
 
             const rowEl = document.createElement("DIV");
-            rowEl.classList.add("map-editor__row");
+            rowEl.classList.add(`map-editor-${this.uuid}__row`);
 
             // Horizontal editor row
             if (i === -1) {
-                rowEl.classList.add("map-editor__row--editor");
+                rowEl.classList.add(`map-editor-${this.uuid}__row--editor`);
             }
 
             for (let j = -1; j < constructionSize; j++) {
 
                 const tileEl = document.createElement("DIV");
-                tileEl.classList.add("map-editor__tile");
+                tileEl.classList.add(`map-editor-${this.uuid}__tile`);
                 tileEl.setAttribute("data-i", i);
                 tileEl.setAttribute("data-j", j);
                 rowEl.appendChild(tileEl);
@@ -62,13 +69,13 @@
 
                 // Horizontal editor row's tiles
                 if (i === -1) {
-                    tileEl.classList.add("map-editor__tile--editor");
+                    tileEl.classList.add(`map-editor-${this.uuid}__tile--editor`);
                     tileEl.appendChild(createNumEl(j));
                 }
 
                 // Vertical editor row's tiles
                 if (i !== -1 && j === -1) {
-                    tileEl.classList.add("map-editor__tile--editor");
+                    tileEl.classList.add(`map-editor-${this.uuid}__tile--editor`);
                     tileEl.appendChild(createNumEl(i));
                 }
             }
@@ -77,12 +84,16 @@
         }
     };
 
-    MapDataEditor.prototype.save = function() {
+    MapDataEditor.prototype.export = function() {
 
         // Copy map data into a new element
         const copyOfWrap = this.worldWrap.innerHTML;
+
+        // Strip HTML from any map-editor 
+        const cleaned = copyOfWrap.replaceAll(/map-editor-.*?__/g, "");
+
         const newEl = document.createElement("DIV");
-        newEl.innerHTML = copyOfWrap;
+        newEl.innerHTML = cleaned;
 
         // Remove .editor elements
         [...newEl.querySelectorAll('[class$="--editor"]')]
@@ -98,7 +109,7 @@
     };
 
     function getMatrix(el) {
-        return [...el.querySelectorAll(".map-editor__row")].map(row => row.querySelectorAll(".map-editor__tile"));
+        return [...el.querySelectorAll(`.map-editor-${this.uuid}__row`)].map(row => row.querySelectorAll(`.map-editor-${this.uuid}__tile`));
     }
 
     function createNumEl(num) {
@@ -113,15 +124,15 @@
     function init(targetEl) {
 
         if (!targetEl) {
-            return console.error("Missing target element, cannot initialize.");
+            throw new Error("Missing target element.");
         }
 
         this.worldWrap = targetEl;
-        this.worldWrap.classList.add("map-editor__world-wrap");
-        this.world = this.worldWrap.querySelector(".world");
+        this.worldWrap.classList.add(`map-editor-${this.uuid}__world-wrap`);
+        this.world = this.worldWrap.querySelector(`.map-editor-${this.uuid}__world`);
         if (!this.world) {
             this.world = document.createElement("DIV");
-            this.world.classList.add(".map-editor__world");
+            this.world.classList.add(`map-editor-${this.uuid}__world`);
             this.worldWrap.appendChild(this.world);
         }
 
@@ -140,6 +151,10 @@
             { passive: false }
         );
 
+        const tileQuery = `map-editor-${this.uuid}__tile`;
+        const tileEditorQuery = `map-editor-${this.uuid}__tile--editor`;
+        const tileCrosshairQuery = `map-editor-${this.uuid}__tile--crosshair`;
+
         // Remove right mouse button menu
         this.worldWrap.addEventListener("contextmenu", evt => evt.preventDefault());
 
@@ -151,7 +166,7 @@
             const prevY = this.worldWrap.scrollTop + mdevt.pageY;
 
             if (mdevt.button === 0) {
-                if (mdevt.target.classList.contains("map-editor__tile") && !mdevt.target.classList.contains("map-editor__tile--editor")) {
+                if (mdevt.target.classList.contains(tileQuery) && !mdevt.target.classList.contains(tileEditorQuery)) {
                     if (this.lmb === null) {
                         mdevt.target.removeAttribute("data-key");
                     }
@@ -162,7 +177,7 @@
             }
 
             if (mdevt.button === 2) {
-                if (mdevt.target.classList.contains("map-editor__tile") && !mdevt.target.classList.contains("map-editor__tile--editor")) {
+                if (mdevt.target.classList.contains(tileQuery) && !mdevt.target.classList.contains(tileEditorQuery)) {
                     if (this.rmb === null) {
                         mdevt.target.removeAttribute("data-key");
                     }
@@ -183,7 +198,7 @@
                 }
 
                 if (mdevt.button === 0) {
-                    if (mmevt.target.classList.contains("map-editor__tile") && !mmevt.target.classList.contains("map-editor__tile--editor")) {
+                    if (mmevt.target.classList.contains(tileQuery) && !mmevt.target.classList.contains(tileEditorQuery)) {
                         if (this.lmb === null) {
                             mmevt.target.removeAttribute("data-key");
                         }
@@ -194,7 +209,7 @@
                 }
 
                 if (mdevt.button === 2) {
-                    if (mmevt.target.classList.contains("map-editor__tile") && !mmevt.target.classList.contains("map-editor__tile--editor")) {
+                    if (mmevt.target.classList.contains(tileQuery) && !mmevt.target.classList.contains(tileEditorQuery)) {
                         if (this.rmb === null) {
                             mmevt.target.removeAttribute("data-key");
                         }
@@ -216,13 +231,13 @@
 
         this.world.addEventListener("mousemove", (evt) => {
 
-            const editorTiles = [ ...this.world.querySelectorAll(".map-editor__tile--editor") ];
+            const editorTiles = [ ...this.world.querySelectorAll(tileEditorQuery) ];
             
             // Clean crosshair on all tiles
-            editorTiles.forEach(tile => tile.classList.remove("map-editor__tile--crosshair"));
+            editorTiles.forEach(tile => tile.classList.remove(tileCrosshairQuery));
             
             const hoveredEl = evt.target;
-            if (hoveredEl.classList.contains("map-editor__tile")) {
+            if (hoveredEl.classList.contains(tileQuery)) {
 
                 const i = hoveredEl.getAttribute("data-i");
                 const j = hoveredEl.getAttribute("data-j");
@@ -230,10 +245,84 @@
                 // Add crosshair where needed
                 editorTiles.forEach(tile => {
                     if (tile.getAttribute("data-i") === i || tile.getAttribute("data-j") === j) {
-                        tile.classList.add("map-editor__tile--crosshair");
+                        tile.classList.add(tileCrosshairQuery);
                     }
                 });
             }
         });
+    }
+
+    function addStyle(materials) {
+
+        if (!materials) {
+            throw new Error("Missing materials.");
+        }
+
+        const materialStyles = materials
+            .map(m => `[data-key="${m.id}"] { background-color: ${m.color}; }`)
+            .join("\n\n");
+
+        const css = `
+*[class^="map-editor-${this.uuid}"]  {
+    box-sizing: border-box;
+}
+
+.map-editor-${this.uuid}__world-wrap {
+    background-color: #444;
+    position: relative;
+    width: 1024px;
+    height: 576px;
+    overflow: auto;
+}
+
+.map-editor-${this.uuid}__world {
+    position: absolute;
+}
+    
+.map-editor-${this.uuid}__row {
+    display: flex;
+}
+
+.map-editor-${this.uuid}__row--editor {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #444;
+}
+
+.map-editor-${this.uuid}__row > .map-editor-${this.uuid}__tile {
+    display: grid;
+    place-items: center;
+}
+
+.map-editor-${this.uuid}__tile {
+    position: relative;
+    border: 1px solid #fff2;
+    width: 1em;
+    height: 1em;
+    flex: 0 0 1em;
+}
+
+.map-editor-${this.uuid}__tile--editor {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background-color: #444;
+}
+
+.map-editor-${this.uuid}__tile--crosshair::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: #f003;
+}
+
+${materialStyles}
+`;
+
+        const style = document.createElement("STYLE");
+        style.id = "map-editor-style-" + this.uuid;
+        style.innerHTML = css;
+        document.head.appendChild(style);
     }
 })();

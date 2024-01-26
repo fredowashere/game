@@ -10,16 +10,39 @@
 <body>
 
     <div>
-        <button onclick="map.load()">Load</button>
-        <button onclick="map.save()">Save</button>
+        <button onclick="load()">Load</button>
+        <button onclick="save()">Save</button>
     </div>
 
     <div class="target"></div>
 
     <script src="index.js"></script>
     <script>
-        const map = new MapDataEditor(document.querySelector(".target"));
-        map.load();
+
+        const map = new MapDataEditor(
+            document.querySelector(".target"),
+            [
+                { id: 1, name: "Wall", color: 'rgba(136,136,136,1)', solid: false },
+                { id: 0, name: "Empty Space", color: 'rgba(51,51,51,1)', solid: false }
+            ]
+        );
+        map.import();
+
+        function load() {
+            const name = prompt("Insert a name.");
+            if (name) {
+                const mapData = localStorage.getItem(name);
+                map.import(mapData);
+            }
+        }
+
+        function save() {
+            const name = prompt("Choose a name.");
+            if (name) {
+                const exported = map.export();
+                localStorage.setItem(name, exported);
+            }
+        }
     </script>
 </body>
 </html>

@@ -267,8 +267,7 @@
 }`)
             .join("\n\n");
 
-        const css = `
-*[class^="map-editor-${this.uuid}"]  {
+        const css = `*[class^="map-editor-${this.uuid}"]  {
     box-sizing: border-box;
 }
 

@@ -50,7 +50,8 @@
             ],
             "scripts": [
               "./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
-              "src/assets/js/vanilla-picker.js"
+              "src/assets/js/vanilla-picker.js",
+              "src/assets/js/map-data-editor.js"
             ]
           },
           "configurations": {

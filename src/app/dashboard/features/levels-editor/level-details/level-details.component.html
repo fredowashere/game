@@ -1,21 +1,15 @@
 <div class="editor-row px-3">
 
     <div class="map-editor shadow" style="margin-left: auto;">
+
         <div>
             <h5 class="m-2 mb-0">Map Editor</h5>
         
-            <div class="map-editor__controls p-2">
-            
-                <div>
-                    <button class="btn btn-outline-primary">
-                        <i class="bi bi-play"></i>
-                    </button>
-                </div>
+            <div class="d-flex justify-content-between p-2 border-bottom">
 
-                <div class="d-flex justify-content-center gap-2">
-                    <div>L-Mouse Button Material</div>
-                    <div>R-Mouse Button Material</div>
-                </div>
+                <button class="btn btn-outline-primary">
+                    <i class="bi bi-play"></i>
+                </button>
 
                 <div>
                     <button class="btn btn-outline-primary me-2">
@@ -27,11 +21,12 @@
                 </div>
             </div>
         </div>
-        <div style="width: 768px; aspect-ratio: 16/9; background-color: bisque;"></div>
-    </div>
 
-    <div class="materials-pane shadow">
-        <app-map-materials></app-map-materials>
+        <div id="map-data-editor"></div>
+
+        <div class="d-flex justify-content-center">
+            
+        </div>
     </div>
 
     <div class="materials-pane shadow" style="margin-right: auto;">

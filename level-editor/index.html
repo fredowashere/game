@@ -10,14 +10,16 @@
 <body>
 
     <div>
-        <button onclick="load()">Load</button>
-        <button onclick="save()">Save</button>
+        <button onclick="map.load()">Load</button>
+        <button onclick="map.save()">Save</button>
     </div>
 
-    <div class="world-wrap">
-        <div class="world"></div>
-    </div>
+    <div class="target"></div>
 
     <script src="index.js"></script>
+    <script>
+        const map = new MapDataEditor(document.querySelector(".target"));
+        map.load();
+    </script>
 </body>
 </html>

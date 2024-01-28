@@ -15,8 +15,7 @@
                     class="btn btn-primary"
                     (click)="create()"
                 >
-                    <i class="bi bi-plus me-2"></i>
-                    Add New
+                    <i class="bi bi-plus"></i>
                 </button>
 
                 <button
@@ -52,8 +51,8 @@
                 <th sortable="color" (sort)="dt.sort($event)">Color</th>
                 <th sortable="fore" (sort)="dt.sort($event)">Fore</th>
                 <th sortable="solid" (sort)="dt.sort($event)">Solid</th>
-                <th class="text-end" sortable="gravity" (sort)="dt.sort($event)">Gravity</th>
-                <th class="text-end" sortable="friction" (sort)="dt.sort($event)">Friction</th>
+                <th>Gravity</th>
+                <th>Friction</th>
                 <th class="text-end" sortable="bounce" (sort)="dt.sort($event)">Bounce</th>
                 <th sortable="jump" (sort)="dt.sort($event)">Jump</th>
                 <th sortable="script" (sort)="dt.sort($event)">Script</th>
@@ -82,17 +81,17 @@
                     {{ material.solid ? "True" : "False" }}
                 </td>
         
-                <td class="text-end" data-label="Gravity">
+                <td data-label="Gravity">
                     <ng-container *ngIf="material.gravity; else noGravity">
-                        x: {{ material.gravity.x }}
+                        x: {{ material.gravity.x }},
                         y: {{ material.gravity.y }}
                     </ng-container>
                     <ng-template #noGravity>--</ng-template>
                 </td>
         
-                <td class="text-end" data-label="Friction">
+                <td data-label="Friction">
                     <ng-container *ngIf="material.friction; else noFriction">
-                        x: {{ material.friction.x }}
+                        x: {{ material.friction.x }},
                         y: {{ material.friction.y }}
                     </ng-container>
                     <ng-template #noFriction>--</ng-template>

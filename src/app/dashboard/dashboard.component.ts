@@ -4,6 +4,7 @@ import { filter, Subject, takeUntil, tap } from 'rxjs';
 import { SidebarService } from '../services/sidebar.service';
 import { DEFAULT_ENGINE_SETTINGS } from './features/models/engine-settings';
 import { DEFAULT_MATERIALS } from './features/models/materials';
+import { DEFAULT_LEVEL } from './features/models/levels';
 
 @Component({
   selector: 'app-dashboard',
@@ -36,6 +37,9 @@ export class DashboardComponent {
     }
     if (!localStorage.getItem("materials")) {
       localStorage.setItem("materials", JSON.stringify(DEFAULT_MATERIALS));
+    }
+    if (!localStorage.getItem("levels")) {
+      localStorage.setItem("levels", JSON.stringify([ DEFAULT_LEVEL ]));
     }
   }
 

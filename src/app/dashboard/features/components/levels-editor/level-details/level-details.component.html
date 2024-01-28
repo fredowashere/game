@@ -1,8 +1,15 @@
-<div class="editor-row px-3">
-
+<div class="editor-row px-3 py-5">
+    
     <div class="map-editor shadow" style="margin-left: auto;">
 
         <div>
+
+            <div style="margin-top: -1.5rem;">
+                <a class="text-decoration-none" [routerLink]="[ '..' ]">
+                    <i class="bi bi-arrow-left"></i> Back to Levels
+                </a>
+            </div>
+
             <h5 class="m-2 mb-0">Map Editor</h5>
         
             <div class="map-controls">
@@ -96,3 +103,4 @@
         <app-global-materials></app-global-materials>
     </div>
 </div>
+

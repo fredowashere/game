@@ -7,6 +7,7 @@ import { GlobalMaterialsComponent } from './global-materials/global-materials.co
 import { LevelDetailsComponent } from './level-details/level-details.component';
 
 const routes: Routes = [
+  { path: ':levelId', component: LevelDetailsComponent },
   { path: '', component: LevelsEditorComponent }
 ];
 

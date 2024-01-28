@@ -25,6 +25,27 @@ export class LevelDetailsComponent {
     rmb: new FormControl()
   });
 
+  form2 = new FormGroup({
+    tile_size: new FormControl(),
+    gravity: new FormGroup({
+      x: new FormControl(),
+      y: new FormControl(),
+    }),
+    vel_limit: new FormGroup({
+      x: new FormControl(),
+      y: new FormControl(),
+    }),
+    movement_speed: new FormGroup({
+      x: new FormControl(),
+      y: new FormControl(),
+    }),
+    player: new FormGroup({
+      x: new FormControl(),
+      y: new FormControl(),
+      color: new FormControl()
+    }),
+  });
+
   constructor(
     private modalService: NgbModal,
     private materialService: MaterialService

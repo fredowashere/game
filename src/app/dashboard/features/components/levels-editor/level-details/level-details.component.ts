@@ -3,6 +3,8 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { IMaterial } from '../../../models/materials';
 import { Subject, takeUntil } from 'rxjs';
 import { MaterialService } from '../../../services/materials.service';
+import { AreYouSureComponent } from '../../../are-you-sure.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-level-details',
@@ -16,6 +18,7 @@ export class LevelDetailsComponent {
   lmbs: IMaterial[] = [];
   rmbs: IMaterial[] = [];
   materialNameFormatter = (m: IMaterial) => m.name;
+  map: any = null;
 
   form = new FormGroup({
     lmb: new FormControl(),
@@ -23,17 +26,18 @@ export class LevelDetailsComponent {
   });
 
   constructor(
+    private modalService: NgbModal,
     private materialService: MaterialService
   ) {}
 
   ngOnInit() {
 
-    const map = new window.MapDataEditor(
+    this.map = new window.MapDataEditor(
       document.querySelector("#map-data-editor"),
       1024,
       576
     );
-    map.import();
+    this.map.import();
 
     let materialsInit = false;
     this.materialService.materials$
@@ -43,7 +47,7 @@ export class LevelDetailsComponent {
         const copyOfMaterials = [ ...materials ];
         copyOfMaterials.unshift({ id: null, name: "Eraser", color: "#0000" } as any);
 
-        map.setMaterials(copyOfMaterials);
+        this.map.setMaterials(copyOfMaterials);
 
         this.lmbs = copyOfMaterials;
         this.rmbs = copyOfMaterials;
@@ -56,10 +60,10 @@ export class LevelDetailsComponent {
       });
 
     this.form.controls.lmb.valueChanges
-      .subscribe(value => map.setLMB(value ? value.id : null));
+      .subscribe(value => this.map.setLMB(value ? value.id : null));
 
     this.form.controls.rmb.valueChanges
-      .subscribe(value => map.setRMB(value ? value.id : null));
+      .subscribe(value => this.map.setRMB(value ? value.id : null));
 
     // function load() {
     //   const name = prompt("Insert a name.");
@@ -80,5 +84,12 @@ export class LevelDetailsComponent {
 
   ngOnDestroy() {
     this.destroy$.next();
+    this.map.destroy();
+  }
+
+  async clean() {
+    const modalRef = this.modalService.open(AreYouSureComponent);
+    await modalRef.result;
+    this.map.clean();
   }
 }

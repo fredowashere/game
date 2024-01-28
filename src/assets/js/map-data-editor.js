@@ -143,9 +143,14 @@
         return newEl.innerHTML.trim();
     };
 
-    MapDataEditor.prototype.destroy = function() {}; // ToDo: Implement this (removes memory leaks)
+    MapDataEditor.prototype.destroy = function() {
+        clearInterval(this._crosshairInterval);
+    };
 
-    MapDataEditor.prototype.clean = function() {}; // ToDo: Implement this (clean the canvas from all materials)
+    MapDataEditor.prototype.clean = function() {
+        [ ...this.worldWrap.querySelectorAll(`.map-editor-${this.uuid}__tile`) ]
+            .forEach(t => t.removeAttribute("data-key"));
+    };
 
     function getMatrix(el) {
         return [...el.querySelectorAll(`.map-editor-${this.uuid}__row`)].map(row => row.querySelectorAll(`.map-editor-${this.uuid}__tile`));

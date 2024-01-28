@@ -12,10 +12,6 @@
                     <button class="btn btn-outline-primary me-2">
                         <i class="bi bi-play"></i>
                     </button>
-
-                    <button class="btn btn-outline-danger">
-                        <i class="bi bi-stars"></i>
-                    </button>
                 </div>
 
                 <div class="d-flex gap-2">
@@ -79,8 +75,11 @@
 
                 <div class="ms-auto">
 
-                    <button class="btn btn-outline-primary me-2">
-                        Load
+                    <button
+                        class="btn btn-outline-danger me-2"
+                        (click)="clean()"
+                    >
+                        Clean
                     </button>
 
                     <button class="btn btn-primary">

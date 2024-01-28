@@ -13,7 +13,13 @@ import { IMaterial } from '../../models/materials';
         <div class="modal-header">
 
             <h4 class="modal-title" id="modal-title">
-                {{ material ? 'Edit ' + material.name : 'Create new material' }}
+                <ng-container *ngIf="material; else newMaterial">
+                    Edit {{ material.name }}
+                    <span class="ms-1" style="display: inline-block; width: 20px; height: 20px;" [style.background]="pickerColor"></span>
+                </ng-container>
+                <ng-template #newMaterial>
+                    Create new material
+                </ng-template>
             </h4>
 
             <button
@@ -24,123 +30,137 @@ import { IMaterial } from '../../models/materials';
 
         <div class="modal-body">
 
-            <div class="ps-3 mb-3">
+            <div class="border rounded mb-3">
+                <h5 class="text-uppercase border-bottom p-2 mb-0 clickable" (click)="isAppearanceCollapsed = !isAppearanceCollapsed">
+                    Appearance
+                    <i *ngIf="!isAppearanceCollapsed" class="bi bi-arrows-collapse ms-1"></i>
+                    <i *ngIf="isAppearanceCollapsed" class="bi bi-arrows-expand ms-1"></i>
+                </h5>
+                <div class="p-2 px-3" #appearanceCollapse="ngbCollapse" [(ngbCollapse)]="isAppearanceCollapsed">
 
-                <h5 class="text-uppercase" style="margin-left: -1rem;">Appearance</h5>
-
-                <span class="mb-3" id="colorPicker">
-                    <span [style.background]="pickerColor"></span> {{ pickerColor }}
-                </span>
-
-                <app-input
-                    class="mb-3"
-                    type="checkbox"
-                    name="fore"
-                    label="Fore"
-                    helper="Whether the tile is drawn in front of the player, defaults to false."
-                    [ngControl]="form.controls.fore"
-                    [floatingLabel]="true"
-                />
-    
-                <app-input
-                    class="mb-3"
-                    name="name"
-                    label="Name"
-                    helper="A string that briefly describes the material"
-                    [ngControl]="form.controls.name"
-                    [floatingLabel]="true"
-                />
-            </div>
-
-            <div class="ps-3 mb-3">
-
-                <h5 class="text-uppercase" style="margin-left: -1rem;">Physics</h5>
-
-                <app-input
-                    class="mb-3"
-                    type="checkbox"
-                    name="solid"
-                    label="Solid"
-                    helper="Whether the tile is solid or not, defaults to false."
-                    [ngControl]="form.controls.solid"
-                    [floatingLabel]="true"
-                />
-
-                <app-input
-                    class="mb-3"
-                    type="number"
-                    name="bounce"
-                    label="Bounce"
-                    helper="How much velocity is preserved upon hitting the tile, 0.5 is half."
-                    [ngControl]="form.controls.bounce"
-                    [floatingLabel]="true"
-                />
-
-                <div class="flexgrid flexgrid--2">
+                    <span class="mb-3" id="colorPicker">
+                        <span [style.background]="pickerColor"></span> {{ pickerColor }}
+                    </span>
 
                     <app-input
-                        type="number"
-                        name="frictionx"
-                        label="Friction X"
-                        helper="X value of the friction of the tile"
-                        [ngControl]="form.controls.friction.controls.x"
+                        class="mb-3"
+                        type="checkbox"
+                        name="fore"
+                        label="Fore"
+                        helper="Whether the tile is drawn in front of the player, defaults to false."
+                        [ngControl]="form.controls.fore"
                         [floatingLabel]="true"
                     />
         
                     <app-input
-                        type="number"
-                        name="frictiony"
-                        label="Friction Y"
-                        helper="Y value of the friction of the tile"
-                        [ngControl]="form.controls.friction.controls.y"
-                        [floatingLabel]="true"
-                    />
-                </div>
-
-                <div class="flexgrid flexgrid--2">
-
-                    <app-input
-                        type="number"
-                        name="gravityx"
-                        label="Gravity X"
-                        helper="X value of the gravity of the tile"
-                        [ngControl]="form.controls.gravity.controls.x"
-                        [floatingLabel]="true"
-                    />
-        
-                    <app-input
-                        type="number"
-                        name="gravityy"
-                        label="Gravity Y"
-                        helper="Y value of the gravity of the tile"
-                        [ngControl]="form.controls.gravity.controls.y"
+                        name="name"
+                        label="Name"
+                        helper="A string that briefly describes the material"
+                        [ngControl]="form.controls.name"
                         [floatingLabel]="true"
                     />
                 </div>
             </div>
+            
+            <div class="border rounded mb-3">
+                <h5 class="text-uppercase border-bottom p-2 mb-0 clickable" (click)="isPhysicsCollapsed = !isPhysicsCollapsed">
+                    Physics
+                    <i *ngIf="!isPhysicsCollapsed" class="bi bi-arrows-collapse ms-1"></i>
+                    <i *ngIf="isPhysicsCollapsed" class="bi bi-arrows-expand ms-1"></i>
+                </h5>
+                <div class="p-2 px-3" #physicsCollapse="ngbCollapse" [(ngbCollapse)]="isPhysicsCollapsed">
 
-            <div class="ps-3">
+                    <app-input
+                        class="mb-3"
+                        type="checkbox"
+                        name="solid"
+                        label="Solid"
+                        helper="Whether the tile is solid or not, defaults to false."
+                        [ngControl]="form.controls.solid"
+                        [floatingLabel]="true"
+                    />
 
-                <h5 class="text-uppercase" style="margin-left: -1rem;">Behavior</h5>
+                    <app-input
+                        class="mb-3"
+                        type="number"
+                        name="bounce"
+                        label="Bounce"
+                        helper="How much velocity is preserved upon hitting the tile, 0.5 is half."
+                        [ngControl]="form.controls.bounce"
+                        [floatingLabel]="true"
+                    />
 
-                <app-input
-                    class="mb-3"
-                    type="checkbox"
-                    name="jump"
-                    label="Jump"
-                    helper="Whether the player can jump while over the tile, defaults to false."
-                    [ngControl]="form.controls.jump"
-                    [floatingLabel]="true"
-                />
+                    <div class="flexgrid flexgrid--2">
 
-                <app-input
-                    type="textarea"
-                    name="script"
-                    label="Script"
-                    helper="Refers to a script in the scripts section, executed if it is touched."
-                    [ngControl]="form.controls.script"
-                    [floatingLabel]="true"
-                />
+                        <app-input
+                            type="number"
+                            name="frictionx"
+                            label="Friction X"
+                            helper="X value of the friction of the tile"
+                            [ngControl]="form.controls.friction.controls.x"
+                            [floatingLabel]="true"
+                        />
+            
+                        <app-input
+                            type="number"
+                            name="frictiony"
+                            label="Friction Y"
+                            helper="Y value of the friction of the tile"
+                            [ngControl]="form.controls.friction.controls.y"
+                            [floatingLabel]="true"
+                        />
+                    </div>
+
+                    <div class="flexgrid flexgrid--2">
+
+                        <app-input
+                            type="number"
+                            name="gravityx"
+                            label="Gravity X"
+                            helper="X value of the gravity of the tile"
+                            [ngControl]="form.controls.gravity.controls.x"
+                            [floatingLabel]="true"
+                        />
+            
+                        <app-input
+                            type="number"
+                            name="gravityy"
+                            label="Gravity Y"
+                            helper="Y value of the gravity of the tile"
+                            [ngControl]="form.controls.gravity.controls.y"
+                            [floatingLabel]="true"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div class="border rounded mb-3">
+                <h5 class="text-uppercase border-bottom p-2 mb-0 clickable" (click)="isBehaviorCollapsed = !isBehaviorCollapsed">
+                    Behavior
+                    <i *ngIf="!isBehaviorCollapsed" class="bi bi-arrows-collapse ms-1"></i>
+                    <i *ngIf="isBehaviorCollapsed" class="bi bi-arrows-expand ms-1"></i>
+                </h5>
+                <div class="p-2 px-3" #behaviorCollapse="ngbCollapse" [(ngbCollapse)]="isBehaviorCollapsed">
+
+                    <app-input
+                        class="mb-3"
+                        type="checkbox"
+                        name="jump"
+                        label="Jump"
+                        helper="Whether the player can jump while over the tile, defaults to false."
+                        [ngControl]="form.controls.jump"
+                        [floatingLabel]="true"
+                    />
+
+                    <app-input
+                        type="textarea"
+                        name="script"
+                        label="Script"
+                        helper="Refers to a script in the scripts section, executed if it is touched."
+                        [ngControl]="form.controls.script"
+                        [floatingLabel]="true"
+                    />
+                </div>
             </div>
         </div>
         
@@ -199,6 +219,10 @@ export class MaterialEditComponent {
 
     @Input("material") material!: IMaterial;
 
+    isAppearanceCollapsed = false;
+    isPhysicsCollapsed = false;
+    isBehaviorCollapsed = false;
+
     pickerColor = "rgba(0,204,255,1)";
 
     form = new FormGroup({
@@ -232,6 +256,8 @@ export class MaterialEditComponent {
             this.pickerColor = this.material.color;
             this.form.patchValue(this.material);
         }
+        this.isAppearanceCollapsed = !!this.material;
+        this.isPhysicsCollapsed = !!this.material;
     }
 
     ngAfterViewInit() {

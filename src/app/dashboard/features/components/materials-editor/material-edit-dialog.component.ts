@@ -134,7 +134,7 @@ import { IMaterial } from '../../models/materials';
                 </div>
             </div>
 
-            <div class="border rounded mb-3">
+            <div class="border rounded">
                 <h5 class="text-uppercase border-bottom p-2 mb-0 clickable" (click)="isBehaviorCollapsed = !isBehaviorCollapsed">
                     Behavior
                     <i *ngIf="!isBehaviorCollapsed" class="bi bi-arrows-collapse ms-1"></i>

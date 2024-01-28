@@ -1,6 +1,6 @@
 (function() {
 
-    function MapDataEditor(targetEl, materials, viewportWidth, viewportHeight) {
+    function MapDataEditor(targetEl, viewportWidth, viewportHeight) {
         
         this.uuid = Math.random().toString(36).slice(2, 7);
         this.worldSize = 1e2;
@@ -21,10 +21,32 @@
         this._editorTiles = [];
 
         init.bind(this)(targetEl);
-        addStyle.bind(this)(materials);
+        addStyles.bind(this)();
     }
 
     window.MapDataEditor = MapDataEditor;
+
+    MapDataEditor.prototype.setMaterials = function(materials) {
+
+        if (!materials) {
+            throw new Error("Missing materials.");
+        }
+
+        const css = materials
+            .map(m => `[data-key="${m.id}"] { background-color: ${m.color} }`)
+            .join("\n\n");
+
+        const oldStyle = document.head.querySelector(`#map-editor-material-styles-${this.uuid}`);
+        if (oldStyle) {
+            oldStyle.innerHTML = css;
+        }
+        else {
+            const newStyle = document.createElement("STYLE");
+            newStyle.id = "map-editor-material-styles-" + this.uuid;
+            newStyle.innerHTML = css;
+            document.head.appendChild(newStyle);
+        }
+    };
 
     MapDataEditor.prototype.setLMB = function(val) {
         this.lmb = val;
@@ -267,17 +289,7 @@
         );
     }
 
-    function addStyle(materials) {
-
-        if (!materials) {
-            throw new Error("Missing materials.");
-        }
-
-        const materialStyles = materials
-            .map(m => `[data-key="${m.id}"] {
-    background-color: ${m.color};
-}`)
-            .join("\n\n");
+    function addStyles() {
 
         const css = `*[class^="map-editor-${this.uuid}"]  {
     box-sizing: border-box;
@@ -327,9 +339,7 @@
 
 .map-editor-${this.uuid}__tile--crosshair {
     border: 1px solid #f008;
-}
-
-${materialStyles}`;
+}`;
 
         const style = document.createElement("STYLE");
         style.id = "map-editor-style-" + this.uuid;

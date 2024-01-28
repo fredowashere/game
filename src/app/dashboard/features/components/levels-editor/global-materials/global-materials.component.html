@@ -2,16 +2,18 @@
         
 <div class="d-flex justify-content-between p-2 border-bottom">
 
-    <div>
-        <button [disabled]="dt.selectedRows.length === 0" class="btn btn-outline-primary me-2">
-            <i class="bi bi-arrow-left-right"></i>
-        </button>
-        <button class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i>
-        </button>
-    </div>
+    <button
+        class="btn btn-primary"
+        (click)="create()"
+    >
+        <i class="bi bi-plus-circle"></i>
+    </button>
 
-    <button [disabled]="dt.selectedRows.length === 0" class="btn btn-danger">
+    <button
+        class="btn btn-danger"
+        (click)="deleteMany()"
+        [disabled]="dt.selectedRows.length === 0"
+    >
         <i class="bi bi-trash3"></i>
     </button>
 </div>
@@ -20,7 +22,7 @@
     #dt
     [thead]="thead"
     [tbody]="tbody"
-    [items]="materials"
+    [items]="$any(materialService.materials$ | async)"
     [searchable]="[ 'name' ]"
     [paginated]="true"
     [pageSize]="50"

@@ -40,7 +40,7 @@
             #dt
             [thead]="thead"
             [tbody]="tbody"
-            [items]="materials"
+            [items]="$any(materialService.materials$ | async)"
             [searchable]="[ 'name' ]"
             [paginated]="true"
             [pageSize]="10"

@@ -159,14 +159,6 @@
 
             <app-input
                 type="number"
-                name="movementSpeedJump"
-                label="Mov. Speed Jump"
-                [ngControl]="form.controls.movementSpeed.controls.jump"
-                [floatingLabel]="true"
-            />
-
-            <app-input
-                type="number"
                 name="movementSpeedX"
                 label="Mov. Speed X"
                 [ngControl]="form.controls.movementSpeed.controls.x"
@@ -178,6 +170,14 @@
                 name="movementSpeedY"
                 label="Mov. Speed Y"
                 [ngControl]="form.controls.movementSpeed.controls.y"
+                [floatingLabel]="true"
+            />
+
+            <app-input
+                type="number"
+                name="movementSpeedJump"
+                label="Mov. Speed Jump"
+                [ngControl]="form.controls.movementSpeed.controls.jump"
                 [floatingLabel]="true"
             />
         </div>

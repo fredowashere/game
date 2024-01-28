@@ -1,6 +1,6 @@
-<div class="editor-row px-3 py-5">
+<div class="editor-row px-3 pt-5">
     
-    <div class="map-editor shadow" style="margin-left: auto;">
+    <div class="card-looking shadow" style="margin-left: auto;">
 
         <div>
 
@@ -10,12 +10,18 @@
                 </a>
             </div>
 
-            <h5 class="m-2 mb-0">Map Editor</h5>
+            <div class="col-md-3">
+                <app-input
+                    class="m-2 mb-0"
+                    name="name"
+                    placeholder="Insert a level name"
+                    [ngControl]="form.controls.name"
+                />
+            </div>
         
             <div class="map-controls">
 
                 <div class="me-auto">
-
                     <button class="btn btn-outline-primary me-2">
                         Play <i class="bi bi-play"></i>
                     </button>
@@ -41,7 +47,7 @@
                             [template]="materialAutocomplete"
                             [formatter]="materialNameFormatter"
                             [options]="lmbs"
-                            [ngControl]="form.controls.lmb"
+                            [ngControl]="form.controls._lmb"
                         />
         
                         <span
@@ -52,7 +58,7 @@
                                 border: 4px solid;
                                 inset: 0px;
                             "
-                            [style.borderColor]="form.controls.lmb.value?.color"
+                            [style.borderColor]="form.controls._lmb.value?.color"
                         ></span>
                     </div>
 
@@ -64,7 +70,7 @@
                             [template]="materialAutocomplete"
                             [formatter]="materialNameFormatter"
                             [options]="lmbs"
-                            [ngControl]="form.controls.rmb"
+                            [ngControl]="form.controls._rmb"
                         />
         
                         <span
@@ -75,7 +81,7 @@
                                 border: 4px solid;
                                 inset: 0px;
                             "
-                            [style.borderColor]="form.controls.rmb.value?.color"
+                            [style.borderColor]="form.controls._rmb.value?.color"
                         ></span>
                     </div>
                 </div>
@@ -99,8 +105,111 @@
         <div id="map-data-editor"></div>
     </div>
 
-    <div class="materials-pane shadow" style="margin-right: auto;">
+    <div class="card-looking materials-pane shadow" style="margin-right: auto;">
         <app-global-materials></app-global-materials>
     </div>
 </div>
+
+<div class="editor-row p-3" style="width: 1500px; margin: 0 auto;">
+
+    <div class="card card-body shadow">
+        <div class="flexgrid flexgrid--2">
+
+            <app-input
+                type="number"
+                name="gravityX"
+                label="Gravity X"
+                [ngControl]="form.controls.gravity.controls.x"
+                [floatingLabel]="true"
+            />
+
+            <app-input
+                type="number"
+                name="gravityY"
+                label="Gravity Y"
+                [ngControl]="form.controls.gravity.controls.y"
+                [floatingLabel]="true"
+            />
+        </div>
+    </div>
+
+    <div class="card card-body shadow">
+        <div class="flexgrid flexgrid--2">
+
+            <app-input
+                type="number"
+                name="velLimitX"
+                label="Vel. Limit X"
+                [ngControl]="form.controls.velLimit.controls.x"
+                [floatingLabel]="true"
+            />
+
+            <app-input
+                type="number"
+                name="velLimitY"
+                label="Vel. Limit Y"
+                [ngControl]="form.controls.velLimit.controls.y"
+                [floatingLabel]="true"
+            />
+        </div>
+    </div>
+
+    <div class="card card-body shadow">
+        <div class="flexgrid flexgrid--2">
+
+            <app-input
+                type="number"
+                name="movementSpeedJump"
+                label="Mov. Speed Jump"
+                [ngControl]="form.controls.movementSpeed.controls.jump"
+                [floatingLabel]="true"
+            />
+
+            <app-input
+                type="number"
+                name="movementSpeedX"
+                label="Mov. Speed X"
+                [ngControl]="form.controls.movementSpeed.controls.x"
+                [floatingLabel]="true"
+            />
+
+            <app-input
+                type="number"
+                name="movementSpeedY"
+                label="Mov. Speed Y"
+                [ngControl]="form.controls.movementSpeed.controls.y"
+                [floatingLabel]="true"
+            />
+        </div>
+    </div>
+
+    <div class="card card-body shadow">
+        <div class="flexgrid flexgrid--2">
+    
+            <app-input
+                type="number"
+                name="playerX"
+                label="Player X"
+                [ngControl]="form.controls.player.controls.x"
+                [floatingLabel]="true"
+            />
+    
+            <app-input
+                type="number"
+                name="playerY"
+                label="Player Y"
+                [ngControl]="form.controls.player.controls.y"
+                [floatingLabel]="true"
+            />
+    
+            <app-input
+                name="playerColor"
+                label="Player Color"
+                [ngControl]="form.controls.player.controls.color"
+                [floatingLabel]="true"
+            />
+        </div>
+    </div>
+</div>
+
 

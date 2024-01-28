@@ -21,29 +21,28 @@ export class LevelDetailsComponent {
   map: any = null;
 
   form = new FormGroup({
-    lmb: new FormControl(),
-    rmb: new FormControl()
-  });
-
-  form2 = new FormGroup({
-    tile_size: new FormControl(),
+    name: new FormControl("Example Level"),
+    tileSize: new FormControl(24),
     gravity: new FormGroup({
-      x: new FormControl(),
-      y: new FormControl(),
+      x: new FormControl(0),
+      y: new FormControl(0.3),
     }),
-    vel_limit: new FormGroup({
-      x: new FormControl(),
-      y: new FormControl(),
+    velLimit: new FormGroup({
+      x: new FormControl(2),
+      y: new FormControl(16),
     }),
-    movement_speed: new FormGroup({
-      x: new FormControl(),
-      y: new FormControl(),
+    movementSpeed: new FormGroup({
+      jump: new FormControl(6),
+      x: new FormControl(0.3),
+      y: new FormControl(0.3),
     }),
     player: new FormGroup({
-      x: new FormControl(),
-      y: new FormControl(),
-      color: new FormControl()
+      x: new FormControl(35),
+      y: new FormControl(10),
+      color: new FormControl("#FF9900")
     }),
+    _lmb: new FormControl(),
+    _rmb: new FormControl()
   });
 
   constructor(
@@ -74,16 +73,16 @@ export class LevelDetailsComponent {
         this.rmbs = copyOfMaterials;
 
         if (!materialsInit) {
-          this.form.controls.lmb.setValue(copyOfMaterials[0]);
-          this.form.controls.rmb.setValue(copyOfMaterials[0]);
+          this.form.controls._lmb.setValue(copyOfMaterials[0]);
+          this.form.controls._rmb.setValue(copyOfMaterials[0]);
         }
         materialsInit = true;
       });
 
-    this.form.controls.lmb.valueChanges
+    this.form.controls._lmb.valueChanges
       .subscribe(value => this.map.setLMB(value ? value.id : null));
 
-    this.form.controls.rmb.valueChanges
+    this.form.controls._rmb.valueChanges
       .subscribe(value => this.map.setRMB(value ? value.id : null));
 
     // function load() {

@@ -3,12 +3,6 @@
     gap: 1rem;
 }
 
-.map-editor {
-    border: 1px solid #eee;
-    border-radius: 6px;
-    background: #fff;
-}
-
 .map-controls {
     display: grid;
     grid-template-columns: 33.33% 33.33% 33.33%;
@@ -17,8 +11,11 @@
 }
 
 .materials-pane {
-    flex: 0 0 460px;
+    flex: 0 0 424px;
     overflow: hidden;
+}
+
+.card-looking {
     border: 1px solid #eee;
     border-radius: 6px;
     background: #fff;

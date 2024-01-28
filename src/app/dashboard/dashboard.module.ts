@@ -23,11 +23,6 @@ const routes: Routes = [
           import('./features/components/levels-editor/levels-editor.module').then(m => m.LevelsEditorModule)
       },
       {
-        path: 'playground',
-        loadChildren: () =>
-          import('./features/components/playground/playground.module').then(m => m.PlaygroundModule)
-      },
-      {
         path: 'engine-settings',
         loadChildren: () =>
           import('./features/components/engine-settings/engine-settings.module').then(m => m.EngineSettingsModule)

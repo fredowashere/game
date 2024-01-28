@@ -57,12 +57,6 @@ export class DashboardSidebarComponent {
       icon: 'bi-list-ol',
       path: '/dashboard/levels-editor',
     },
-    {
-      isActive: false,
-      title: 'Playground',
-      icon: 'bi-play',
-      path: '/dashboard/playground',
-    },
   ];
 
   username$: Observable<string | undefined>;

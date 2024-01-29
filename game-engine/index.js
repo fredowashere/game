@@ -344,7 +344,7 @@ const map = {
     movementSpeed: { jump: 6, left: 0.3, right: 0.3 },
     
     /* The coordinates at which the player spawns and the color of the player */
-    player: { x: 35, y: 10, color: "#FF9900" },
+    player: { x: 10, y: 10, color: "#FF9900" },
     
     /* Scripts refered to by the "script" variable in the tile keys */
     scripts: {

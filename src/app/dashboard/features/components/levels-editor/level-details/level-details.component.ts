@@ -5,6 +5,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { MaterialService } from '../../../services/materials.service';
 import { AreYouSureComponent } from '../../../are-you-sure.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-level-details',
@@ -12,6 +13,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./level-details.component.css']
 })
 export class LevelDetailsComponent {
+
+  levelId = -1;
 
   destroy$ = new Subject<void>();
 
@@ -47,8 +50,12 @@ export class LevelDetailsComponent {
 
   constructor(
     private modalService: NgbModal,
-    private materialService: MaterialService
-  ) {}
+    private materialService: MaterialService,
+    private route: ActivatedRoute
+  ) {
+    this.levelId = Number(route.snapshot.paramMap.get("levelId"));
+    console.log(this.levelId);
+  }
 
   ngOnInit() {
 

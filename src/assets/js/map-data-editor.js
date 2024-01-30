@@ -61,9 +61,9 @@
         // Add prefix to mapData classes
         if (mapData) {
             mapData = mapData
-                .replaceAll("world", `map-editor-${this.uuid}__world`)
-                .replaceAll("row", `map-editor-${this.uuid}__row`)
-                .replaceAll("tile", `map-editor-${this.uuid}__tile`);
+                .replaceAll("g-world", `map-editor-${this.uuid}__world`)
+                .replaceAll("g-row", `map-editor-${this.uuid}__row`)
+                .replaceAll("g-tile", `map-editor-${this.uuid}__tile`);
         }
 
         // Clear editor from previous map
@@ -124,21 +124,19 @@
         // Copy map data into a new element
         const copyOfWrap = this.worldWrap.innerHTML;
 
-        // Strip HTML from any map-editor 
-        const cleaned = copyOfWrap.replaceAll(/map-editor-.*?__/g, "");
+        // Strip editor prefix 
+        const cleaned = copyOfWrap.replaceAll(/map-editor-.*?__/g, "g-");
 
         const newEl = document.createElement("DIV");
         newEl.innerHTML = cleaned;
 
-        // Remove .editor elements
+        // Remove editor elements
         [...newEl.querySelectorAll('[class$="--editor"]')]
             .forEach(editor => editor.remove());
 
-        // Remove .crosshair class
-        [...newEl.querySelectorAll(`.map-editor-${this.uuid}__tile--crosshair`)]
-            .forEach(ch => ch.classList.remove(`map-editor-${this.uuid}__tile--crosshair`));
-
-        localStorage.setItem("prova", newEl.innerHTML.trim());
+        // Remove crosshair elements
+        [...newEl.querySelectorAll('[class$="--crosshair"]')]
+            .forEach(editor => editor.remove());
 
         return newEl.innerHTML.trim();
     };

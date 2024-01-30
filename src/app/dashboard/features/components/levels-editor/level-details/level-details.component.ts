@@ -6,6 +6,7 @@ import { MaterialService } from '../../../services/materials.service';
 import { AreYouSureComponent } from '../../../are-you-sure.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
+import { LevelService } from '../../../services/levels.service';
 
 @Component({
   selector: 'app-level-details',
@@ -51,10 +52,10 @@ export class LevelDetailsComponent {
   constructor(
     private modalService: NgbModal,
     private materialService: MaterialService,
+    private levelService: LevelService,
     private route: ActivatedRoute
   ) {
     this.levelId = Number(route.snapshot.paramMap.get("levelId"));
-    console.log(this.levelId);
   }
 
   ngOnInit() {
@@ -92,6 +93,15 @@ export class LevelDetailsComponent {
     this.form.controls._rmb.valueChanges
       .subscribe(value => this.map.setRMB(value ? value.id : null));
 
+    if (this.levelId > -1) {
+      const levels = this.levelService.getAll();
+      const level = levels.find(level => level.id == this.levelId);
+      if (level) {
+        this.form.patchValue(level);
+        this.map.import(level.data);
+      }
+    }
+
     // function load() {
     //   const name = prompt("Insert a name.");
     //   if (name) {
@@ -118,5 +128,11 @@ export class LevelDetailsComponent {
     const modalRef = this.modalService.open(AreYouSureComponent);
     await modalRef.result;
     this.map.clean();
+  }
+
+  play() {
+    const data = this.map.export();
+    const settings = this.form.getRawValue();
+    console.log({ ...settings, data });
   }
 }

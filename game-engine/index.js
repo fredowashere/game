@@ -362,7 +362,7 @@
         this.domWorldWrap.scrollTo(this.camera.x | 0, this.camera.y | 0)
         
         if (this.lastTile != tile._key.id && tile._key.script) {
-            eval(this.currentMap.scripts[tile._key.script]);
+            eval(tile._key.script);
         }
         
         this.lastTile = tile._key.id;

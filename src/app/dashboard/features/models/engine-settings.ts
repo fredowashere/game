@@ -52,5 +52,5 @@ export const DEFAULT_ENGINE_SETTINGS = {
             y: 0
         },
         can_jump: true
-    },
+    }
 }

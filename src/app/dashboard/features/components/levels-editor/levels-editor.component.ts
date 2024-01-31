@@ -40,7 +40,7 @@ export class LevelsEditorComponent {
   async deleteOne(level: ILevel) {
     const modalRef = this.modalService.open(AreYouSureComponent);
     await modalRef.result;
-    this.levelService.delete(level);
+    this.levelService.delete(level.id!);
   }
 
   async deleteMany() {

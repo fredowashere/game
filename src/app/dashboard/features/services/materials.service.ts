@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { DEFAULT_MATERIALS, IMaterial } from "../models/materials";
+import { DEFAULT_MATERIALS, IMaterial, IMaterials } from "../models/materials";
 import { BehaviorSubject } from "rxjs";
 
 @Injectable({
@@ -10,48 +10,54 @@ export class MaterialService {
     materials$ = new BehaviorSubject<IMaterial[]>([]);
 
     constructor() {
-        this.materials$.next(this.getAll());
+        this.materials$.next(this.getSortedArray(this.getAll()));
+    }
+
+    getNewId(materials: IMaterials) {
+        const ids = Object.keys(materials) as unknown as number[];
+        const highestId = Math.max(...ids);
+        return highestId + 1;
+    }
+
+    getSortedArray(materials: IMaterials) {
+        return Object.values(materials).sort((a, b) => b.id - a.id);
     }
 
     getAll() {
         const materials = localStorage.getItem("materials");
-        return (materials ? JSON.parse(materials) : []) as IMaterial[];
+        return (materials ? JSON.parse(materials) : {}) as IMaterials;
     }
 
     create(newMaterial: IMaterial) {
         const materials = this.getAll();
-        const id = materials[0].id + 1;
-        const newMaterials = [ { ...newMaterial, id }, ...materials ];
+        const newId = this.getNewId(materials);
+        newMaterial.id = newId;
+        const newMaterials = { ...materials, [newId]: newMaterial };
         localStorage.setItem("materials", JSON.stringify(newMaterials));
-        this.materials$.next(newMaterials);
+        this.materials$.next(this.getSortedArray(newMaterials));
         return newMaterials;
     }
 
     update(oldMaterial: IMaterial, newMaterial: IMaterial) {
         const materials = this.getAll();
-        const id = oldMaterial.id;
-        const foundIndex = materials.findIndex(m => m.id === id);
-        materials.splice(foundIndex, 1, { ...newMaterial, id });
-        const newMaterials = [ ...materials ];
+        newMaterial.id = oldMaterial.id;
+        const newMaterials = { ...materials, [oldMaterial.id!]: newMaterial };
         localStorage.setItem("materials", JSON.stringify(newMaterials));
-        this.materials$.next(newMaterials);
+        this.materials$.next(this.getSortedArray(newMaterials));
         return newMaterials;
     }
 
-    delete(material: IMaterial) {
-        const materials = this.getAll();
-        const id = material.id;
-        const foundIndex = materials.findIndex(material => material.id === id);
-        materials.splice(foundIndex, 1);
-        const newMaterials = [ ...materials ];
+    delete(materialId: number) {
+        const newMaterials = this.getAll();
+        delete newMaterials[materialId];
         localStorage.setItem("materials", JSON.stringify(newMaterials));
-        this.materials$.next(newMaterials);
+        this.materials$.next(this.getSortedArray(newMaterials));
         return newMaterials;
     }
 
     resetToFactory() {
         localStorage.setItem("materials", JSON.stringify(DEFAULT_MATERIALS));
-        this.materials$.next(DEFAULT_MATERIALS);
+        this.materials$.next(this.getSortedArray(DEFAULT_MATERIALS));
         return DEFAULT_MATERIALS;
     }
 }

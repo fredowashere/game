@@ -51,7 +51,7 @@ export class GlobalMaterialsComponent {
   async deleteOne(material: IMaterial) {
     const modalRef = this.modalService.open(AreYouSureComponent);
     await modalRef.result;
-    this.materialService.delete(material);
+    this.materialService.delete(material.id!);
   }
 
   async deleteMany() {

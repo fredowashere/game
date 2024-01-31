@@ -72,7 +72,7 @@ export class LevelDetailsComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe(materials => {
 
-        const copyOfMaterials = [ ...materials ];
+        const copyOfMaterials = Object.values(materials);
         copyOfMaterials.unshift({ id: null, name: "Eraser", color: "#0000" } as any);
 
         this.map.setMaterials(copyOfMaterials);
@@ -95,7 +95,7 @@ export class LevelDetailsComponent {
 
     if (this.levelId > -1) {
       const levels = this.levelService.getAll();
-      const level = levels.find(level => level.id == this.levelId);
+      const level = levels[this.levelId];
       if (level) {
         this.form.patchValue(level);
         this.map.import(level.data);

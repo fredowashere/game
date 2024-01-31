@@ -150,7 +150,7 @@
         this.currentMap.height = this.currentMap.dom.length;
         this.currentMap.width = Math.max(...this.currentMap.dom.map(row => row.length));
 
-        map.keys.forEach(key => {
+        Object.values(map.keys).forEach(key => {
             this.currentMap.dom.forEach((row, y) => {
                 row.forEach((tile, x) => {
                     const tileKey = tile.getAttribute("data-key");

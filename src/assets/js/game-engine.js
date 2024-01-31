@@ -1,7 +1,7 @@
 (function () {
 
     /* Clarity engine */
-    const Clarity = function (domTarget) {
+    function Clarity(domTarget) {
 
         if (!domTarget) return this.error("Cannot initialize engine without a valid target element.");
 
@@ -402,13 +402,13 @@
         return Math.random().toString(36).slice(2, 7);
     }
 
-    window.initGameEngine = function (domTarget, viewportWidth, viewportHeight, map) {
+    window.initGameEngine = function (domTarget, viewportWidth, viewportHeight, level) {
 
         window.requestAnimFrame = window.requestAnimationFrame || (callback => window.setTimeout(callback, 1000 / 60));
 
         window.game = new Clarity(domTarget);
                game.setViewport(viewportWidth, viewportHeight);
-               game.loadMap(map);
+               game.loadMap(level);
                game.limitViewport = true;
     };
 

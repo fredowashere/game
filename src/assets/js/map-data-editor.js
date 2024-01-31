@@ -122,10 +122,10 @@
     MapDataEditor.prototype.export = function() {
 
         // Copy map data into a new element
-        const copyOfWrap = this.worldWrap.innerHTML;
+        const copyOfWorld = this.world.innerHTML;
 
         // Strip editor prefix 
-        const cleaned = copyOfWrap.replaceAll(/map-editor-.*?__/g, "g-");
+        const cleaned = copyOfWorld.replaceAll(/map-editor-.*?__/g, "g-");
 
         const newEl = document.createElement("DIV");
         newEl.innerHTML = cleaned;

@@ -37,8 +37,8 @@ export class LevelDetailsComponent {
     }),
     movementSpeed: new FormGroup({
       jump: new FormControl(6),
-      x: new FormControl(0.3),
-      y: new FormControl(0.3),
+      left: new FormControl(0.3),
+      right: new FormControl(0.3),
     }),
     player: new FormGroup({
       x: new FormControl(35),
@@ -133,6 +133,8 @@ export class LevelDetailsComponent {
   play() {
     const data = this.map.export();
     const settings = this.form.getRawValue();
-    console.log({ ...settings, data });
+    const level = { ...settings, data, keys: this.materialService.getAll() };
+    window.initGameEngine(document.querySelector("#target"), 576, 360, level);
+    window.startGameEngine();
   }
 }

@@ -7,11 +7,7 @@ import { DEFAULT_LEVELS, ILevel, ILevels } from "../models/levels";
 })
 export class LevelService {
 
-    levels$ = new BehaviorSubject<ILevel[]>([]);
-
-    constructor() {
-        this.levels$.next(this.getSortedArray(this.getAll()));
-    }
+    constructor() {}
 
     getNewId(levels: ILevels) {
         const ids = Object.keys(levels) as unknown as number[];
@@ -28,13 +24,16 @@ export class LevelService {
         return (levels ? JSON.parse(levels) : {}) as ILevels;
     }
 
+    getById(levelId: number) {
+        return this.getAll()[levelId];
+    }
+
     create(newLevel: ILevel) {
         const levels = this.getAll();
         const newId = this.getNewId(levels);
         newLevel.id = newId;
         const newLevels = { ...levels, [newId]: newLevel };
         localStorage.setItem("levels", JSON.stringify(newLevels));
-        this.levels$.next(this.getSortedArray(newLevels));
         return newLevels;
     }
 
@@ -43,7 +42,6 @@ export class LevelService {
         newLevel.id = oldLevel.id;
         const newLevels = { ...levels, [oldLevel.id!]: newLevel };
         localStorage.setItem("levels", JSON.stringify(newLevels));
-        this.levels$.next(this.getSortedArray(newLevels));
         return newLevels;
     }
 
@@ -51,13 +49,11 @@ export class LevelService {
         const newLevels = this.getAll();
         delete newLevels[levelId];
         localStorage.setItem("levels", JSON.stringify(newLevels));
-        this.levels$.next(this.getSortedArray(newLevels));
         return newLevels;
     }
 
     resetToFactory() {
         localStorage.setItem("levels", JSON.stringify(DEFAULT_LEVELS));
-        this.levels$.next(this.getSortedArray(DEFAULT_LEVELS));
         return DEFAULT_LEVELS;
     }
 }

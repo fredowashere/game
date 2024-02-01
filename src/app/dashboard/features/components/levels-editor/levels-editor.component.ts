@@ -16,12 +16,18 @@ export class LevelsEditorComponent {
 
   @ViewChild("dt") dt!: TableComponent;
 
+  levels: ILevel[] = [];
+
   constructor(
-    public levelService: LevelService,
+    private levelService: LevelService,
     private modalService: NgbModal,
     private router: Router,
     private route: ActivatedRoute
   ) { }
+
+  ngOnInit() {
+    this.levels = this.levelService.getSortedArray(this.levelService.getAll());
+  }
 
   async reset() {
     const modalRef = this.modalService.open(AreYouSureComponent);

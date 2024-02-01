@@ -39,7 +39,7 @@
             #dt
             [thead]="thead"
             [tbody]="tbody"
-            [items]="$any(levelService.levels$ | async)"
+            [items]="levels"
             [searchable]="[ 'name' ]"
             [paginated]="true"
             [pageSize]="10"

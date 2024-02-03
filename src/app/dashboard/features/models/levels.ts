@@ -27,7 +27,7 @@ export const DEFAULT_LEVEL: ILevel = {
     // Movement speed when the key is pressed
     movementSpeed: { jump: 6, left: 0.3, right: 0.3 },
     // The coordinates at which the player spawns and the color of the player
-    player: { x: 35, y: 10, color: "#FF9900" },
+    player: { x: 1, y: 1, color: "rgba(255,153,0,1)" },
     materials: DEFAULT_MATERIALS,
     // An array representing the map tiles. Each number corresponds to a key
     data: `<div class="world">

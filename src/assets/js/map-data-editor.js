@@ -287,7 +287,7 @@
 }
 
 .map-editor-${this.uuid}__world-wrap {
-    background-image: linear-gradient(45deg, #777, #333);
+    background-color: #dd33dd;
     position: relative;
     width: ${this.viewportWidth}px;
     height: ${this.viewportHeight}px;

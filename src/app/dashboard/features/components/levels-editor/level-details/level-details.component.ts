@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { IMaterial } from '../../../models/materials';
 import { Subject, startWith, takeUntil } from 'rxjs';
@@ -13,7 +13,7 @@ import { LevelService } from '../../../services/level.service';
   templateUrl: './level-details.component.html',
   styleUrls: ['./level-details.component.css']
 })
-export class LevelDetailsComponent {
+export class LevelDetailsComponent implements OnInit, OnDestroy {
 
   levelId = -1;
 
@@ -24,6 +24,7 @@ export class LevelDetailsComponent {
   rmbs: IMaterial[] = [];
   materialNameFormatter = (m: IMaterial) => m.name;
   map: any = null;
+  playing = false;
 
   form = new FormGroup({
     name: new FormControl("Example Level"),
@@ -68,6 +69,12 @@ export class LevelDetailsComponent {
     );
     this.map.import();
 
+    this.form.controls._lmb.valueChanges
+      .subscribe(value => this.map.setLMB(value ? value.id : null));
+
+    this.form.controls._rmb.valueChanges
+      .subscribe(value => this.map.setRMB(value ? value.id : null));
+
     this.levelService.levelsUpdated
       .pipe(
         startWith(""),
@@ -80,7 +87,7 @@ export class LevelDetailsComponent {
         );
 
         const copyOfMaterials = Object.values(materials);
-        copyOfMaterials.unshift({ id: null, name: "Eraser", color: "#0000" } as any);
+        copyOfMaterials.unshift({ id: 1, name: "Air", color: "#888" } as any);
 
         this.map.setMaterials(copyOfMaterials);
 
@@ -95,15 +102,11 @@ export class LevelDetailsComponent {
         this.materialsInit = true;
       });
 
-    this.form.controls._lmb.valueChanges
-      .subscribe(value => this.map.setLMB(value ? value.id : null));
-
-    this.form.controls._rmb.valueChanges
-      .subscribe(value => this.map.setRMB(value ? value.id : null));
-
     if (this.levelId > -1) {
+
       const levels = this.levelService.getAll();
       const level = levels[this.levelId];
+
       if (level) {
         this.form.patchValue(level);
         this.map.import(level.data);
@@ -130,6 +133,7 @@ export class LevelDetailsComponent {
   ngOnDestroy() {
     this.destroy$.next();
     this.map.destroy();
+    window.stopGameEngine();
   }
 
   async clean() {
@@ -146,9 +150,14 @@ export class LevelDetailsComponent {
 
     const level = { ...settings, materials, data };
 
-    console.log(level);
-
-    window.initGameEngine(document.querySelector("#target"), 576, 360, level);
+    window.initGameEngine(document.querySelector("#game-engine-target"), 576, 360, level);
     window.startGameEngine();
+
+    this.playing = true;
+  }
+
+  stop() {
+    window.stopGameEngine();
+    this.playing = false;
   }
 }

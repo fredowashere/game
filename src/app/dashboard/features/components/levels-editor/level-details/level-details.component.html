@@ -22,11 +22,21 @@
             <div class="map-controls">
 
                 <div class="me-auto">
+
                     <button
-                        class="btn btn-outline-primary me-2"
+                        *ngIf="!playing"
+                        class="btn btn-outline-primary"
                         (click)="play()"
                     >
-                        Play <i class="bi bi-play"></i>
+                        Play <i class="bi bi-play-fill"></i>
+                    </button>
+
+                    <button
+                        *ngIf="playing"
+                        class="btn btn-outline-danger"
+                        (click)="stop()"
+                    >
+                        Stop <i class="bi bi-stop-fill"></i>
                     </button>
                 </div>
 
@@ -105,7 +115,14 @@
             </div>
         </div>
 
-        <div id="map-data-editor"></div>
+        <div class="map-data-editor-wrap">
+
+            <div id="map-data-editor"></div>
+
+            <div class="game-engine-target-wrap" [class.game-engine-target-wrap--invisible]="!playing">
+                <div id="game-engine-target"></div>
+            </div>
+        </div>
     </div>
 
     <div class="card-looking materials-pane shadow" style="margin-right: auto;">
@@ -214,5 +231,3 @@
         </div>
     </div>
 </div>
-
-<div id="target"></div>

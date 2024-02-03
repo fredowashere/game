@@ -5,6 +5,8 @@
 
         if (!domTarget) return this.error("Cannot initialize engine without a valid target element.");
 
+        domTarget.innerHTML = "";
+
         this.domTarget = domTarget;
         this.domWorldWrap = null;
         this.domWorld = null;
@@ -54,18 +56,19 @@
 
     Clarity.prototype.keydown = function (e) {
 
-        e.preventDefault();
-
         const _this = this;
 
         switch (e.keyCode) {
         case 37:
+            e.preventDefault();
             _this.key.left = true;
             break;
         case 38:
+            e.preventDefault();
             _this.key.up = true;
             break;
         case 39:
+            e.preventDefault();
             _this.key.right = true;
             break;
         }
@@ -73,18 +76,19 @@
 
     Clarity.prototype.keyup = function (e) {
 
-        e.preventDefault();
-
         const _this = this;
 
         switch (e.keyCode) {
         case 37:
+            e.preventDefault();
             _this.key.left = false;
             break;
         case 38:
+            e.preventDefault();
             _this.key.up = false;
             break;
         case 39:
+            e.preventDefault();
             _this.key.right = false;
             break;
         }

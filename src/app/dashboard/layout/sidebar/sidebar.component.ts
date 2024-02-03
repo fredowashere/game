@@ -47,12 +47,6 @@ export class DashboardSidebarComponent {
     },
     {
       isActive: false,
-      title: 'Materials Editor',
-      icon: 'bi-grid-fill',
-      path: '/dashboard/materials-editor',
-    },
-    {
-      isActive: false,
       title: 'Levels Editor',
       icon: 'bi-list-ol',
       path: '/dashboard/levels-editor',

@@ -20,3 +20,23 @@
     border-radius: 6px;
     background: #fff;
 }
+
+.map-data-editor-wrap {
+    position: relative;
+}
+
+.game-engine-target-wrap {
+    background-color: rgb(51, 51, 51);
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    z-index: 99;
+    opacity: 1;
+    transition: opacity 250ms ease;
+}
+
+.game-engine-target-wrap--invisible {
+    opacity: 0;
+    pointer-events: none;
+}

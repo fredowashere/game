@@ -41,6 +41,7 @@ export class LevelService {
         newLevel.id = newId;
         const newLevels = { ...levels, [newId]: newLevel };
         this.writeIntoLS(newLevels);
+        return newLevel.id;
     }
 
     update(oldLevel: ILevel, newLevel: ILevel) {
@@ -48,12 +49,14 @@ export class LevelService {
         newLevel.id = oldLevel.id;
         const newLevels = { ...levels, [newLevel.id!]: newLevel };
         this.writeIntoLS(newLevels);
+        return newLevel.id;
     }
 
     delete(levelId: number) {
         const levels = this.getAll();
         delete levels[levelId];
         this.writeIntoLS(levels);
+        return levelId;
     }
 
     resetToFactory() {

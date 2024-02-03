@@ -7,31 +7,20 @@
 
     <div class="card shadow">
 
-        <div class="modal-footer flex-wrap justify-content-between gap-3 p-3">
-
-            <div class="d-flex flex-wrap gap-3">
-
-                <button
-                    class="btn btn-primary"
-                    (click)="create()"
-                >
-                    <i class="bi bi-plus"></i>
-                </button>
-
-                <button
-                    class="btn btn-danger"
-                    [disabled]="dt.selectedRows.length === 0"
-                    (click)="deleteMany()"
-                >
-                    <i class="bi bi-trash3"></i>
-                </button>
-            </div>
+        <div class="modal-footer flex-wrap justify-content-between gap-3 p-3 border-bottom">
 
             <button
                 class="btn btn-outline-primary"
+                (click)="create()"
+            >
+                <i class="bi bi-plus"></i> New
+            </button>
+
+            <button
+                class="btn btn-outline-danger"
                 (click)="reset()"
             >
-                Restore Factory Levels
+                Reset <i class="bi bi-stars"></i>
             </button>
         </div>
         
@@ -43,10 +32,10 @@
             [searchable]="[ 'name' ]"
             [paginated]="true"
             [pageSize]="10"
-            [selectable]="true"
         >
         
             <ng-template #thead>
+                <th class="text-end" sortable="id" (sort)="dt.sort($event)">ID</th>
                 <th sortable="name" (sort)="dt.sort($event)">Name</th>
                 <th class="text-end" sortable="tileSize" (sort)="dt.sort($event)">Tile Size</th>
                 <th>Gravity</th>
@@ -57,6 +46,10 @@
             </ng-template>
         
             <ng-template #tbody let-level let-term$="term$">
+
+                <td class="text-end" data-label="ID">
+                    {{ level.id }}
+                </td>
         
                 <td data-label="Name">
                     <ngb-highlight [result]="level.name" [term]="(term$ | async) || ''"/>
@@ -99,7 +92,7 @@
                         </button>
         
                         <button
-                            class="btn btn-danger"
+                            class="btn btn-outline-danger"
                             (click)="deleteOne(level)"
                         >
                             <i class="bi bi-trash3"></i>

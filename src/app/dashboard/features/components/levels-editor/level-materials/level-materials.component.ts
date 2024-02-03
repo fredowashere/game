@@ -1,6 +1,5 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { TableComponent } from 'src/app/shared/components/table/table.component';
 import { LevelMaterialEditComponent } from './level-material-edit-dialog.component';
 import { IMaterial } from '../../../models/materials';
 import { AreYouSureComponent } from '../../../are-you-sure.component';
@@ -16,8 +15,6 @@ import { Subject, startWith, takeUntil } from 'rxjs';
 })
 export class LevelMaterialsComponent implements OnInit, OnDestroy {
 
-  @ViewChild("dt") dt!: TableComponent;
-
   destroy$ = new Subject<void>();
   levelId = -1;
   materials: IMaterial[] = [];
@@ -32,6 +29,9 @@ export class LevelMaterialsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+
+    if (this.levelId < 0) return;
+
     this.levelService.levelsUpdated
       .pipe(
         startWith(""),
@@ -80,13 +80,5 @@ export class LevelMaterialsComponent implements OnInit, OnDestroy {
     const modalRef = this.modalService.open(AreYouSureComponent);
     await modalRef.result;
     this.materialService.delete(this.levelId, material.id!);
-  }
-
-  async deleteMany() {
-    const modalRef = this.modalService.open(AreYouSureComponent);
-    await modalRef.result;
-    for (const material of this.dt.selectedRows) {
-      this.materialService.delete(this.levelId, material.id);
-    }
   }
 }

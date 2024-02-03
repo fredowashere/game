@@ -166,32 +166,20 @@ import { IMaterial } from '../../../models/materials';
         
         <div class="modal-footer flex-wrap justify-content-between gap-3">
 
-            <div>
-                <button
-                    *ngIf="material"
-                    class="btn btn-danger me-auto"
-                    (click)="delete()"
-                >
-                    Delete
-                </button>
-            </div>
-
-            <div class="d-flex flex-wrap gap-3">
-
-                <button
-                    class="btn btn-outline-secondary"
-                    (click)="activeModal.dismiss('Cancel')"
-                >
-                    Cancel
-                </button>
+            <button
+                *ngIf="material"
+                class="btn btn-outline-danger"
+                (click)="delete()"
+            >
+                <i class="bi bi-trash3"></i> Delete
+            </button>
     
-                <button
-                    class="btn btn-primary"
-                    (click)="save();"
-                >
-                    Save
-                </button>
-            </div>
+            <button
+                class="btn btn-primary"
+                (click)="save();"
+            >
+                Save <i class="bi bi-save"></i>
+            </button>
         </div>
     `,
     styles: [`

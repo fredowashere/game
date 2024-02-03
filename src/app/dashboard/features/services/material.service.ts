@@ -35,6 +35,7 @@ export class MaterialService {
         newMaterial.id = this.getNewId(level.materials);
         level.materials = { ...level.materials, [newMaterial.id]: newMaterial };
         this.levelService.update(level, level);
+        return newMaterial.id;
     }
 
     update(levelId: number, oldMaterial: IMaterial, newMaterial: IMaterial) {
@@ -42,12 +43,14 @@ export class MaterialService {
         newMaterial.id = oldMaterial.id;
         level.materials = { ...level.materials, [newMaterial.id!]: newMaterial };
         this.levelService.update(level, level);
+        return newMaterial.id;
     }
 
     delete(levelId: number, materialId: number) {
         const level = this.levelService.getById(levelId);
         delete level.materials[materialId];
         this.levelService.update(level, level);
+        return materialId;
     }
 
     resetToFactory(levelId: number) {

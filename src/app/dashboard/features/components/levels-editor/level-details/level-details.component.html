@@ -28,7 +28,7 @@
                         class="btn btn-outline-primary"
                         (click)="play()"
                     >
-                        Play <i class="bi bi-play-fill"></i>
+                        <i class="bi bi-play-fill"></i> Play
                     </button>
 
                     <button
@@ -36,7 +36,7 @@
                         class="btn btn-outline-danger"
                         (click)="stop()"
                     >
-                        Stop <i class="bi bi-stop-fill"></i>
+                        <i class="bi bi-stop-fill"></i> Stop
                     </button>
                 </div>
 
@@ -99,16 +99,19 @@
                     </div>
                 </div>
 
-                <div class="ms-auto">
+                <div class="ms-auto d-flex gap-2">
 
                     <button
-                        class="btn btn-outline-danger me-2"
+                        class="btn btn-outline-danger"
                         (click)="clean()"
                     >
                         Clean <i class="bi bi-stars"></i>
                     </button>
 
-                    <button class="btn btn-primary">
+                    <button
+                        class="btn btn-primary"
+                        (click)="save()"
+                    >
                         Save <i class="bi bi-save"></i>
                     </button>
                 </div>

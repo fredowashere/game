@@ -5,8 +5,9 @@ import { Subject, startWith, takeUntil } from 'rxjs';
 import { MaterialService } from '../../../services/material.service';
 import { AreYouSureComponent } from '../../../are-you-sure.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LevelService } from '../../../services/level.service';
+import { DEFAULT_LEVEL } from '../../../models/levels';
 
 @Component({
   selector: 'app-level-details',
@@ -55,12 +56,13 @@ export class LevelDetailsComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private materialService: MaterialService,
     private levelService: LevelService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.levelId = Number(route.snapshot.paramMap.get("levelId"));
   }
 
-  ngOnInit() {
+  async ngOnInit() {
 
     this.map = new window.MapDataEditor(
       document.querySelector("#map-data-editor"),
@@ -68,6 +70,28 @@ export class LevelDetailsComponent implements OnInit, OnDestroy {
       576
     );
     this.map.import();
+
+    // If level already exists, then load it...
+    if (this.levelId > -1) {
+
+      const levels = this.levelService.getAll();
+      const level = levels[this.levelId];
+
+      if (level) {
+        this.form.patchValue(level);
+        this.map.import(level.data);
+      }
+    }
+    // ...otherwise create it, and reload component
+    else {
+
+      const newLevel = DEFAULT_LEVEL;
+      const levelId = this.levelService.create(newLevel);
+
+      await this.router.navigateByUrl("/", { skipLocationChange: true });
+      await this.router.navigate([ "dashboard", "levels-editor", levelId ]);
+      return;
+    }
 
     this.form.controls._lmb.valueChanges
       .subscribe(value => this.map.setLMB(value ? value.id : null));
@@ -101,33 +125,6 @@ export class LevelDetailsComponent implements OnInit, OnDestroy {
 
         this.materialsInit = true;
       });
-
-    if (this.levelId > -1) {
-
-      const levels = this.levelService.getAll();
-      const level = levels[this.levelId];
-
-      if (level) {
-        this.form.patchValue(level);
-        this.map.import(level.data);
-      }
-    }
-
-    // function load() {
-    //   const name = prompt("Insert a name.");
-    //   if (name) {
-    //     const mapData = localStorage.getItem(name);
-    //     map.import(mapData);
-    //   }
-    // }
-
-    // function save() {
-    //   const name = prompt("Choose a name.");
-    //   if (name) {
-    //     const exported = map.export();
-    //     localStorage.setItem(name, exported);
-    //   }
-    // }
   }
 
   ngOnDestroy() {
@@ -142,17 +139,21 @@ export class LevelDetailsComponent implements OnInit, OnDestroy {
     this.map.clean();
   }
 
-  play() {
-
-    const materials = this.levelService.getById(this.levelId).materials;
+  extractLevel() {
+    const level = this.levelService.getById(this.levelId);
     const settings = this.form.getRawValue();
     const data = this.map.export();
+    return { ...level, ...settings, data };
+  }
 
-    const level = { ...settings, materials, data };
+  save() {
+    const level = this.extractLevel();
+    this.levelService.update(level as any, level as any);
+  }
 
-    window.initGameEngine(document.querySelector("#game-engine-target"), 576, 360, level);
+  play() {
+    window.initGameEngine(document.querySelector("#game-engine-target"), 576, 360, this.extractLevel());
     window.startGameEngine();
-
     this.playing = true;
   }
 

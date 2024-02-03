@@ -62,12 +62,4 @@ export class LevelsEditorComponent implements OnInit, OnDestroy {
     await modalRef.result;
     this.levelService.delete(level.id!);
   }
-
-  async deleteMany() {
-    const modalRef = this.modalService.open(AreYouSureComponent);
-    await modalRef.result;
-    for (const level of this.dt.selectedRows) {
-      this.levelService.delete(level.id);
-    }
-  }
 }

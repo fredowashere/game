@@ -56,6 +56,8 @@
 
     Clarity.prototype.keydown = function (e) {
 
+        if (!window.isGameEngineRunning) return;
+
         const _this = this;
 
         switch (e.keyCode) {
@@ -75,6 +77,8 @@
     };
 
     Clarity.prototype.keyup = function (e) {
+
+        if (!window.isGameEngineRunning) return;
 
         const _this = this;
 
@@ -416,30 +420,30 @@
         window.requestAnimFrame = window.requestAnimationFrame || (callback => window.setTimeout(callback, 1000 / 60));
 
         window.game = new Clarity(domTarget);
-               game.setViewport(viewportWidth, viewportHeight);
-               game.loadMap(level);
-               game.limitViewport = true;
+        window.game.setViewport(viewportWidth, viewportHeight);
+        window.game.loadMap(level);
+        window.game.limitViewport = true;
     };
 
     window.startGameEngine = function () {
 
         const loop = uuid => {
 
-            game.updatePlayer();
-            game.drawMap();
-            game.drawPlayer();
+            window.game.updatePlayer();
+            window.game.drawMap();
+            window.game.drawPlayer();
             
-            if (isGameEngineRunning === uuid) {
-                requestAnimFrame(() => loop(uuid));
+            if (window.isGameEngineRunning === uuid) {
+                window.requestAnimFrame(() => loop(uuid));
             }
         };
 
         window.isGameEngineRunning = getUUID();
-        loop(isGameEngineRunning);
+        loop(window.isGameEngineRunning);
     };
 
     window.stopGameEngine = function () {
-        isGameEngineRunning = false;
+        window.isGameEngineRunning = false;
     };
 
 })();

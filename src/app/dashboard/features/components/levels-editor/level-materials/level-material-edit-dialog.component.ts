@@ -183,14 +183,16 @@ import { IMaterial } from '../../../models/materials';
         
         <div class="modal-footer flex-wrap justify-content-between gap-3">
 
-            <button
-                *ngIf="material"
-                class="btn btn-outline-danger"
-                [disabled]="[ 1, 2 ].includes(material.id || -1)"
-                (click)="delete()"
-            >
-                <i class="bi bi-trash3"></i> Delete
-            </button>
+            <div>
+                <button
+                    *ngIf="material"
+                    class="btn btn-outline-danger"
+                    [disabled]="[ 1, 2 ].includes(material.id || -1)"
+                    (click)="delete()"
+                >
+                    <i class="bi bi-trash3"></i> Delete
+                </button>
+            </div>
     
             <button
                 class="btn btn-primary"

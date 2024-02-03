@@ -159,12 +159,17 @@
                 row.forEach((tile, x) => {
                     const tileKey = tile.getAttribute("data-key");
                     if (tileKey == material.id) {
+
                         const domTile = this.currentMap.dom[y][x];
-                        domTile.style.width = this.tileSize + "px";
-                        domTile.style.height = this.tileSize + "px";
-                        domTile.style.flex = "0 0 " + this.tileSize + "px";
-                        domTile.style.backgroundColor = material.color;
                         domTile._material = material;
+
+                        domTile.style.backgroundColor = material.color;
+                        
+                        domTile.style.flex = `0 0 ${this.tileSize}px`;
+                        domTile.style.height = this.tileSize + "px";
+                        domTile.style.width = this.tileSize + "px";
+
+                        if (material.fore) domTile.style.zIndex = 1;
                     }
                 });
             });

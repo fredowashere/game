@@ -154,7 +154,7 @@
             for (let j = 1; j < matrix[i].length; j++) {
 
                 const tile = matrix[i][j];
-                
+
                 if (i === 1 || i === matrix.length - 1 || j === 1 || j === matrix[i].length - 1) {
                     tile.setAttribute("data-key", 2);
                 }
@@ -302,7 +302,7 @@
 }
 
 .map-editor-${this.uuid}__world-wrap {
-    background-color: #dd33dd;
+    background-color: rgba(136,136,136,1);
     position: relative;
     width: ${this.viewportWidth}px;
     height: ${this.viewportHeight}px;

@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { IMaterial } from '../../../models/materials';
-import { Subject, takeUntil } from 'rxjs';
-import { MaterialService } from '../../../services/materials.service';
+import { Subject, startWith, takeUntil } from 'rxjs';
+import { MaterialService } from '../../../services/material.service';
 import { AreYouSureComponent } from '../../../are-you-sure.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
-import { LevelService } from '../../../services/levels.service';
+import { LevelService } from '../../../services/level.service';
 
 @Component({
   selector: 'app-level-details',
@@ -19,6 +19,7 @@ export class LevelDetailsComponent {
 
   destroy$ = new Subject<void>();
 
+  materialsInit = false;
   lmbs: IMaterial[] = [];
   rmbs: IMaterial[] = [];
   materialNameFormatter = (m: IMaterial) => m.name;
@@ -67,10 +68,16 @@ export class LevelDetailsComponent {
     );
     this.map.import();
 
-    let materialsInit = false;
-    this.materialService.materials$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(materials => {
+    this.levelService.levelsUpdated
+      .pipe(
+        startWith(""),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(() => {
+
+        const materials = this.materialService.getSortedArray(
+          this.materialService.getAll(this.levelId)
+        );
 
         const copyOfMaterials = Object.values(materials);
         copyOfMaterials.unshift({ id: null, name: "Eraser", color: "#0000" } as any);
@@ -80,11 +87,12 @@ export class LevelDetailsComponent {
         this.lmbs = copyOfMaterials;
         this.rmbs = copyOfMaterials;
 
-        if (!materialsInit) {
+        if (!this.materialsInit) {
           this.form.controls._lmb.setValue(copyOfMaterials[0]);
           this.form.controls._rmb.setValue(copyOfMaterials[0]);
         }
-        materialsInit = true;
+
+        this.materialsInit = true;
       });
 
     this.form.controls._lmb.valueChanges
@@ -131,9 +139,15 @@ export class LevelDetailsComponent {
   }
 
   play() {
-    const data = this.map.export();
+
+    const materials = this.levelService.getById(this.levelId).materials;
     const settings = this.form.getRawValue();
-    const level = { ...settings, data, keys: this.materialService.getAll() };
+    const data = this.map.export();
+
+    const level = { ...settings, materials, data };
+
+    console.log(level);
+
     window.initGameEngine(document.querySelector("#target"), 576, 360, level);
     window.startGameEngine();
   }

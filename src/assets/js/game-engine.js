@@ -132,9 +132,9 @@
     Clarity.prototype.loadMap = function (map) {
 
         if (
-            typeof map      === "undefined"
-         || typeof map.data === "undefined"
-         || typeof map.keys === "undefined"
+            typeof map           === "undefined"
+         || typeof map.data      === "undefined"
+         || typeof map.materials === "undefined"
         ) {
             this.error("Error: Invalid map data!");
             return false;
@@ -150,17 +150,17 @@
         this.currentMap.height = this.currentMap.dom.length;
         this.currentMap.width = Math.max(...this.currentMap.dom.map(row => row.length));
 
-        Object.values(map.keys).forEach(key => {
+        Object.values(map.materials).forEach(material => {
             this.currentMap.dom.forEach((row, y) => {
                 row.forEach((tile, x) => {
                     const tileKey = tile.getAttribute("data-key");
-                    if (tileKey == key.id) {
+                    if (tileKey == material.id) {
                         const domTile = this.currentMap.dom[y][x];
                         domTile.style.width = this.tileSize + "px";
                         domTile.style.height = this.tileSize + "px";
                         domTile.style.flex = "0 0 " + this.tileSize + "px";
-                        domTile.style.backgroundColor = key.color;
-                        domTile._key = key;
+                        domTile.style.backgroundColor = material.color;
+                        domTile._material = material;
                     }
                 });
             });
@@ -187,12 +187,12 @@
     };
 
     Clarity.prototype.getTile = function (x, y) {
-        return this.currentMap.dom[y] && this.currentMap.dom[y][x] ? this.currentMap.dom[y][x] : { _key: 0 };
+        return this.currentMap.dom[y] && this.currentMap.dom[y][x] ? this.currentMap.dom[y][x] : { _material: 0 };
     };
 
     Clarity.prototype.drawTile = function (tile) {
-        if (!tile || !tile._key || !tile._key.color) return;
-        tile.style.backgroundColor = tile._key.color;
+        if (!tile || !tile._material || !tile._material.color) return;
+        tile.style.backgroundColor = tile._material.color;
     };
 
     Clarity.prototype.drawMap = function () {
@@ -223,18 +223,18 @@
             Math.round(this.player.loc.y / this.tileSize)
         );
         
-        if (tile._key.gravity) {
-            this.player.vel.x += tile._key.gravity.x;
-            this.player.vel.y += tile._key.gravity.y;
+        if (tile._material.gravity) {
+            this.player.vel.x += tile._material.gravity.x;
+            this.player.vel.y += tile._material.gravity.y;
         }
         else {
             this.player.vel.x += this.currentMap.gravity.x;
             this.player.vel.y += this.currentMap.gravity.y;
         }
         
-        if (tile._key.friction) {
-            this.player.vel.x *= tile._key.friction.x;
-            this.player.vel.y *= tile._key.friction.y;
+        if (tile._material.friction) {
+            this.player.vel.x *= tile._material.friction.x;
+            this.player.vel.y *= tile._material.friction.y;
         }
 
         const tYUp   = Math.floor(tY / this.tileSize);
@@ -247,16 +247,16 @@
         const xNear1  = Math.round((this.player.loc.x - offset) / this.tileSize);
         const xNear2  = Math.round((this.player.loc.x + offset) / this.tileSize);
 
-        const top1    = this.getTile(xNear1, tYUp)._key;
-        const top2    = this.getTile(xNear2, tYUp)._key;
-        const bottom1 = this.getTile(xNear1, tYDown)._key;
-        const bottom2 = this.getTile(xNear2, tYDown)._key;
-        const left1   = this.getTile(tXLeft, yNear1)._key;
-        const left2   = this.getTile(tXLeft, yNear2)._key;
-        const right1  = this.getTile(tXRight, yNear1)._key;
-        const right2  = this.getTile(tXRight, yNear2)._key;
+        const top1    = this.getTile(xNear1, tYUp)._material;
+        const top2    = this.getTile(xNear2, tYUp)._material;
+        const bottom1 = this.getTile(xNear1, tYDown)._material;
+        const bottom2 = this.getTile(xNear2, tYDown)._material;
+        const left1   = this.getTile(tXLeft, yNear1)._material;
+        const left2   = this.getTile(tXLeft, yNear2)._material;
+        const right1  = this.getTile(tXRight, yNear1)._material;
+        const right2  = this.getTile(tXRight, yNear2)._material;
 
-        if (tile._key.jump && this.jumpSwitch > 15) {
+        if (tile._material.jump && this.jumpSwitch > 15) {
             this.player.canJump = true;
             this.jumpSwitch = 0;
         }
@@ -276,15 +276,15 @@
 
             /* Fix overlap */
             while (
-                this.getTile(Math.floor(this.player.loc.x / this.tileSize), yNear1)._key.solid
-             || this.getTile(Math.floor(this.player.loc.x / this.tileSize), yNear2)._key.solid
+                this.getTile(Math.floor(this.player.loc.x / this.tileSize), yNear1)._material.solid
+             || this.getTile(Math.floor(this.player.loc.x / this.tileSize), yNear2)._material.solid
             ) {
                 this.player.loc.x += 0.1;
             }
 
             while (
-                this.getTile(Math.ceil(this.player.loc.x / this.tileSize), yNear1)._key.solid
-             || this.getTile(Math.ceil(this.player.loc.x / this.tileSize), yNear2)._key.solid
+                this.getTile(Math.ceil(this.player.loc.x / this.tileSize), yNear1)._material.solid
+             || this.getTile(Math.ceil(this.player.loc.x / this.tileSize), yNear2)._material.solid
             ) {
                 this.player.loc.x -= 0.1;
             }
@@ -303,15 +303,15 @@
 
             /* Fix overlap */
             while (
-                this.getTile(xNear1, Math.floor(this.player.loc.y / this.tileSize))._key.solid
-            || this.getTile(xNear2, Math.floor(this.player.loc.y / this.tileSize))._key.solid
+                this.getTile(xNear1, Math.floor(this.player.loc.y / this.tileSize))._material.solid
+            || this.getTile(xNear2, Math.floor(this.player.loc.y / this.tileSize))._material.solid
             ) {
                 this.player.loc.y += 0.1;
             }
 
             while (
-                this.getTile(xNear1, Math.ceil(this.player.loc.y / this.tileSize))._key.solid
-            || this.getTile(xNear2, Math.ceil(this.player.loc.y / this.tileSize))._key.solid
+                this.getTile(xNear1, Math.ceil(this.player.loc.y / this.tileSize))._material.solid
+            || this.getTile(xNear2, Math.ceil(this.player.loc.y / this.tileSize))._material.solid
             ) {
                 this.player.loc.y -= 0.1;
             }
@@ -325,7 +325,7 @@
             
             this.player.vel.y *= -bounce || 0;
 
-            if ((bottom1.solid || bottom2.solid) && !tile._key.jump) {
+            if ((bottom1.solid || bottom2.solid) && !tile._material.jump) {
                 this.player.onFloor = true;
                 this.player.canJump = true;
             }
@@ -361,11 +361,11 @@
 
         this.domWorldWrap.scrollTo(this.camera.x | 0, this.camera.y | 0)
         
-        if (this.lastTile != tile._key.id && tile._key.script) {
-            eval(tile._key.script);
+        if (this.lastTile != tile._material.id && tile._material.script) {
+            eval(tile._material.script);
         }
         
-        this.lastTile = tile._key.id;
+        this.lastTile = tile._material.id;
     };
 
     Clarity.prototype.updatePlayer = function () {

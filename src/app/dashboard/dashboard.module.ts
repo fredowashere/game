@@ -13,20 +13,15 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'levels-editor', pathMatch: 'full' },
       {
-        path: 'materials-editor',
+        path: 'engine-settings',
         loadChildren: () =>
-          import('./features/components/materials-editor/materials-editor.module').then(m => m.MaterialsEditorModule)
+          import('./features/components/engine-settings/engine-settings.module').then(m => m.EngineSettingsModule)
       },
       {
         path: 'levels-editor',
         loadChildren: () =>
           import('./features/components/levels-editor/levels-editor.module').then(m => m.LevelsEditorModule)
-      },
-      {
-        path: 'engine-settings',
-        loadChildren: () =>
-          import('./features/components/engine-settings/engine-settings.module').then(m => m.EngineSettingsModule)
-      },
+      }
     ]
   },
 ];

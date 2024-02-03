@@ -3,10 +3,10 @@ import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { IMaterial } from '../../models/materials';
+import { IMaterial } from '../../../models/materials';
 
 @Component({
-    selector: 'app-material-edit',
+    selector: 'app-level-material-edit',
     standalone: true,
     imports: [ CommonModule, SharedModule ],
     template: `
@@ -215,7 +215,7 @@ import { IMaterial } from '../../models/materials';
         }
     `]
 })
-export class MaterialEditComponent {
+export class LevelMaterialEditComponent {
 
     @Input("material") material!: IMaterial;
 

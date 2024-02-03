@@ -51,20 +51,20 @@ export class EngineSettingsComponent {
   }
 
   loadFromLocalStorage() {
-    const settings = localStorage.getItem("engine_settings");
+    const settings = localStorage.getItem("engineSettings");
     if (settings) {
       this.form.patchValue(JSON.parse(settings));
     }
   }
 
   reset() {
-    localStorage.setItem("engine_settings", JSON.stringify(DEFAULT_ENGINE_SETTINGS));
+    localStorage.setItem("engineSettings", JSON.stringify(DEFAULT_ENGINE_SETTINGS));
     this.loadFromLocalStorage();
     this.toaster.show("Successfully resetted to factory settings!", { classname: "bg-success text-white" });
   }
 
   save() {
-    localStorage.setItem("engine_settings", JSON.stringify(this.form.getRawValue()));
+    localStorage.setItem("engineSettings", JSON.stringify(this.form.getRawValue()));
     this.toaster.show("Successfully saved current settings!", { classname: "bg-success text-white" });
   }
 }

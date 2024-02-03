@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { LevelsEditorComponent } from './levels-editor.component';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { GlobalMaterialsComponent } from './global-materials/global-materials.component';
+import { LevelMaterialsComponent } from './level-materials/level-materials.component';
 import { LevelDetailsComponent } from './level-details/level-details.component';
 
 const routes: Routes = [
@@ -14,7 +14,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     LevelsEditorComponent,
-    GlobalMaterialsComponent,
+    LevelMaterialsComponent,
     LevelDetailsComponent
   ],
   imports: [

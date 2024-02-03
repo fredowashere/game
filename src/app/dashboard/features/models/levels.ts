@@ -1,3 +1,5 @@
+import { DEFAULT_MATERIALS, IMaterials } from "./materials";
+
 export interface ILevel {
     id?: number;
     name: string;
@@ -6,6 +8,7 @@ export interface ILevel {
     velLimit: { x: number; y: number; };
     movementSpeed: { jump: number; left: number; right: number; };
     player: { x: number; y: number; color: string; };
+    materials: IMaterials;
     data: string;
 }
 
@@ -26,6 +29,7 @@ export const DEFAULT_LEVELS: ILevels = {
         movementSpeed: { jump: 6, left: 0.3, right: 0.3 },
         // The coordinates at which the player spawns and the color of the player
         player: { x: 35, y: 10, color: "#FF9900" },
+        materials: DEFAULT_MATERIALS,
         // An array representing the map tiles. Each number corresponds to a key
         data: `<div class="world">
         <div class="g-row" style="display: flex">

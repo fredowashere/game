@@ -21,7 +21,7 @@ export interface IMaterials {
 }
 
 export const DEFAULT_MATERIALS: IMaterials = {
-    11: { id: 11, name: "Unlock", color: 'rgba(0,255,255,1)', solid: false, script: 'this.currentMap.keys[10].solid = 0;\nthis.currentMap.keys[10].color = "#888";' },
+    11: { id: 11, name: "Unlock", color: 'rgba(0,255,255,1)', solid: false, script: 'this.currentMap.materials[10].solid = 0;\nthis.currentMap.materials[10].color = "#888";' },
     10: { id: 10, name: "", color: 'rgba(85,85,85,1)', solid: true},
     9:{ id: 9, name: "Death", color: 'rgba(201,50,50,1)', solid: false, script: 'alert("You died!");\nthis.loadMap(this.currentMap);' },
     8:{ id: 8, name: "Next Level", color: 'rgba(250,223,115,1)', solid: false, script: 'alert("You won! Reloading map.");\nthis.loadMap(this.currentMap);' },

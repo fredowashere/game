@@ -1,13 +1,20 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
 import { DEFAULT_LEVELS, ILevel, ILevels } from "../models/levels";
+import { Subject } from "rxjs";
 
 @Injectable({
     providedIn: "root"
 })
 export class LevelService {
 
+    levelsUpdated = new Subject<void>();
+
     constructor() {}
+
+    writeIntoLS(levels: ILevels) {
+        localStorage.setItem("levels", JSON.stringify(levels));
+        this.levelsUpdated.next();
+    }
 
     getNewId(levels: ILevels) {
         const ids = Object.keys(levels) as unknown as number[];
@@ -33,27 +40,23 @@ export class LevelService {
         const newId = this.getNewId(levels);
         newLevel.id = newId;
         const newLevels = { ...levels, [newId]: newLevel };
-        localStorage.setItem("levels", JSON.stringify(newLevels));
-        return newLevels;
+        this.writeIntoLS(newLevels);
     }
 
     update(oldLevel: ILevel, newLevel: ILevel) {
         const levels = this.getAll();
         newLevel.id = oldLevel.id;
-        const newLevels = { ...levels, [oldLevel.id!]: newLevel };
-        localStorage.setItem("levels", JSON.stringify(newLevels));
-        return newLevels;
+        const newLevels = { ...levels, [newLevel.id!]: newLevel };
+        this.writeIntoLS(newLevels);
     }
 
     delete(levelId: number) {
-        const newLevels = this.getAll();
-        delete newLevels[levelId];
-        localStorage.setItem("levels", JSON.stringify(newLevels));
-        return newLevels;
+        const levels = this.getAll();
+        delete levels[levelId];
+        this.writeIntoLS(levels);
     }
 
     resetToFactory() {
-        localStorage.setItem("levels", JSON.stringify(DEFAULT_LEVELS));
-        return DEFAULT_LEVELS;
+        this.writeIntoLS(DEFAULT_LEVELS);
     }
 }

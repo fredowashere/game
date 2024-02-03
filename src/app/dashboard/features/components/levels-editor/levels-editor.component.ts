@@ -1,21 +1,22 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TableComponent } from 'src/app/shared/components/table/table.component';
-import { MaterialService } from '../../services/materials.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AreYouSureComponent } from '../../are-you-sure.component';
-import { LevelService } from '../../services/levels.service';
-import { ILevel } from '../../models/levels';
+import { LevelService } from '../../services/level.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ILevel } from '../../models/levels';
+import { Subject, startWith, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-levels-editor',
   templateUrl: './levels-editor.component.html',
   styleUrls: ['./levels-editor.component.css']
 })
-export class LevelsEditorComponent {
+export class LevelsEditorComponent implements OnInit, OnDestroy {
 
   @ViewChild("dt") dt!: TableComponent;
 
+  destroy$ = new Subject<void>();
   levels: ILevel[] = [];
 
   constructor(
@@ -26,7 +27,20 @@ export class LevelsEditorComponent {
   ) { }
 
   ngOnInit() {
-    this.levels = this.levelService.getSortedArray(this.levelService.getAll());
+    this.levelService.levelsUpdated
+      .pipe(
+        startWith(""),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(() => {
+        this.levels = this.levelService.getSortedArray(
+          this.levelService.getAll()
+        );
+      });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
   }
 
   async reset() {
@@ -53,7 +67,7 @@ export class LevelsEditorComponent {
     const modalRef = this.modalService.open(AreYouSureComponent);
     await modalRef.result;
     for (const level of this.dt.selectedRows) {
-      this.levelService.delete(level);
+      this.levelService.delete(level.id);
     }
   }
 }

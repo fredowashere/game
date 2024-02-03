@@ -32,11 +32,8 @@ export class DashboardComponent {
       .subscribe();
 
     // Populate localStorage with default settings
-    if (!localStorage.getItem("engine_settings")) {
-      localStorage.setItem("engine_settings", JSON.stringify(DEFAULT_ENGINE_SETTINGS));
-    }
-    if (!localStorage.getItem("materials")) {
-      localStorage.setItem("materials", JSON.stringify(DEFAULT_MATERIALS));
+    if (!localStorage.getItem("engineSettings")) {
+      localStorage.setItem("engineSettings", JSON.stringify(DEFAULT_ENGINE_SETTINGS));
     }
     if (!localStorage.getItem("levels")) {
       localStorage.setItem("levels", JSON.stringify(DEFAULT_LEVELS));

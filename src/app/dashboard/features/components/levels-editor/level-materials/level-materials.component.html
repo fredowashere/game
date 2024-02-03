@@ -29,7 +29,7 @@
     #dt
     [thead]="thead"
     [tbody]="tbody"
-    [items]="$any(materialService.materials$ | async)"
+    [items]="materials"
     [searchable]="[ 'name' ]"
     [paginated]="true"
     [pageSize]="50"

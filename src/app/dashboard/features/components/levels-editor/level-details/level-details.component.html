@@ -49,7 +49,7 @@
                             [style.backgroundColor]="r.color"
                         ></span>
 
-                        <ngb-highlight [result]="r.name || '--'" [term]="t"></ngb-highlight>
+                        <ngb-highlight [result]="r.id + ' ' + (r.name || '--')" [term]="t"></ngb-highlight>
                     </ng-template>
 
                     <div class="position-relative d-flex align-items-center gap-2">

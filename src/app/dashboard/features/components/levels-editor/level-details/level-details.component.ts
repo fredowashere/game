@@ -23,7 +23,7 @@ export class LevelDetailsComponent implements OnInit, OnDestroy {
   materialsInit = false;
   lmbs: IMaterial[] = [];
   rmbs: IMaterial[] = [];
-  materialNameFormatter = (m: IMaterial) => m.name;
+  materialNameFormatter = (m: IMaterial) => m.id + " " + (m.name || "--");
   map: any = null;
   playing = false;
 
@@ -110,17 +110,14 @@ export class LevelDetailsComponent implements OnInit, OnDestroy {
           this.materialService.getAll(this.levelId)
         );
 
-        const copyOfMaterials = Object.values(materials);
-        copyOfMaterials.unshift({ id: 1, name: "Air", color: "#888" } as any);
+        this.map.setMaterials(materials);
 
-        this.map.setMaterials(copyOfMaterials);
-
-        this.lmbs = copyOfMaterials;
-        this.rmbs = copyOfMaterials;
+        this.lmbs = materials;
+        this.rmbs = materials;
 
         if (!this.materialsInit) {
-          this.form.controls._lmb.setValue(copyOfMaterials[0]);
-          this.form.controls._rmb.setValue(copyOfMaterials[0]);
+          this.form.controls._lmb.setValue(materials[0]);
+          this.form.controls._rmb.setValue(materials[1]);
         }
 
         this.materialsInit = true;

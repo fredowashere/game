@@ -205,10 +205,7 @@
 
             if (mdevt.button === 0) {
                 if (mdevt.target.classList.contains(this._tileClass) && !mdevt.target.classList.contains(this._tileEditorClass)) {
-                    if (this.lmb === null) {
-                        mdevt.target.removeAttribute("data-key");
-                    }
-                    else {
+                    if (this.lmb) {
                         mdevt.target.setAttribute("data-key", this.lmb);
                     }
                 }
@@ -216,10 +213,7 @@
 
             if (mdevt.button === 2) {
                 if (mdevt.target.classList.contains(this._tileClass) && !mdevt.target.classList.contains(this._tileEditorClass)) {
-                    if (this.rmb === null) {
-                        mdevt.target.removeAttribute("data-key");
-                    }
-                    else {
+                    if (this.rmb) {
                         mdevt.target.setAttribute("data-key", this.rmb);
                     }
                 }
@@ -237,10 +231,7 @@
 
                 if (mdevt.button === 0) {
                     if (mmevt.target.classList.contains(this._tileClass) && !mmevt.target.classList.contains(this._tileEditorClass)) {
-                        if (this.lmb === null) {
-                            mmevt.target.removeAttribute("data-key");
-                        }
-                        else {
+                        if (this.lmb) {
                             mmevt.target.setAttribute("data-key", this.lmb);
                         }
                     }
@@ -248,10 +239,7 @@
 
                 if (mdevt.button === 2) {
                     if (mmevt.target.classList.contains(this._tileClass) && !mmevt.target.classList.contains(this._tileEditorClass)) {
-                        if (this.rmb === null) {
-                            mmevt.target.removeAttribute("data-key");
-                        }
-                        else {
+                        if (this.rmb) {
                             mmevt.target.setAttribute("data-key", this.rmb);
                         }
                     }

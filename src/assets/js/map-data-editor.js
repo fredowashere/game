@@ -146,8 +146,23 @@
     };
 
     MapDataEditor.prototype.clean = function() {
-        [ ...this.worldWrap.querySelectorAll(`.map-editor-${this.uuid}__tile`) ]
-            .forEach(t => t.setAttribute("data-key", 1));
+
+        // Put walls along the perimeter and fill with air
+        const matrix = getMatrix.bind(this)(this.world);
+
+        for (let i = 1; i < matrix.length; i++) {
+            for (let j = 1; j < matrix[i].length; j++) {
+
+                const tile = matrix[i][j];
+                
+                if (i === 1 || i === matrix.length - 1 || j === 1 || j === matrix[i].length - 1) {
+                    tile.setAttribute("data-key", 2);
+                }
+                else {
+                    tile.setAttribute("data-key", 1);
+                }
+            }
+        }
     };
 
     function getMatrix(el) {

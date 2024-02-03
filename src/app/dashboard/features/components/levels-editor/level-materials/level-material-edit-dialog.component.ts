@@ -186,7 +186,7 @@ import { IMaterial } from '../../../models/materials';
             <button
                 *ngIf="material"
                 class="btn btn-outline-danger"
-                [disabled]="material.id == 1"
+                [disabled]="[ 1, 2 ].includes(material.id || -1)"
                 (click)="delete()"
             >
                 <i class="bi bi-trash3"></i> Delete

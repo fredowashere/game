@@ -49,7 +49,6 @@ import { IMaterial } from '../../../models/materials';
                         label="Fore"
                         helper="Whether the tile is drawn in front of the player, defaults to false."
                         [ngControl]="form.controls.fore"
-                        [floatingLabel]="true"
                     />
         
                     <app-input
@@ -77,7 +76,6 @@ import { IMaterial } from '../../../models/materials';
                         label="Solid"
                         helper="Whether the tile is solid or not, defaults to false."
                         [ngControl]="form.controls.solid"
-                        [floatingLabel]="true"
                     />
 
                     <app-input
@@ -90,6 +88,14 @@ import { IMaterial } from '../../../models/materials';
                         [floatingLabel]="true"
                     />
 
+                    <app-input
+                        class="mb-1"
+                        type="checkbox"
+                        name="frictionYes"
+                        label="Enable Friction"
+                        [ngControl]="form.controls.frictionYes"
+                    />
+
                     <div class="flexgrid flexgrid--2">
 
                         <app-input
@@ -99,6 +105,7 @@ import { IMaterial } from '../../../models/materials';
                             helper="X value of the friction of the tile"
                             [ngControl]="form.controls.friction.controls.x"
                             [floatingLabel]="true"
+                            [disabled]="!form.controls.frictionYes.value"
                         />
             
                         <app-input
@@ -108,8 +115,17 @@ import { IMaterial } from '../../../models/materials';
                             helper="Y value of the friction of the tile"
                             [ngControl]="form.controls.friction.controls.y"
                             [floatingLabel]="true"
+                            [disabled]="!form.controls.frictionYes.value"
                         />
                     </div>
+
+                    <app-input
+                        class="mb-1"
+                        type="checkbox"
+                        name="gravityYes"
+                        label="Enable Gravity"
+                        [ngControl]="form.controls.gravityYes"
+                    />
 
                     <div class="flexgrid flexgrid--2">
 
@@ -120,6 +136,7 @@ import { IMaterial } from '../../../models/materials';
                             helper="X value of the gravity of the tile"
                             [ngControl]="form.controls.gravity.controls.x"
                             [floatingLabel]="true"
+                            [disabled]="!form.controls.gravityYes.value"
                         />
             
                         <app-input
@@ -129,6 +146,7 @@ import { IMaterial } from '../../../models/materials';
                             helper="Y value of the gravity of the tile"
                             [ngControl]="form.controls.gravity.controls.y"
                             [floatingLabel]="true"
+                            [disabled]="!form.controls.gravityYes.value"
                         />
                     </div>
                 </div>
@@ -149,7 +167,6 @@ import { IMaterial } from '../../../models/materials';
                         label="Jump"
                         helper="Whether the player can jump while over the tile, defaults to false."
                         [ngControl]="form.controls.jump"
-                        [floatingLabel]="true"
                     />
 
                     <app-input
@@ -221,10 +238,12 @@ export class LevelMaterialEditComponent {
         // Physiques
         solid: new FormControl(),
         bounce: new FormControl(),
+        frictionYes : new FormControl(false),
         friction: new FormGroup({
             x: new FormControl(0),
             y: new FormControl(0)
         }),
+        gravityYes: new FormControl(false),
         gravity: new FormGroup({
             x: new FormControl(0),
             y: new FormControl(0)
@@ -242,7 +261,11 @@ export class LevelMaterialEditComponent {
     ngOnInit() {
         if (this.material) {
             this.pickerColor = this.material.color;
-            this.form.patchValue(this.material);
+            this.form.patchValue({
+                ...this.material,
+                frictionYes: !!this.material.friction,
+                gravityYes: !!this.material.gravity
+            });
         }
         this.isAppearanceCollapsed = !!this.material;
         this.isPhysicsCollapsed = !!this.material;
@@ -261,19 +284,39 @@ export class LevelMaterialEditComponent {
         });
     }
 
+    extractMaterialFromForm() {
+
+        const material = this.form.getRawValue();
+
+        // Remove garbage from material
+        if (!material.frictionYes) {
+            delete (material as any).friction;
+        }
+        if (!material.gravityYes) {
+            delete (material as any).gravity;
+        }
+        delete (material as any).frictionYes;
+        delete (material as any).gravityYes;
+
+        return material;
+    }
+
     async save() {
+
+        const material = this.extractMaterialFromForm();
+
         if (this.material) {
             this.activeModal.close({
                 operation: "Update",
                 old: this.material,
-                new: this.form.getRawValue()
+                new: material
             });
         }
         else {
             this.activeModal.close({
                 operation: "Create",
                 old: null,
-                new: this.form.getRawValue()
+                new: material
             });
         }
     }

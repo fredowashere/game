@@ -21,16 +21,92 @@ export interface IMaterials {
 }
 
 export const DEFAULT_MATERIALS: IMaterials = {
-    11: { id: 11, name: 'Unlock', color: 'rgba(0,255,255,1)', solid: false, script: 'this.currentMap.materials[10].solid = 0;\nthis.currentMap.materials[10].color = "#888";' },
-    10: { id: 10, name: '', color: 'rgba(85,85,85,1)', solid: true},
-    9:{ id: 9, name: 'Death', color: 'rgba(201,50,50,1)', solid: false, script: 'alert("You died!");\nthis.loadMap(this.currentMap);' },
-    8:{ id: 8, name: 'Next Level', color: 'rgba(250,223,115,1)', solid: false, script: 'alert("You won! Reloading map.");\nthis.loadMap(this.currentMap);' },
-    7:{ id: 7, name: 'Change Color', color: 'rgba(115,198,250,1)', solid: false, script: 'this.player.color = "#"+(Math.random()*0xFFFFFF<<0).toString(16);' },
-    6:{ id: 6, name: '', color: 'rgba(102,102,102,1)', solid: true, bounce: 0 },
-    5:{ id: 5, name: 'Bouncing Carpet', color: 'rgba(227,115,250,1)', solid: true, bounce: 1.1 },
-    4:{ id: 4, name: '', color: 'rgba(119,119,119,1)', jump: true },
-    3:{ id: 3, name: 'Water', color: 'rgba(121, 220, 242, 0.4)', friction: { x: 0.9, y: 0.9 }, gravity: { x: 0, y: 0.1 }, jump: true, fore: true },
-    2:{ id: 2, name: 'Dampening Carpet', color: 'rgba(85,85,85,1)', solid: true, bounce: 0.35 },
-    1:{ id: 1, name: 'Wall', color: 'rgba(136,136,136,1)', solid: false },
-    0:{ id: 0, name: 'Empty Space', color: 'rgba(51,51,51,1)', solid: false },
+    0: {
+        "name": "Outer Space",
+        "color": "rgba(51,51,51,1)",
+        "solid": false,
+        "id": 0
+    },
+    1: {
+        "name": "Air",
+        "color": "rgba(136,136,136,1)",
+        "solid": false,
+        "id": 1
+    },
+    2: {
+        "name": "Wall",
+        "color": "rgba(85,85,85,1)",
+        "solid": true,
+        "bounce": 0.35,
+        "id": 2
+    },
+    3: {
+        "id": 3,
+        "name": "Water",
+        "color": "rgba(121, 220, 242, 0.4)",
+        "friction": {
+            "x": 0.9,
+            "y": 0.9
+        },
+        "gravity": {
+            "x": 0,
+            "y": 0.1
+        },
+        "jump": true,
+        "fore": true
+    },
+    4: {
+        "name": "Airscalator",
+        "color": "rgba(119,119,119,1)",
+        "jump": true,
+        "id": 4
+    },
+    5: {
+        "id": 5,
+        "name": "Bouncing Carpet",
+        "color": "rgba(227,115,250,1)",
+        "solid": true,
+        "bounce": 1.1
+    },
+    6: {
+        "name": "Dampening Carpet",
+        "color": "rgba(102,102,102,1)",
+        "solid": true,
+        "bounce": 0,
+        "id": 6
+    },
+    7: {
+        "id": 7,
+        "name": "Change Color",
+        "color": "rgba(115,198,250,1)",
+        "solid": false,
+        "script": "this.player.color = \"#\"+(Math.random()*0xFFFFFF<<0).toString(16);"
+    },
+    8: {
+        "id": 8,
+        "name": "Next Level",
+        "color": "rgba(250,223,115,1)",
+        "solid": false,
+        "script": "alert(\"You won! Reloading map.\");\nthis.loadMap(this.currentMap);"
+    },
+    9: {
+        "id": 9,
+        "name": "Death",
+        "color": "rgba(201,50,50,1)",
+        "solid": false,
+        "script": "alert(\"You died!\");\nthis.loadMap(this.currentMap);"
+    },
+    10: {
+        "name": "Fake Wall",
+        "color": "rgba(85,85,85,1)",
+        "solid": true,
+        "id": 10
+    },
+    11: {
+        "id": 11,
+        "name": "Unlock",
+        "color": "rgba(0,255,255,1)",
+        "solid": false,
+        "script": "this.currentMap.materials[10].solid = 0;\nthis.currentMap.materials[10].color = \"#888\";"
+    }
 };

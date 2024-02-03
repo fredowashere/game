@@ -40,3 +40,18 @@
     opacity: 0;
     pointer-events: none;
 }
+
+#playerColorPicker {
+    height: 58px;
+    width: 200px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+#playerColorPicker > span {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+}

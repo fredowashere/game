@@ -137,6 +137,33 @@
 
     <div class="card card-body shadow">
         <div class="flexgrid flexgrid--2">
+    
+            <app-input
+                type="number"
+                name="playerX"
+                label="Player X"
+                [ngControl]="form.controls.player.controls.x"
+                [floatingLabel]="true"
+            />
+    
+            <app-input
+                type="number"
+                name="playerY"
+                label="Player Y"
+                [ngControl]="form.controls.player.controls.y"
+                [floatingLabel]="true"
+            />
+
+            <div>
+                <span id="playerColorPicker">
+                    <span [style.background]="playerPickerColor"></span> {{ playerPickerColor }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card card-body shadow">
+        <div class="flexgrid flexgrid--2">
 
             <app-input
                 type="number"
@@ -201,34 +228,6 @@
                 name="movementSpeedJump"
                 label="Mov. Speed Jump"
                 [ngControl]="form.controls.movementSpeed.controls.jump"
-                [floatingLabel]="true"
-            />
-        </div>
-    </div>
-
-    <div class="card card-body shadow">
-        <div class="flexgrid flexgrid--2">
-    
-            <app-input
-                type="number"
-                name="playerX"
-                label="Player X"
-                [ngControl]="form.controls.player.controls.x"
-                [floatingLabel]="true"
-            />
-    
-            <app-input
-                type="number"
-                name="playerY"
-                label="Player Y"
-                [ngControl]="form.controls.player.controls.y"
-                [floatingLabel]="true"
-            />
-    
-            <app-input
-                name="playerColor"
-                label="Player Color"
-                [ngControl]="form.controls.player.controls.color"
                 [floatingLabel]="true"
             />
         </div>

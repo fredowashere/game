@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { IMaterial } from '../../../models/materials';
 import { Subject, startWith, takeUntil } from 'rxjs';
@@ -14,7 +14,7 @@ import { DEFAULT_LEVEL } from '../../../models/levels';
   templateUrl: './level-details.component.html',
   styleUrls: ['./level-details.component.css']
 })
-export class LevelDetailsComponent implements OnInit, OnDestroy {
+export class LevelDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   levelId = -1;
 
@@ -26,6 +26,7 @@ export class LevelDetailsComponent implements OnInit, OnDestroy {
   materialNameFormatter = (m: IMaterial) => m.id + " " + (m.name || "--");
   map: any = null;
   playing = false;
+  playerPickerColor = "rgba(255,153,0,1)";
 
   form = new FormGroup({
     name: new FormControl("Example Level"),
@@ -128,6 +129,19 @@ export class LevelDetailsComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.map.destroy();
     window.stopGameEngine();
+  }
+
+  ngAfterViewInit() {
+    const pickerParent = document.querySelector("#playerColorPicker");
+    new window.Picker({
+        parent: pickerParent,
+        defaultColor: this.playerPickerColor,
+        onChange: (color: any) => {
+            const rgba = color.rgbaString;
+            this.playerPickerColor = rgba;
+            this.form.controls.player.controls.color.setValue(rgba);
+        }
+    });
   }
 
   async clean() {

@@ -147,7 +147,7 @@
 
     MapDataEditor.prototype.clean = function() {
         [ ...this.worldWrap.querySelectorAll(`.map-editor-${this.uuid}__tile`) ]
-            .forEach(t => t.removeAttribute("data-key"));
+            .forEach(t => t.setAttribute("data-key", 1));
     };
 
     function getMatrix(el) {

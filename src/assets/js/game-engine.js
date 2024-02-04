@@ -338,7 +338,11 @@
             
             this.player.vel.y *= -bounce || 0;
 
-            if ((bottom1.solid || bottom2.solid) && !tile._material.jump) {
+            const jumpToTop       = this.currentMap.gravity.y > 0 && this.currentMap.movementSpeed.jump > 0;
+            const jumpToBottom    = this.currentMap.gravity.y < 0 && this.currentMap.movementSpeed.jump < 0;
+            const canJumpToTop    = jumpToTop     && (bottom1.solid || bottom2.solid);
+            const canJumpToBottom = jumpToBottom  && (top1.solid    || top2.solid);
+            if ((canJumpToTop || canJumpToBottom) && !tile._material.jump) {
                 this.player.onFloor = true;
                 this.player.canJump = true;
             }

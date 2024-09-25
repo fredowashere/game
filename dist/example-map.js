@@ -1,6 +1,4 @@
-import { IMap } from "./engine.model";
-
-export const FIRST_MAP: IMap = {
+export const FIRST_MAP = {
     tileSize: 16,
     materials: {
         0: {

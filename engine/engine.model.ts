@@ -18,14 +18,15 @@ export interface IMap {
 }
 
 export interface Material {
+    id: number;
     color: string;
     solid: 1|0;
     bounce: number;
     jump: 1|0;
     friction: Coord2D;
-    gravity: Coord2D;
     foreground: 1|0;
     script: string;
+    gravity?: Coord2D;
 }
 
 export type Coord2D = [ number, number ];

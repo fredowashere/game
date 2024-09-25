@@ -191,7 +191,8 @@ export const FIRST_MAP: IMap = {
     velocityLimit: [2, 16],
     movementSpeed: [0.3, 6],
     playerPosition: [2, 2],
-    playerColor: '#FF9900',
+    playerColor: "#FF9900",
+    background: "#eee",
     scripts: {
         ChangeColor: 'game.player.color = "#"+(Math.random()*0xFFFFFF<<0).toString(16);',
         NextLevel: 'alert("Yay! You won! Reloading map."); game.load_map(map);',

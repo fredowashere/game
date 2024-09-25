@@ -7,7 +7,14 @@ export interface IMap {
     movementSpeed: Coord2D;
     playerPosition: Coord2D;
     playerColor: string;
+    background: string;
     scripts: { [key: string]: string };
+    
+    dataMaterial?: Material[][];
+    height?: number;
+    pxHeight?: number;
+    width?: number;
+    pxWidth?: number;
 }
 
 export interface Material {

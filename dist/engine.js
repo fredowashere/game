@@ -166,100 +166,33 @@ export class Engine {
         this.playerPosition[0] += this.playerVelocity[0];
         this.playerPosition[1] += this.playerVelocity[1];
         this.playerVelocity[0] *= .9;
-        // Manage collision
-        const playerGX = fastRound(this.playerPosition[0] / this.tileSize);
-        const playerGY = fastRound(this.playerPosition[1] / this.tileSize);
-        // const coords = this.getMaterialPixelCoords(playerGX, playerGY);
-
-        // const matTop = this.getMaterial(
-        //     fastRound((this.playerPosition[0]) / this.tileSize),
-        //     fastRound((this.playerPosition[1] - offset) / this.tileSize)
-        // );
-        // const matRight = this.getMaterial(
-        //     fastRound((this.playerPosition[0] + offset) / this.tileSize),
-        //     fastRound((this.playerPosition[1]) / this.tileSize)
-        // );
-        // const matBottom = this.getMaterial(
-        //     fastRound((this.playerPosition[0]) / this.tileSize),
-        //     fastRound((this.playerPosition[1] + offset) / this.tileSize)
-        // );
-        // const matLeft = this.getMaterial(
-        //     fastRound((this.playerPosition[0] - offset) / this.tileSize),
-        //     fastRound((this.playerPosition[1]) / this.tileSize)
-        // );
-        // if (matTop?.solid) {
-        //     this.playerPosition[1] += 0.1;
-        // }
-        // if (matRight?.solid) {
-        //     this.playerPosition[0] -= 0.1;
-        // }
-        // if (matBottom?.solid) {
-        //     this.playerPosition[1] -= 0.1;
-        // }
-        // if (matLeft?.solid) {
-        //     this.playerPosition[0] += 0.1;
-        // }
-
-        this.camera[0] += this.playerPosition[0] - (this.viewport[0] / 2) - this.camera[0];
-        this.camera[1] += this.playerPosition[1] - (this.viewport[1] / 2) - this.camera[1];
-
-        const top = [
-            this.playerPosition[0] + (this.tileSize / 2) - this.camera[0],
-            this.playerPosition[1] - this.camera[1]
-        ];
-
-        const right = [
-            this.playerPosition[0] + this.tileSize - this.camera[0],
-            this.playerPosition[1] + (this.tileSize / 2) - this.camera[1]
-        ];
-
-        const bottom = [
-            this.playerPosition[0] + (this.tileSize / 2) - this.camera[0],
-            this.playerPosition[1] + this.tileSize - this.camera[1]
-        ];
-
-        const left = [
-            this.playerPosition[0] - this.camera[0],
-            this.playerPosition[1] + (this.tileSize / 2) - this.camera[1]
-        ];
-
-        const matBottom = this.getMaterial(fastRound(bottom[0] / this.tileSize), fastRound(bottom[1] / this.tileSize));
-        if (matBottom.solid) {
-            console.log("Collision...");
+        // // Manage collision
+        // const playerGX = fastRound(this.playerPosition[0] / this.tileSize);
+        // const playerGY = fastRound(this.playerPosition[1] / this.tileSize);
+        // console.log(this.getMaterialPixelCoords(playerGX, playerGY));
+        const offset = fastFloor(this.tileSize / 2);
+        const matTop = this.getMaterial(fastRound((this.playerPosition[0]) / this.tileSize), fastRound((this.playerPosition[1] - offset) / this.tileSize));
+        const matRight = this.getMaterial(fastRound((this.playerPosition[0] + offset) / this.tileSize), fastRound((this.playerPosition[1]) / this.tileSize));
+        const matBottom = this.getMaterial(fastRound((this.playerPosition[0]) / this.tileSize), fastRound((this.playerPosition[1] + offset) / this.tileSize));
+        const matLeft = this.getMaterial(fastRound((this.playerPosition[0] - offset) / this.tileSize), fastRound((this.playerPosition[1]) / this.tileSize));
+        if (matTop === null || matTop === void 0 ? void 0 : matTop.solid) {
+            this.playerPosition[1] += 17;
         }
-
-        this.context.fillStyle = "#f00";
-        this.context.fillRect(
-            top[0],
-            top[1],
-            4,
-            4
-        );
-
-        this.context.fillStyle = "#f00";
-        this.context.fillRect(
-            right[0],
-            right[1],
-            4,
-            4
-        );
-
-        this.context.fillStyle = "#f00";
-        this.context.fillRect(
-            bottom[0],
-            bottom[1],
-            4,
-            4
-        );
-
-        this.context.fillStyle = "#f00";
-        this.context.fillRect(
-            left[0],
-            left[1],
-            4,
-            4
-        );
-
+        if (matRight === null || matRight === void 0 ? void 0 : matRight.solid) {
+            this.playerPosition[0] -= 17;
+        }
+        if (matBottom === null || matBottom === void 0 ? void 0 : matBottom.solid) {
+            this.playerPosition[1] -= 17;
+        }
+        if (matLeft === null || matLeft === void 0 ? void 0 : matLeft.solid) {
+            this.playerPosition[0] += 17;
+        }
+        const camX = fastRound(this.playerPosition[0] - this.viewport[0] / 2);
+        const camY = fastRound(this.playerPosition[1] - this.viewport[1] / 2);
+        const deltaCamX = camX - this.camera[0];
+        const deltaCamY = camY - this.camera[1];
+        this.camera[0] += deltaCamX;
+        this.camera[1] += deltaCamY;
         if (((_a = this.lastTile) === null || _a === void 0 ? void 0 : _a.id) !== (tile === null || tile === void 0 ? void 0 : tile.id) && (tile === null || tile === void 0 ? void 0 : tile.script)) {
             eval(this.currentMap.scripts[tile.script]);
         }

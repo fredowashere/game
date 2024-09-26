@@ -23,9 +23,9 @@ export interface Material {
     solid: 1|0;
     bounce: number;
     jump: 1|0;
-    friction: Coord2D;
     foreground: 1|0;
     script: string;
+    friction?: Coord2D;
     gravity?: Coord2D;
 }
 

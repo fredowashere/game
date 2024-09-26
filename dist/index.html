@@ -43,10 +43,10 @@
             ctx.fillStyle = '#333';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            game.updatePlayer();
-            game.movePlayer();
             game.drawMap(0);
             game.drawPlayer();
+            game.updatePlayer();
+            game.movePlayer();
 
             window.requestAnimFrame(Loop);
         };

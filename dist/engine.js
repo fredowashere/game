@@ -120,9 +120,23 @@ export class Engine {
         this.playerVelocity = [0, 0];
         return true;
     }
+    getMaterialPixelCoords(gX, gY) {
+        const offset = fastRound((this.tileSize / 2) - 1);
+        const pX = gX * this.tileSize;
+        const pY = gY * this.tileSize;
+        const topLeft = [pX - offset, pY - offset];
+        const topRight = [pX + offset, pY - offset];
+        const bottomRight = [pX + offset, pY + offset];
+        const bottomLeft = [pX - offset, pY + offset];
+        return [
+            topLeft,
+            topRight,
+            bottomRight,
+            bottomLeft
+        ];
+    }
     movePlayer() {
         var _a;
-        const offset = fastRound(this.tileSize / 2);
         const tile = this.getMaterial(fastRound(this.playerPosition[0] / this.tileSize), fastRound(this.playerPosition[1] / this.tileSize));
         // Apply gravity
         if (tile === null || tile === void 0 ? void 0 : tile.gravity) {
@@ -153,22 +167,46 @@ export class Engine {
         this.playerPosition[1] += this.playerVelocity[1];
         this.playerVelocity[0] *= .9;
         // Manage collision
-        const matTop = this.getMaterial(fastRound((this.playerPosition[0]) / this.tileSize), fastRound((this.playerPosition[1] - offset) / this.tileSize));
-        const matRight = this.getMaterial(fastRound((this.playerPosition[0] + offset) / this.tileSize), fastRound((this.playerPosition[1]) / this.tileSize));
-        const matBottom = this.getMaterial(fastRound((this.playerPosition[0]) / this.tileSize), fastRound((this.playerPosition[1] + offset) / this.tileSize));
-        const matLeft = this.getMaterial(fastRound((this.playerPosition[0] - offset) / this.tileSize), fastRound((this.playerPosition[1]) / this.tileSize));
-        if (matTop === null || matTop === void 0 ? void 0 : matTop.solid) {
-            this.playerPosition[1] += 50;
-        }
-        if (matRight === null || matRight === void 0 ? void 0 : matRight.solid) {
-            this.playerPosition[0] -= 50;
-        }
-        if (matBottom === null || matBottom === void 0 ? void 0 : matBottom.solid) {
-            this.playerPosition[1] -= 50;
-        }
-        if (matLeft === null || matLeft === void 0 ? void 0 : matLeft.solid) {
-            this.playerPosition[0] += 50;
-        }
+        const playerGX = fastRound(this.playerPosition[0] / this.tileSize);
+        const playerGY = fastRound(this.playerPosition[1] / this.tileSize);
+        const coords = this.getMaterialPixelCoords(playerGX, playerGY);
+
+        this.context.fillStyle = "#f00";
+        this.context.fillRect(
+            coords[0][0] - this.camera[0],
+            coords[0][1] - this.camera[1],
+            this.tileSize,
+            this.tileSize
+        );
+
+        // const matTop = this.getMaterial(
+        //     fastRound((this.playerPosition[0]) / this.tileSize),
+        //     fastRound((this.playerPosition[1] - offset) / this.tileSize)
+        // );
+        // const matRight = this.getMaterial(
+        //     fastRound((this.playerPosition[0] + offset) / this.tileSize),
+        //     fastRound((this.playerPosition[1]) / this.tileSize)
+        // );
+        // const matBottom = this.getMaterial(
+        //     fastRound((this.playerPosition[0]) / this.tileSize),
+        //     fastRound((this.playerPosition[1] + offset) / this.tileSize)
+        // );
+        // const matLeft = this.getMaterial(
+        //     fastRound((this.playerPosition[0] - offset) / this.tileSize),
+        //     fastRound((this.playerPosition[1]) / this.tileSize)
+        // );
+        // if (matTop?.solid) {
+        //     this.playerPosition[1] += 0.1;
+        // }
+        // if (matRight?.solid) {
+        //     this.playerPosition[0] -= 0.1;
+        // }
+        // if (matBottom?.solid) {
+        //     this.playerPosition[1] -= 0.1;
+        // }
+        // if (matLeft?.solid) {
+        //     this.playerPosition[0] += 0.1;
+        // }
         const camX = fastRound(this.playerPosition[0] - this.viewport[0] / 2);
         const camY = fastRound(this.playerPosition[1] - this.viewport[1] / 2);
         const deltaCamX = Math.abs(camX - this.camera[0]);

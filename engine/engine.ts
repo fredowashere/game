@@ -172,9 +172,25 @@ export class Engine {
         return true;
     }
 
-    movePlayer() {    
-        const offset = fastRound(this.tileSize / 2);
-    
+    getMaterialPixelCoords(gX: number, gY: number) {
+        const offset = fastRound((this.tileSize / 2) - 1);
+        const pX = gX * this.tileSize;
+        const pY = gY * this.tileSize;
+
+        const topLeft = [pX - offset, pY - offset];
+        const topRight = [pX + offset, pY - offset];
+        const bottomRight = [pX + offset, pY + offset];
+        const bottomLeft = [pX - offset, pY + offset];
+
+        return [
+            topLeft,
+            topRight,
+            bottomRight,
+            bottomLeft
+        ];
+    }
+
+    movePlayer() {
         const tile = this.getMaterial(
             fastRound(this.playerPosition[0] / this.tileSize),
             fastRound(this.playerPosition[1] / this.tileSize)
@@ -212,35 +228,41 @@ export class Engine {
         this.playerVelocity[0] *= .9;
 
         // Manage collision
-        const matTop = this.getMaterial(
-            fastRound((this.playerPosition[0]) / this.tileSize),
-            fastRound((this.playerPosition[1] - offset) / this.tileSize)
-        );
-        const matRight = this.getMaterial(
-            fastRound((this.playerPosition[0] + offset) / this.tileSize),
-            fastRound((this.playerPosition[1]) / this.tileSize)
-        );
-        const matBottom = this.getMaterial(
-            fastRound((this.playerPosition[0]) / this.tileSize),
-            fastRound((this.playerPosition[1] + offset) / this.tileSize)
-        );
-        const matLeft = this.getMaterial(
-            fastRound((this.playerPosition[0] - offset) / this.tileSize),
-            fastRound((this.playerPosition[1]) / this.tileSize)
-        );
+        const playerGX = fastRound(this.playerPosition[0] / this.tileSize);
+        const playerGY = fastRound(this.playerPosition[1] / this.tileSize);
+        console.log(this.getMaterialPixelCoords(playerGX, playerGY));
 
-        if (matTop?.solid) {
-            this.playerPosition[1] += 50;
-        }
-        if (matRight?.solid) {
-            this.playerPosition[0] -= 50;
-        }
-        if (matBottom?.solid) {
-            this.playerPosition[1] -= 50;
-        }
-        if (matLeft?.solid) {
-            this.playerPosition[0] += 50;
-        }
+
+
+        // const matTop = this.getMaterial(
+        //     fastRound((this.playerPosition[0]) / this.tileSize),
+        //     fastRound((this.playerPosition[1] - offset) / this.tileSize)
+        // );
+        // const matRight = this.getMaterial(
+        //     fastRound((this.playerPosition[0] + offset) / this.tileSize),
+        //     fastRound((this.playerPosition[1]) / this.tileSize)
+        // );
+        // const matBottom = this.getMaterial(
+        //     fastRound((this.playerPosition[0]) / this.tileSize),
+        //     fastRound((this.playerPosition[1] + offset) / this.tileSize)
+        // );
+        // const matLeft = this.getMaterial(
+        //     fastRound((this.playerPosition[0] - offset) / this.tileSize),
+        //     fastRound((this.playerPosition[1]) / this.tileSize)
+        // );
+
+        // if (matTop?.solid) {
+        //     this.playerPosition[1] += 0.1;
+        // }
+        // if (matRight?.solid) {
+        //     this.playerPosition[0] -= 0.1;
+        // }
+        // if (matBottom?.solid) {
+        //     this.playerPosition[1] -= 0.1;
+        // }
+        // if (matLeft?.solid) {
+        //     this.playerPosition[0] += 0.1;
+        // }
     
         const camX = fastRound(this.playerPosition[0] - this.viewport[0] / 2);
         const camY = fastRound(this.playerPosition[1] - this.viewport[1] / 2);

@@ -166,29 +166,69 @@ export class Engine {
         this.playerPosition[0] += this.playerVelocity[0];
         this.playerPosition[1] += this.playerVelocity[1];
         this.playerVelocity[0] *= .9;
-        // // Manage collision
-        // const playerGX = fastRound(this.playerPosition[0] / this.tileSize);
-        // const playerGY = fastRound(this.playerPosition[1] / this.tileSize);
-        // console.log(this.getMaterialPixelCoords(playerGX, playerGY));
-        const offset = fastFloor(this.tileSize / 2);
-        const matTop = this.getMaterial(fastRound((this.playerPosition[0]) / this.tileSize), fastRound((this.playerPosition[1] - offset) / this.tileSize));
-        const matRight = this.getMaterial(fastRound((this.playerPosition[0] + offset) / this.tileSize), fastRound((this.playerPosition[1]) / this.tileSize));
-        const matBottom = this.getMaterial(fastRound((this.playerPosition[0]) / this.tileSize), fastRound((this.playerPosition[1] + offset) / this.tileSize));
-        const matLeft = this.getMaterial(fastRound((this.playerPosition[0] - offset) / this.tileSize), fastRound((this.playerPosition[1]) / this.tileSize));
-        if (matTop === null || matTop === void 0 ? void 0 : matTop.solid) {
-            this.playerPosition[1] += 17;
+
+        // Manage collision
+        const offset = this.tileSize / 2;
+
+        const getBox = (gX, gY) => {
+            const x = gX * this.tileSize;
+            const y = gY * this.tileSize;
+            const x2 = x + this.tileSize;
+            const y2 = y + this.tileSize;
+            return [x, x2, y, y2];
+        };
+
+        const tX = this.playerPosition[0] + this.playerVelocity[0];
+        const tY = this.playerPosition[1] + this.playerVelocity[1];
+
+        const pX = this.playerPosition[0];
+        const pX2 = this.playerPosition[0] + this.tileSize;
+        const pY = this.playerPosition[1];
+        const pY2 = this.playerPosition[1] + this.tileSize;
+
+        const tYUp = fastFloor(tY / this.tileSize);
+        const tYDown = Math.ceil(tY / this.tileSize);
+        const yNear1 = fastRound((pY - offset) / this.tileSize);
+        const yNear2 = fastRound((pY + offset) / this.tileSize);
+
+        const tXLeft = fastFloor(tX / this.tileSize);
+        const tXRight = Math.ceil(tX / this.tileSize);
+        const xNear1 = fastRound((pX - offset) / this.tileSize);
+        const xNear2 = fastRound((pX + offset) / this.tileSize);
+
+        const top1 = this.getMaterial(xNear1, tYUp);
+        const top2 = this.getMaterial(xNear2, tYUp);
+        const bottom1 = this.getMaterial(xNear1, tYDown);
+        const bottom2 = this.getMaterial(xNear2, tYDown);
+        const left1 = this.getMaterial(tXLeft, yNear1);
+        const left2 = this.getMaterial(tXLeft, yNear2);
+        const right1 = this.getMaterial(tXRight, yNear1);
+        const right2 = this.getMaterial(tXRight, yNear2);
+
+        if (top1.solid === 1 || top2.solid === 1) {
+            this.playerVelocity[1] *= -(top1.bounce || top2.bounce);
+            this.playerPosition[1] += 0.1;
         }
-        if (matRight === null || matRight === void 0 ? void 0 : matRight.solid) {
-            this.playerPosition[0] -= 17;
+        if (right1.solid === 1 || right2.solid === 1) {
+            this.playerVelocity[0] *= -(right1.bounce || right2.bounce);
+            this.playerPosition[0] -= 0.1;
         }
-        if (matBottom === null || matBottom === void 0 ? void 0 : matBottom.solid) {
-            this.playerPosition[1] -= 17;
+        if (bottom1.solid === 1 || bottom2.solid === 1) {
+            this.playerVelocity[1] *= -(bottom1.bounce || bottom2.bounce);
+            this.playerPosition[1] -= pY2 - tY;
+
+            if (tile.jump !== 1) {
+                this.onFloor = 1;
+                this.canJump = 1;
+            }
         }
-        if (matLeft === null || matLeft === void 0 ? void 0 : matLeft.solid) {
-            this.playerPosition[0] += 17;
+        if (left1.solid === 1 || left2.solid === 1) {
+            this.playerVelocity[0] *= -(left1.bounce || left2.bounce);
+            this.playerPosition[0] += 0.1;
         }
-        const camX = fastRound(this.playerPosition[0] - this.viewport[0] / 2);
-        const camY = fastRound(this.playerPosition[1] - this.viewport[1] / 2);
+
+        const camX = fastFloor(this.playerPosition[0] - (this.viewport[0] / 2));
+        const camY = fastFloor(this.playerPosition[1] - (this.viewport[1] / 2));
         const deltaCamX = camX - this.camera[0];
         const deltaCamY = camY - this.camera[1];
         this.camera[0] += deltaCamX;

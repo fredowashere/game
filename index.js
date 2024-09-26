@@ -375,7 +375,7 @@ Clarity.prototype.draw_map = function (context, fore) {
 };
 
 Clarity.prototype.move_player = function () {
-
+    console.time("AAA");
     var tX = this.player.loc.x + this.player.vel.x;
     var tY = this.player.loc.y + this.player.vel.y;
 
@@ -558,6 +558,7 @@ Clarity.prototype.move_player = function () {
     }
     
     this.last_tile = tile.id;
+    console.timeEnd("AAA");
 };
 
 Clarity.prototype.update_player = function () {

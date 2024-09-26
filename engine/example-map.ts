@@ -206,9 +206,9 @@ export const FIRST_MAP: IMap = {
     playerColor: "#FF9900",
     background: "#eee",
     scripts: {
-        ChangeColor: 'game.player.color = "#"+(Math.random()*0xFFFFFF<<0).toString(16);',
-        NextLevel: 'alert("Yay! You won! Reloading map."); game.load_map(map);',
-        Death: 'alert("You died!"); game.load_map(map);',
-        Unlock: 'game.current_map.keys[10].solid = 0; game.current_map.keys[10].color = "#888";'
+        ChangeColor: 'this.playerColor = "#"+(Math.random()*0xFFFFFF<<0).toString(16);',
+        NextLevel: 'alert("Yay! You won! Reloading map."); this.loadMap(this.currentMap);',
+        Death: 'alert("You died!"); this.loadMap(this.currentMap);',
+        Unlock: 'this.currentMap.materials[10].solid = 0; this.currentMap.materials[10].color = "#888";'
     }
 };

@@ -168,18 +168,6 @@ export class Engine {
         }
         ;
 
-        // Manage collision
-
-        const getBox = (gX, gY) => {
-            const x = gX * this.tileSize;
-            const y = gY * this.tileSize;
-            const x2 = x + this.tileSize;
-            const y2 = y + this.tileSize;
-            return [x, x2, y, y2];
-        };
-
-        const offset = this.tileSize / 2;
-
         // Apply forces
         this.playerVelocity[0] = Math.min(Math.max(this.playerVelocity[0], -this.currentMap.velocityLimit[0]), this.currentMap.velocityLimit[0]);
         this.playerVelocity[1] = Math.min(Math.max(this.playerVelocity[1], -this.currentMap.velocityLimit[1]), this.currentMap.velocityLimit[1]);
@@ -198,31 +186,102 @@ export class Engine {
         }
         this.lastTile = tile;
 
-        // Draw player boundaries
-        this.context.fillStyle = "#f00";
-        this.context.fillRect(
-            this.playerPosition[0] - this.camera[0],
-            this.playerPosition[1] - this.camera[1],
-            4,
-            4
-        );
-        this.context.fillRect(
-            (this.playerPosition[0] + this.tileSize - 4) - this.camera[0],
-            this.playerPosition[1] - this.camera[1],
-            4,
-            4
-        );
-        this.context.fillRect(
-            (this.playerPosition[0] + this.tileSize - 4) - this.camera[0],
-            (this.playerPosition[1] + this.tileSize - 4) - this.camera[1],
-            4,
-            4
-        );
-        this.context.fillRect(
-            this.playerPosition[0] - this.camera[0],
-            (this.playerPosition[1] + this.tileSize - 4) - this.camera[1],
-            4,
-            4
-        );
+        // Handle collision
+        const getTop1 = () => {
+            return this.getMaterial(
+                Math.floor((this.playerPosition[0] + 2) / this.tileSize),
+                Math.floor((this.playerPosition[1] + 1) / this.tileSize)
+            );
+        }
+
+        const getTop2 = () => {
+            return this.getMaterial(
+                Math.floor((this.playerPosition[0] + this.tileSize - 2) / this.tileSize),
+                Math.floor((this.playerPosition[1] + 1) / this.tileSize)
+            );
+        }
+
+        const getRight1 = () => {
+            return this.getMaterial(
+                Math.floor((this.playerPosition[0] + this.tileSize - 1) / this.tileSize),
+                Math.floor((this.playerPosition[1] + 2) / this.tileSize)
+            );
+        }
+
+        const getRight2 = () => {
+            return this.getMaterial(
+                Math.floor((this.playerPosition[0] + this.tileSize - 1) / this.tileSize),
+                Math.floor((this.playerPosition[1] + this.tileSize - 2) / this.tileSize)
+            );
+        }
+
+        const getBottom2 = () => {
+            return this.getMaterial(
+                Math.floor((this.playerPosition[0] + this.tileSize - 2) / this.tileSize),
+                Math.floor((this.playerPosition[1] + this.tileSize - 1) / this.tileSize)
+            );
+        }
+
+        const getBottom1 = () => {
+            return this.getMaterial(
+                Math.floor((this.playerPosition[0] + 2) / this.tileSize),
+                Math.floor((this.playerPosition[1] + this.tileSize - 1) / this.tileSize)
+            );
+        }
+
+        const getLeft2 = () => {
+            return this.getMaterial(
+                Math.floor((this.playerPosition[0] + 1) / this.tileSize),
+                Math.floor((this.playerPosition[1] + this.tileSize - 2) / this.tileSize)
+            );
+        }
+
+        const getLeft1 = () => {
+            return this.getMaterial(
+                Math.floor((this.playerPosition[0] + 1) / this.tileSize),
+                Math.floor((this.playerPosition[1] + 2) / this.tileSize)
+            );
+        }
+
+        let i = 1e6;
+        while (i--) {
+            const top1 = getTop1();
+            const top2 = getTop2();
+            const right1 = getRight1();
+            const right2 = getRight2();
+            const bottom2 = getBottom2();
+            const bottom1 = getBottom1();
+            const left2 = getLeft2();
+            const left1 = getLeft1();
+
+            if (top1.solid === 1 || top2.solid === 1) {
+                this.playerPosition[1] += 1;
+            }
+
+            if (right1.solid === 1 || right2.solid === 1) {
+                this.playerPosition[0] -= 1;
+            }
+
+            if (bottom2.solid === 1 || bottom1.solid === 1) {
+                this.playerPosition[1] -= 1;
+            }
+
+            if (left2.solid === 1 || left1.solid === 1) {
+                this.playerPosition[0] += 1;
+            }
+
+            if (
+                getTop1().solid === 0 &&
+                getTop2().solid === 0 &&
+                getRight1().solid === 0 &&
+                getRight2().solid === 0 &&
+                getBottom2().solid === 0 &&
+                getBottom1().solid === 0 &&
+                getLeft2().solid === 0 &&
+                getLeft1().solid === 0
+            ) {
+                break;
+            }
+        }
     }
 }

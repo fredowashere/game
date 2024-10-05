@@ -200,7 +200,7 @@ export const FIRST_MAP = {
     gravity: [0, 0.3],
     velocityLimit: [2, 14],
     movementSpeed: [0.3, 6],
-    playerPosition: [2, 2],
+    playerPosition: [2, 25],
     playerColor: "#FF9900",
     background: "#eee",
     scripts: {

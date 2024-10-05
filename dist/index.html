@@ -44,9 +44,9 @@
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             game.drawMap(0);
-            game.drawPlayer();
             game.updatePlayer();
             game.movePlayer();
+            game.drawPlayer();
 
             window.requestAnimFrame(Loop);
         };

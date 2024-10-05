@@ -198,7 +198,7 @@ export const FIRST_MAP = {
         [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
     ],
     gravity: [0, 0.3],
-    velocityLimit: [2, 16],
+    velocityLimit: [2, 14],
     movementSpeed: [0.3, 6],
     playerPosition: [2, 2],
     playerColor: "#FF9900",

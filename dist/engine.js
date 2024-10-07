@@ -143,8 +143,7 @@ export class Engine {
     movePlayer() {
         var _a;
         const tile = this.getMaterial(fastRound(this.playerPosition[0] / this.tileSize), fastRound(this.playerPosition[1] / this.tileSize));
-        const tX = this.playerPosition[0] + this.playerVelocity[0];
-        const tY = this.playerPosition[1] + this.playerVelocity[1];
+
         // Apply gravity
         if (tile === null || tile === void 0 ? void 0 : tile.gravity) {
             this.playerVelocity[0] += tile.gravity[0];
@@ -157,7 +156,7 @@ export class Engine {
         // Apply friction
         if (tile === null || tile === void 0 ? void 0 : tile.friction) {
             this.playerVelocity[0] *= tile.friction[0];
-            this.playerVelocity[0] *= tile.friction[1];
+            this.playerVelocity[1] *= tile.friction[1]; // TODO: FIX THIS
         }
         if ((tile === null || tile === void 0 ? void 0 : tile.jump) && this.jumpSwitch > 15) {
             this.canJump = 1;
@@ -186,101 +185,73 @@ export class Engine {
         }
         this.lastTile = tile;
 
-        // Handle collision
-        const getTop1 = () => {
+        const getTop = () => {
             return this.getMaterial(
-                Math.floor((this.playerPosition[0] + 2) / this.tileSize),
-                Math.floor((this.playerPosition[1] + 1) / this.tileSize)
+                Math.floor((this.playerPosition[0] + (this.tileSize / 2)) / this.tileSize),
+                Math.floor(this.playerPosition[1] / this.tileSize)
             );
         }
 
-        const getTop2 = () => {
+        const getBottom = () => {
             return this.getMaterial(
-                Math.floor((this.playerPosition[0] + this.tileSize - 2) / this.tileSize),
-                Math.floor((this.playerPosition[1] + 1) / this.tileSize)
+                Math.floor((this.playerPosition[0] + (this.tileSize / 2)) / this.tileSize),
+                Math.floor((this.playerPosition[1] + this.tileSize) / this.tileSize)
             );
         }
 
-        const getRight1 = () => {
+        const getLeft = () => {
             return this.getMaterial(
-                Math.floor((this.playerPosition[0] + this.tileSize - 1) / this.tileSize),
-                Math.floor((this.playerPosition[1] + 2) / this.tileSize)
+                Math.floor(this.playerPosition[0] / this.tileSize),
+                Math.floor((this.playerPosition[1] + (this.tileSize / 2)) / this.tileSize)
             );
         }
 
-        const getRight2 = () => {
+        const getRight = () => {
             return this.getMaterial(
-                Math.floor((this.playerPosition[0] + this.tileSize - 1) / this.tileSize),
-                Math.floor((this.playerPosition[1] + this.tileSize - 2) / this.tileSize)
+                Math.floor((this.playerPosition[0] + this.tileSize) / this.tileSize),
+                Math.floor((this.playerPosition[1] + (this.tileSize / 2)) / this.tileSize)
             );
         }
 
-        const getBottom2 = () => {
-            return this.getMaterial(
-                Math.floor((this.playerPosition[0] + this.tileSize - 2) / this.tileSize),
-                Math.floor((this.playerPosition[1] + this.tileSize - 1) / this.tileSize)
-            );
+        const top = getTop();
+        const bottom = getBottom();
+        const left = getLeft();
+        const right = getRight();
+
+        if (top.solid) {
+            this.playerVelocity[1] *= -top.bounce || 0;
+
+            while(getTop().solid) {
+                this.playerPosition[1] += 0.1;
+            }
         }
 
-        const getBottom1 = () => {
-            return this.getMaterial(
-                Math.floor((this.playerPosition[0] + 2) / this.tileSize),
-                Math.floor((this.playerPosition[1] + this.tileSize - 1) / this.tileSize)
-            );
-        }
+        if (bottom.solid) {
+            this.playerVelocity[1] *= -bottom.bounce || 0;
 
-        const getLeft2 = () => {
-            return this.getMaterial(
-                Math.floor((this.playerPosition[0] + 1) / this.tileSize),
-                Math.floor((this.playerPosition[1] + this.tileSize - 2) / this.tileSize)
-            );
-        }
-
-        const getLeft1 = () => {
-            return this.getMaterial(
-                Math.floor((this.playerPosition[0] + 1) / this.tileSize),
-                Math.floor((this.playerPosition[1] + 2) / this.tileSize)
-            );
-        }
-
-        let i = 1e6;
-        while (i--) {
-            const top1 = getTop1();
-            const top2 = getTop2();
-            const right1 = getRight1();
-            const right2 = getRight2();
-            const bottom2 = getBottom2();
-            const bottom1 = getBottom1();
-            const left2 = getLeft2();
-            const left1 = getLeft1();
-
-            if (top1.solid === 1 || top2.solid === 1) {
-                this.playerPosition[1] += 1;
+            while(getBottom().solid) {
+                this.playerPosition[1] -= 0.1;
             }
 
-            if (right1.solid === 1 || right2.solid === 1) {
-                this.playerPosition[0] -= 1;
+            if(!tile.jump) {
+                // this.player.on_floor = true;
+                this.canJump = true;
             }
+        }
 
-            if (bottom2.solid === 1 || bottom1.solid === 1) {
-                this.playerPosition[1] -= 1;
+        if (left.solid) {
+            this.playerVelocity[0] *= -left.bounce || 0;
+
+            while(getLeft().solid) {
+                this.playerPosition[0] += 0.1;
             }
+        }
 
-            if (left2.solid === 1 || left1.solid === 1) {
-                this.playerPosition[0] += 1;
-            }
+        if (right.solid) {
+            this.playerVelocity[0] *= -right.bounce || 0;
 
-            if (
-                getTop1().solid === 0 &&
-                getTop2().solid === 0 &&
-                getRight1().solid === 0 &&
-                getRight2().solid === 0 &&
-                getBottom2().solid === 0 &&
-                getBottom1().solid === 0 &&
-                getLeft2().solid === 0 &&
-                getLeft1().solid === 0
-            ) {
-                break;
+            while(getRight().solid) {
+                this.playerPosition[0] -= 0.1;
             }
         }
     }

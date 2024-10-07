@@ -221,17 +221,13 @@ export class Engine {
         if (top.solid) {
             this.playerVelocity[1] *= -top.bounce || 0;
 
-            while(getTop().solid) {
-                this.playerPosition[1] += 0.1;
-            }
+            this.playerPosition[1] = Math.ceil(this.playerPosition[1] / this.tileSize) * this.tileSize;
         }
 
         if (bottom.solid) {
             this.playerVelocity[1] *= -bottom.bounce || 0;
 
-            while(getBottom().solid) {
-                this.playerPosition[1] -= 0.1;
-            }
+            this.playerPosition[1] = Math.floor(this.playerPosition[1] / this.tileSize) * this.tileSize;
 
             if(!tile.jump) {
                 // this.player.on_floor = true;
@@ -242,17 +238,13 @@ export class Engine {
         if (left.solid) {
             this.playerVelocity[0] *= -left.bounce || 0;
 
-            while(getLeft().solid) {
-                this.playerPosition[0] += 0.1;
-            }
+            this.playerPosition[0] = Math.ceil(this.playerPosition[0] / this.tileSize) * this.tileSize;
         }
 
         if (right.solid) {
             this.playerVelocity[0] *= -right.bounce || 0;
 
-            while(getRight().solid) {
-                this.playerPosition[0] -= 0.1;
-            }
+            this.playerPosition[0] = Math.floor(this.playerPosition[0] / this.tileSize) * this.tileSize;
         }
     }
 }

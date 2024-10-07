@@ -185,31 +185,34 @@ export class Engine {
         }
         this.lastTile = tile;
 
+        // TODO: Camera should not follow (less motion sickness)
+
+        // TODO: This should me moved outside in dedicated methods
         const getTop = () => {
             return this.getMaterial(
-                Math.floor((this.playerPosition[0] + (this.tileSize / 2)) / this.tileSize),
-                Math.floor(this.playerPosition[1] / this.tileSize)
+                fastFloor((this.playerPosition[0] + (this.tileSize / 2)) / this.tileSize),
+                fastFloor(this.playerPosition[1] / this.tileSize)
             );
         }
 
         const getBottom = () => {
             return this.getMaterial(
-                Math.floor((this.playerPosition[0] + (this.tileSize / 2)) / this.tileSize),
-                Math.floor((this.playerPosition[1] + this.tileSize) / this.tileSize)
+                fastFloor((this.playerPosition[0] + (this.tileSize / 2)) / this.tileSize),
+                fastFloor((this.playerPosition[1] + this.tileSize) / this.tileSize)
             );
         }
 
         const getLeft = () => {
             return this.getMaterial(
-                Math.floor(this.playerPosition[0] / this.tileSize),
-                Math.floor((this.playerPosition[1] + (this.tileSize / 2)) / this.tileSize)
+                fastFloor(this.playerPosition[0] / this.tileSize),
+                fastFloor((this.playerPosition[1] + (this.tileSize / 2)) / this.tileSize)
             );
         }
 
         const getRight = () => {
             return this.getMaterial(
-                Math.floor((this.playerPosition[0] + this.tileSize) / this.tileSize),
-                Math.floor((this.playerPosition[1] + (this.tileSize / 2)) / this.tileSize)
+                fastFloor((this.playerPosition[0] + this.tileSize) / this.tileSize),
+                fastFloor((this.playerPosition[1] + (this.tileSize / 2)) / this.tileSize)
             );
         }
 
@@ -220,31 +223,27 @@ export class Engine {
 
         if (top.solid) {
             this.playerVelocity[1] *= -top.bounce || 0;
-
             this.playerPosition[1] = Math.ceil(this.playerPosition[1] / this.tileSize) * this.tileSize;
         }
 
         if (bottom.solid) {
             this.playerVelocity[1] *= -bottom.bounce || 0;
-
-            this.playerPosition[1] = Math.floor(this.playerPosition[1] / this.tileSize) * this.tileSize;
+            this.playerPosition[1] = fastFloor(this.playerPosition[1] / this.tileSize) * this.tileSize;
 
             if(!tile.jump) {
-                // this.player.on_floor = true;
+                // this.player.on_floor = true; // TODO: This should be restored
                 this.canJump = true;
             }
         }
 
         if (left.solid) {
             this.playerVelocity[0] *= -left.bounce || 0;
-
             this.playerPosition[0] = Math.ceil(this.playerPosition[0] / this.tileSize) * this.tileSize;
         }
 
         if (right.solid) {
             this.playerVelocity[0] *= -right.bounce || 0;
-
-            this.playerPosition[0] = Math.floor(this.playerPosition[0] / this.tileSize) * this.tileSize;
+            this.playerPosition[0] = fastFloor(this.playerPosition[0] / this.tileSize) * this.tileSize;
         }
     }
 }

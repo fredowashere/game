@@ -1,4 +1,6 @@
-export const FIRST_MAP = {
+import { IMap } from "./engine.model";
+
+export const FIRST_MAP: IMap = {
     tileSize: 16,
     materials: {
         0: {
@@ -198,9 +200,9 @@ export const FIRST_MAP = {
         [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
     ],
     gravity: [0, 0.3],
-    velocityLimit: [2, 14],
+    velocityLimit: [2, 16],
     movementSpeed: [0.3, 6],
-    playerPosition: [2, 25],
+    playerPosition: [2, 2],
     playerColor: "#FF9900",
     background: "#eee",
     scripts: {

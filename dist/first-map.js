@@ -1,6 +1,4 @@
-import { IMap } from "./engine.model";
-
-export const FIRST_MAP: IMap = {
+export const FIRST_MAP = {
     tileSize: 16,
     materials: {
         0: {
@@ -39,7 +37,7 @@ export const FIRST_MAP: IMap = {
         3: {
             id: 3,
             color: "rgba(121, 220, 242, 0.4)",
-            solid: 1,
+            solid: 0,
             bounce: 0,
             jump: 1,
             foreground: 1,

@@ -506,11 +506,11 @@ Clarity.prototype.move_player = function () {
         
         var mag = Math.round(Math.max(1, x_dif * 0.1));
     
-        if(c_x != this.camera.x) {
+        // if(c_x != this.camera.x) {
             
             this.camera.x += c_x > this.camera.x ? mag : -mag;
             
-            if(this.limit_viewport) {
+            // if(this.limit_viewport) {
                 
                 this.camera.x = 
                     Math.min(
@@ -523,19 +523,19 @@ Clarity.prototype.move_player = function () {
                         0,
                         this.camera.x
                     );
-            }
-        }
+            // }
+        // }
     }
     
     if(y_dif > 5) {
         
         var mag = Math.round(Math.max(1, y_dif * 0.1));
         
-        if(c_y != this.camera.y) {
+        // if(c_y != this.camera.y) {
             
             this.camera.y += c_y > this.camera.y ? mag : -mag;
         
-            if(this.limit_viewport) {
+            // if(this.limit_viewport) {
                 
                 this.camera.y = 
                     Math.min(
@@ -548,8 +548,8 @@ Clarity.prototype.move_player = function () {
                         0,
                         this.camera.y
                     );
-            }
-        }
+            // }
+        // }
     }
     
     if(this.last_tile != tile.id && tile.script) {

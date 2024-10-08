@@ -1,9 +1,7 @@
 import { Coord2D, IMap, Material } from "./engine.model";
-import { fastFloor, fastRound } from "./engine.util";
 
 export class Engine {
     tileSize: 8|16|24|32;
-    limitViewport: 1|0;
     jumpSwitch: 1|0;
     viewport: Coord2D;
     camera: Coord2D;
@@ -21,7 +19,6 @@ export class Engine {
 
     constructor() {
         this.tileSize = 16;
-        this.limitViewport = 0;
         this.jumpSwitch = 0;
         this.viewport = [200, 200];
         this.camera = [0, 0];
@@ -88,11 +85,11 @@ export class Engine {
     }
 
     drawMap(foreground = 0) {
-        const startY = fastFloor(this.camera[1] / this.tileSize);
+        const startY = Math.floor(this.camera[1] / this.tileSize);
         const endY = (this.camera[1] + this.viewport[1] + this.tileSize) / this.tileSize;
 
         for (let y = startY; y < endY; y++) {
-            const startX = fastFloor(this.camera[0] / this.tileSize);
+            const startX = Math.floor(this.camera[0] / this.tileSize);
             const endX = (this.camera[0] + this.viewport[0] + this.tileSize) / this.tileSize;
 
             for (let x = startX; x < endX; x++) {
@@ -173,7 +170,7 @@ export class Engine {
     }
 
     getMaterialPixelCoords(gX: number, gY: number) {
-        const offset = fastRound((this.tileSize / 2) - 1);
+        const offset = Math.round((this.tileSize / 2) - 1);
         const pX = gX * this.tileSize;
         const pY = gY * this.tileSize;
 
@@ -190,10 +187,38 @@ export class Engine {
         ];
     }
 
+    getMaterialTop() {
+        return this.getMaterial(
+            Math.floor((this.playerPosition[0] + (this.tileSize / 2)) / this.tileSize),
+            Math.floor(this.playerPosition[1] / this.tileSize)
+        );
+    }
+
+    getMaterialBottom() {
+        return this.getMaterial(
+            Math.floor((this.playerPosition[0] + (this.tileSize / 2)) / this.tileSize),
+            Math.floor((this.playerPosition[1] + this.tileSize) / this.tileSize)
+        );
+    }
+
+    getMaterialLeft() {
+        return this.getMaterial(
+            Math.floor(this.playerPosition[0] / this.tileSize),
+            Math.floor((this.playerPosition[1] + (this.tileSize / 2)) / this.tileSize)
+        );
+    }
+
+    getMaterialRight() {
+        return this.getMaterial(
+            Math.floor((this.playerPosition[0] + this.tileSize) / this.tileSize),
+            Math.floor((this.playerPosition[1] + (this.tileSize / 2)) / this.tileSize)
+        );
+    }
+
     movePlayer() {
         const tile = this.getMaterial(
-            fastRound(this.playerPosition[0] / this.tileSize),
-            fastRound(this.playerPosition[1] / this.tileSize)
+            Math.round(this.playerPosition[0] / this.tileSize),
+            Math.round(this.playerPosition[1] / this.tileSize)
         );
         
         // Apply gravity
@@ -208,7 +233,7 @@ export class Engine {
         // Apply friction
         if (tile?.friction) {
             this.playerVelocity[0] *= tile.friction[0];
-            this.playerVelocity[0] *= tile.friction[1];
+            this.playerVelocity[1] *= tile.friction[1];
         }
 
         if (tile?.jump && this.jumpSwitch > 15) {
@@ -226,57 +251,58 @@ export class Engine {
         this.playerPosition[1] += this.playerVelocity[1];
         
         this.playerVelocity[0] *= .9;
-
-        // // Manage collision
-        // const playerGX = fastRound(this.playerPosition[0] / this.tileSize);
-        // const playerGY = fastRound(this.playerPosition[1] / this.tileSize);
-        // console.log(this.getMaterialPixelCoords(playerGX, playerGY));
-
-
-        const offset = fastFloor(this.tileSize / 2);
-
-        const matTop = this.getMaterial(
-            fastRound((this.playerPosition[0]) / this.tileSize),
-            fastRound((this.playerPosition[1] - offset) / this.tileSize)
-        );
-        const matRight = this.getMaterial(
-            fastRound((this.playerPosition[0] + offset) / this.tileSize),
-            fastRound((this.playerPosition[1]) / this.tileSize)
-        );
-        const matBottom = this.getMaterial(
-            fastRound((this.playerPosition[0]) / this.tileSize),
-            fastRound((this.playerPosition[1] + offset) / this.tileSize)
-        );
-        const matLeft = this.getMaterial(
-            fastRound((this.playerPosition[0] - offset) / this.tileSize),
-            fastRound((this.playerPosition[1]) / this.tileSize)
-        );
-
-        if (matTop?.solid) {
-            this.playerPosition[1] += 0.1;
-        }
-        if (matRight?.solid) {
-            this.playerPosition[0] -= 0.1;
-        }
-        if (matBottom?.solid) {
-            this.playerPosition[1] -= 0.1;
-        }
-        if (matLeft?.solid) {
-            this.playerPosition[0] += 0.1;
-        }
     
-        const camX = fastRound(this.playerPosition[0] - this.viewport[0] / 2);
-        const camY = fastRound(this.playerPosition[1] - this.viewport[1] / 2);
+        // Manage camera
+        const camX = Math.round(this.playerPosition[0] - this.viewport[0] / 2);
+        const camY = Math.round(this.playerPosition[1] - this.viewport[1] / 2);
         const deltaCamX = camX - this.camera[0];
         const deltaCamY = camY - this.camera[1];
 
-        this.camera[0] += deltaCamX;
-        this.camera[1] += deltaCamY;
-        
+        if (Math.abs(deltaCamX) > 8) {
+            this.camera[0] += deltaCamX * 0.2;
+            this.camera[0] = Math.max(0, Math.min(this.currentMap!.pxWidth! - this.viewport[0] + this.tileSize, this.camera[0]));
+        }
+
+        if (Math.abs(deltaCamY) > 8) {
+            this.camera[1] += deltaCamY * 0.2;
+            this.camera[1] = Math.max(0, Math.min(this.currentMap!.pxHeight! - this.viewport[1] + this.tileSize, this.camera[1]));
+        }
+
+        // Run script
         if(this.lastTile?.id !== tile?.id && tile?.script) {
             eval(this.currentMap!.scripts[tile.script]);
         }
         
         this.lastTile = tile;
+
+        // Manage collision
+        const top = this.getMaterialTop()!;
+        const bottom = this.getMaterialBottom()!;
+        const left = this.getMaterialLeft()!;
+        const right = this.getMaterialRight()!;
+
+        if (top.solid) {
+            this.playerVelocity[1] *= -top.bounce || 0;
+            this.playerPosition[1] = Math.ceil(this.playerPosition[1] / this.tileSize) * this.tileSize;
+        }
+
+        if (bottom.solid) {
+            this.playerVelocity[1] *= -bottom.bounce || 0;
+            this.playerPosition[1] = Math.floor(this.playerPosition[1] / this.tileSize) * this.tileSize;
+
+            if(!tile?.jump) {
+                this.canJump = 1;
+            }
+        }
+
+        if (left.solid) {
+            this.playerVelocity[0] *= -left.bounce || 0;
+            this.playerPosition[0] = Math.ceil(this.playerPosition[0] / this.tileSize) * this.tileSize;
+        }
+
+        if (right.solid) {
+            this.playerVelocity[0] *= -right.bounce || 0;
+            this.playerPosition[0] = Math.floor(this.playerPosition[0] / this.tileSize) * this.tileSize;
+        }
     }
 }

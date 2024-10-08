@@ -259,12 +259,12 @@ export class Engine {
         const deltaCamY = camY - this.camera[1];
 
         if (Math.abs(deltaCamX) > 8) {
-            this.camera[0] += deltaCamX * 0.2;
+            this.camera[0] += Math.floor(deltaCamX * 0.1);
             this.camera[0] = Math.max(0, Math.min(this.currentMap!.pxWidth! - this.viewport[0] + this.tileSize, this.camera[0]));
         }
 
         if (Math.abs(deltaCamY) > 8) {
-            this.camera[1] += deltaCamY * 0.2;
+            this.camera[1] += Math.floor(deltaCamY * 0.1);
             this.camera[1] = Math.max(0, Math.min(this.currentMap!.pxHeight! - this.viewport[1] + this.tileSize, this.camera[1]));
         }
 

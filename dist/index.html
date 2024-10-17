@@ -8,50 +8,15 @@
 </head>
 
 <body>
-    <canvas id="canvas"></canvas>
     <script type="module">
         import { Engine } from "./engine.js";
         import { FIRST_MAP } from "./first-map.js";
 
-        window.requestAnimFrame =
-            window.requestAnimationFrame ||
-            window.webkitRequestAnimationFrame ||
-            window.mozRequestAnimationFrame ||
-            window.oRequestAnimationFrame ||
-            window.msRequestAnimationFrame ||
-            function (callback) {
-                return window.setTimeout(callback, 1000 / 60);
-            };
-
-        var canvas = document.getElementById('canvas'),
-            ctx = canvas.getContext('2d');
-
-        canvas.width = 400;
-        canvas.height = 400;
-
-        var game = new Engine();
-        game.context = ctx;
-        game.viewport[0] = canvas.width;
-        game.viewport[1] = canvas.height;
-        game.loadMap(FIRST_MAP);
-
-        /* Limit the viewport to the confines of the map */
-        game.limit_viewport = true;
-
-        var Loop = function () {
-
-            ctx.fillStyle = '#333';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            game.drawMap(0);
-            game.updatePlayer();
-            game.drawPlayer();
-            game.movePlayer();
-
-            window.requestAnimFrame(Loop);
-        };
-
-        Loop();
+        const engine = new Engine();
+        document.body.appendChild(engine.canvas);
+        engine.setViewport(400, 400);
+        engine.loadMap(FIRST_MAP);
+        engine.start();
     </script>
 </body>
 

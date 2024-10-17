@@ -14,8 +14,14 @@ export class Engine {
     keyUp: 1|0;
 
     currentMap?: IMap;
-    context?: CanvasRenderingContext2D;
     lastTile?: Material;
+    
+    canvas: any;
+    context: CanvasRenderingContext2D;
+    requestAnimationFrame: (cb: () => void) => void;
+    running: number;
+    then: number;
+    frameCap: number;
 
     constructor() {
         this.tileSize = 16;
@@ -32,6 +38,20 @@ export class Engine {
 
         window.onkeydown = (e: KeyboardEvent) => this.keydown(e);
         window.onkeyup = (e: KeyboardEvent) => this.keyup(e);
+
+        this.canvas = document.createElement("CANVAS") as any;
+        this.context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
+        this.requestAnimationFrame = window.requestAnimationFrame.bind(window) || ((cb: () => void) => window.setTimeout(cb, 1000 / 60));
+        this.running = 0;
+        this.then = 0;
+        this.frameCap = 1000 / 60;
+    }
+
+    setViewport(width: number, height: number) {
+        this.canvas.width = width;
+        this.canvas.height = height;
+        this.viewport[0] = this.canvas.width;
+        this.viewport[1] = this.canvas.height;
     }
 
     keydown(e: KeyboardEvent) {
@@ -304,5 +324,38 @@ export class Engine {
             this.playerVelocity[0] *= -right.bounce || 0;
             this.playerPosition[0] = Math.floor(this.playerPosition[0] / this.tileSize) * this.tileSize;
         }
+    }
+
+    start() {
+        if (this.running === 1) {
+            return;
+        }
+        this.running = 1;
+
+        const loop = () => {
+            if (this.running === 0) {
+                return;
+            }
+
+            const now = Date.now();
+            if (now - this.then > this.frameCap) {
+                this.context.fillStyle = "#333";
+                this.context.fillRect(0, 0, this.viewport[0], this.viewport[1]);
+    
+                this.drawMap(0);
+                this.updatePlayer();
+                this.drawPlayer();
+                this.movePlayer();
+    
+                this.then = now;
+            }
+
+            this.requestAnimationFrame(loop);
+        };
+        loop();
+    }
+
+    stop() {
+        this.running = 0;
     }
 }

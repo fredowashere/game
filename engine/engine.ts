@@ -338,7 +338,8 @@ export class Engine {
             }
 
             const now = Date.now();
-            if (now - this.then > this.frameCap) {
+            const elapsed = now - this.then;
+            if (elapsed > this.frameCap) {
                 this.context.fillStyle = "#333";
                 this.context.fillRect(0, 0, this.viewport[0], this.viewport[1]);
     
